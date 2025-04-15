@@ -1,26 +1,33 @@
-// Importation des hooks et bibliothèques nécessaires
-import { useState, useEffect } from 'react';  // Importation des hooks React
-import { useForm } from 'react-hook-form';  // Importation de react-hook-form pour la gestion des formulaires
-import { zodResolver } from '@hookform/resolvers/zod';  // Résolveur pour Zod (validation de schéma)
-import * as z from 'zod';  // Zod pour la validation des données
-import { format } from 'date-fns';  // Utilitaire pour le formatage de dates
-import { fr } from 'date-fns/locale';  // Locale française pour le formatage des dates
-import { Calendar as CalendarIcon, Clock } from 'lucide-react';  // Icônes utilisées dans le formulaire
-import { Button } from '@/components/ui/button';  // Composant bouton
-import { Calendar } from '@/components/ui/calendar';  // Composant calendrier
-import {
-  Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
-} from '@/components/ui/form';  // Composants de formulaire de l'UI
-import {
-  Popover, PopoverContent, PopoverTrigger,
-} from '@/components/ui/popover';  // Composants popover pour la sélection de date
-import { Input } from '@/components/ui/input';  // Champ de saisie
-import { Textarea } from '@/components/ui/textarea';  // Champ de texte pour les descriptions
-import { AppointmentService, Appointment } from '@/services/AppointmentService';  // Service pour gérer les rendez-vous
-import { AuthService } from '@/services/AuthService';  // Service d'authentification
-import { toast } from 'sonner';  // Notifications toast
 
-// Schéma de validation Zod pour le formulaire
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { Calendar as CalendarIcon, Clock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { AppointmentService, Appointment } from '@/services/AppointmentService';
+import { AuthService } from '@/services/AuthService';
+import { toast } from 'sonner';
+
+// Schéma de validation pour le formulaire
 const formSchema = z.object({
   titre: z.string().min(2, {
     message: "Le titre doit contenir au moins 2 caractères.",
@@ -44,26 +51,23 @@ const formSchema = z.object({
   }),
 });
 
-// Type des propriétés du formulaire de rendez-vous
 type AppointmentFormProps = {
-  appointment?: Appointment;  // Optionnel, utilisé en mode édition
-  onSuccess: () => void;  // Callback à appeler après un succès
-  onCancel: () => void;  // Callback à appeler en cas d'annulation
+  appointment?: Appointment;
+  onSuccess: () => void;
+  onCancel: () => void;
 };
 
-// Composant principal pour ajouter ou modifier un rendez-vous
 const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormProps) => {
-  // State pour gérer l'état de disponibilité de l'heure et le statut de soumission
   const [isAvailable, setIsAvailable] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [availableHours, setAvailableHours] = useState<string[]>([]);  // Liste des heures disponibles
-  const isEditing = !!appointment;  // Vérifie si c'est un mode édition
+  const [availableHours, setAvailableHours] = useState<string[]>([]);
+  const isEditing = !!appointment;
   
-  const currentUser = AuthService.getCurrentUser();  // Récupère l'utilisateur connecté
+  const currentUser = AuthService.getCurrentUser();
   
-  // Initialisation du formulaire avec des valeurs par défaut ou celles de l'appointment existant
+  // Initialiser le formulaire avec les valeurs par défaut ou les valeurs de l'appointment existant
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),  // Utilisation de Zod pour la validation
+    resolver: zodResolver(formSchema),
     defaultValues: appointment ? {
       titre: appointment.titre,
       description: appointment.description,
@@ -81,14 +85,14 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
     },
   });
 
-  // Fonction pour vérifier la disponibilité des horaires pour la date sélectionnée
+  // Récupérer les heures disponibles pour la date sélectionnée
   const checkAvailability = async (date: Date, currentHeure?: string) => {
     try {
-      const dateStr = format(date, 'yyyy-MM-dd');  // Formate la date sélectionnée
-      const appointments = await AppointmentService.getCurrentWeekAppointments();  // Récupère les rendez-vous de la semaine
-      const dayAppointments = appointments.filter(a => a.date === dateStr);  // Filtre ceux de la même date
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const appointments = await AppointmentService.getCurrentWeekAppointments();
+      const dayAppointments = appointments.filter(a => a.date === dateStr);
       
-      // Génère les horaires possibles (de 7h à 20h par tranche de 30 minutes)
+      // Générer toutes les heures possibles (de 7h à 20h par tranche de 30min)
       const allHours = [];
       for (let hour = 7; hour <= 20; hour++) {
         for (let min = 0; min < 60; min += 30) {
@@ -96,17 +100,18 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
         }
       }
       
-      // Filtre les horaires déjà pris
+      // Filtrer les heures déjà prises
       const unavailableHours = new Set();
+      
       dayAppointments.forEach(app => {
-        if (appointment && app.id === appointment.id) return;  // Ne pas bloquer l'horaire en mode édition
+        if (appointment && app.id === appointment.id) return; // Ne pas bloquer l'horaire actuel en mode édition
         
         const appHour = parseInt(app.heure.split(':')[0]);
         const appMin = parseInt(app.heure.split(':')[1]);
         const endHour = appHour + Math.floor((appMin + app.duree) / 60);
         const endMin = (appMin + app.duree) % 60;
         
-        // Bloque toutes les heures qui chevauchent le rendez-vous
+        // Bloquer toutes les heures qui chevauchent ce rendez-vous
         allHours.forEach(time => {
           const [h, m] = time.split(':').map(Number);
           const timeInMinutes = h * 60 + m;
@@ -119,11 +124,10 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
         });
       });
       
-      // Sélectionne les horaires disponibles
       const available = allHours.filter(hour => !unavailableHours.has(hour));
       setAvailableHours(available);
       
-      // En mode édition, ajoute l'heure actuelle si elle est indisponible
+      // Si on est en mode édition et que l'heure actuelle n'est pas disponible, l'ajouter quand même
       if (currentHeure && !available.includes(currentHeure)) {
         setAvailableHours(prev => [...prev, currentHeure].sort());
       }
@@ -134,28 +138,28 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
       return false;
     }
   };
-
-  // Vérifie la disponibilité à chaque fois que la date ou l'heure change
+  
+  // Vérifier la disponibilité lors du changement de date
   useEffect(() => {
     const date = form.watch('date');
     const heure = form.watch('heure');
     
     if (date) {
       checkAvailability(date, isEditing ? heure : undefined)
-        .then(available => setIsAvailable(available));  // Met à jour l'état de la disponibilité
+        .then(available => setIsAvailable(available));
     }
   }, [form.watch('date'), isEditing]);
-
-  // Fonction de soumission du formulaire
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!currentUser) {
       toast.error("Vous devez être connecté pour ajouter un rendez-vous");
       return;
     }
     
-    setIsSubmitting(true);  // Déclenche la soumission
+    setIsSubmitting(true);
+    
     try {
-      // Formate les données pour l'API
+      // Formater les données pour l'API
       const appointmentData = {
         ...values,
         userId: currentUser.id,
@@ -164,8 +168,8 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
       
       let success = false;
       
-      // Mode édition (mise à jour d'un rendez-vous existant)
       if (isEditing && appointment) {
+        // Mode édition
         success = await AppointmentService.update({
           ...appointmentData,
           id: appointment.id,
@@ -175,7 +179,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
           toast.success("Rendez-vous modifié avec succès");
         }
       } else {
-        // Mode création (ajout d'un nouveau rendez-vous)
+        // Mode création
         const newAppointment = await AppointmentService.add(appointmentData as Omit<Appointment, 'id'>);
         success = !!newAppointment;
         
@@ -185,20 +189,19 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
       }
       
       if (success) {
-        onSuccess();  // Callback après réussite
+        onSuccess();
       }
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du rendez-vous:', error);
       toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous");
     } finally {
-      setIsSubmitting(false);  // Fin de la soumission
+      setIsSubmitting(false);
     }
   };
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Champ Titre */}
         <FormField
           control={form.control}
           name="titre"
@@ -212,9 +215,8 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             </FormItem>
           )}
         />
-        {/* Grille pour Date et Heure */}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Champ Date */}
           <FormField
             control={form.control}
             name="date"
@@ -227,17 +229,23 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
                       <Button
                         variant={"outline"}
                         className={`pl-3 text-left font-normal ${!field.value ? "text-muted-foreground" : ""}`}
-                        disabled={isSubmitting}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? format(field.value, 'dd MMM yyyy', { locale: fr }) : 'Choisir une date'}
+                        {field.value ? (
+                          format(field.value, "EEEE d MMMM yyyy", { locale: fr })
+                        ) : (
+                          <span>Sélectionner une date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
+                      mode="single"
                       selected={field.value}
-                      onChange={field.onChange}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -245,7 +253,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
               </FormItem>
             )}
           />
-          {/* Champ Heure */}
+          
           <FormField
             control={form.control}
             name="heure"
@@ -253,18 +261,32 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
               <FormItem>
                 <FormLabel>Heure</FormLabel>
                 <FormControl>
-                  <select {...field} disabled={isSubmitting}>
-                    {availableHours.map(hour => (
-                      <option key={hour} value={hour}>{hour}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      className="w-full px-3 py-2 border border-input rounded-md"
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={!isAvailable || availableHours.length === 0}
+                    >
+                      {availableHours.length === 0 ? (
+                        <option value="">Aucun horaire disponible</option>
+                      ) : (
+                        availableHours.map(hour => (
+                          <option key={hour} value={hour}>
+                            {hour}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    <Clock className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50" />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        {/* Champ Durée */}
+        
         <FormField
           control={form.control}
           name="duree"
@@ -272,13 +294,20 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             <FormItem>
               <FormLabel>Durée (minutes)</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="60" {...field} />
+                <Input 
+                  type="number" 
+                  min={15} 
+                  max={180} 
+                  step={15} 
+                  {...field} 
+                  onChange={e => field.onChange(parseInt(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* Champ Lieu */}
+        
         <FormField
           control={form.control}
           name="location"
@@ -286,13 +315,13 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             <FormItem>
               <FormLabel>Lieu</FormLabel>
               <FormControl>
-                <Input placeholder="Adresse" {...field} />
+                <Input placeholder="Cabinet médical" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* Description */}
+        
         <FormField
           control={form.control}
           name="description"
@@ -300,26 +329,37 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Description du rendez-vous" {...field} />
+                <Textarea 
+                  placeholder="Détails du rendez-vous..."
+                  className="min-h-[100px]"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* Boutons */}
-        <div className="flex justify-end space-x-4">
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            disabled={isSubmitting}
-          >
+        
+        {!isAvailable && availableHours.length === 0 && (
+          <div className="bg-yellow-100 text-yellow-800 p-3 rounded-md">
+            Aucun horaire n'est disponible pour cette date. Veuillez sélectionner une autre date.
+          </div>
+        )}
+        
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button type="button" variant="outline" onClick={onCancel}>
             Annuler
           </Button>
-          <Button
-            type="submit"
-            disabled={isSubmitting || !isAvailable}
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || (!isAvailable && availableHours.length === 0)}
           >
-            {isEditing ? 'Modifier' : 'Ajouter'} le rendez-vous
+            {isSubmitting 
+              ? "Enregistrement..." 
+              : isEditing 
+                ? "Modifier le rendez-vous" 
+                : "Ajouter le rendez-vous"
+            }
           </Button>
         </div>
       </form>
