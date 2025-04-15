@@ -209,7 +209,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             <FormItem>
               <FormLabel>Titre</FormLabel>
               <FormControl>
-                <Input placeholder="Rendez-vous médecin" {...field} />
+                <Input placeholder="Rendez-vous avec ...." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -315,7 +315,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
             <FormItem>
               <FormLabel>Lieu</FormLabel>
               <FormControl>
-                <Input placeholder="Cabinet médical" {...field} />
+                <Input placeholder="Adresse" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
