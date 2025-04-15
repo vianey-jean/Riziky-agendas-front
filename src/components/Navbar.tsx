@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,23 +8,27 @@ import { AuthService } from '@/services/AuthService';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import AppointmentDetails from '@/components/AppointmentDetails';
 
+// Composant Navbar: Gère la barre de navigation et la recherche
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Appointment[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const currentUser = AuthService.getCurrentUser();
   const navigate = useNavigate();
 
+  // Fonction pour basculer l'état du menu mobile
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Fonction de recherche de rendez-vous
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
+    
     if (query.length >= 3) {
       setIsSearching(true);
       try {
@@ -41,6 +46,7 @@ const Navbar = () => {
     }
   };
 
+  // Gestion du clic sur un rendez-vous dans les résultats de recherche
   const handleAppointmentClick = (appointment: Appointment) => {
     setShowSearchResults(false);
     setSearchQuery('');
@@ -48,6 +54,7 @@ const Navbar = () => {
     setShowAppointmentDetails(true);
   };
 
+  // Fonction de déconnexion
   const handleLogout = () => {
     AuthService.logout();
     navigate('/');
@@ -57,15 +64,13 @@ const Navbar = () => {
     <>
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo toujours visible */}
+          <div className="flex justify-between h-16">
             <div className="flex items-center flex-shrink-0">
-              <Link to="/" className="flex items-center">
+              <Link to="/" className="flex flex items-center">
                 <h1 className="text-xl font-bold text-primary">Riziky-Agendas</h1>
               </Link>
             </div>
-
-            {/* Navigation principale (masquée sur mobile) */}
+            
             <div className="hidden md:flex items-center space-x-12">
               <Link to="/" className="nav-link">Liste RDV</Link>
               <Link to="/a-propos" className="nav-link">À propos</Link>
@@ -73,7 +78,7 @@ const Navbar = () => {
               {currentUser && (
                 <Link to="/dashboard" className="nav-link font-bold text-blue-500">Prise RDV</Link>
               )}
-
+              
               <div className="relative">
                 <div className="flex items-center border border-gray-300 rounded-md px-2">
                   <Search className="h-4 w-4 text-gray-400" />
@@ -85,7 +90,7 @@ const Navbar = () => {
                     className="border-0 focus-visible:ring-0"
                   />
                 </div>
-
+                
                 {showSearchResults && searchResults.length > 0 && (
                   <div className="absolute top-full mt-1 w-96 bg-white border rounded-md shadow-lg z-50">
                     {searchResults.map((result) => (
@@ -103,7 +108,7 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-
+              
               {currentUser ? (
                 <Button onClick={handleLogout} variant="outline">
                   Déconnexion
@@ -114,8 +119,7 @@ const Navbar = () => {
                 </Link>
               )}
             </div>
-
-            {/* Bouton menu mobile */}
+            
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
@@ -130,20 +134,17 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        {/* Menu mobile */}
+        
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {currentUser && (
-                <Link
-                  to="/"
-                  className="block px-3 py-2 rounded-md text-base font-bold text-blue-500 hover:text-blue-700"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Liste RDV
-                </Link>
-              )}
+              <Link
+                to="/"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Liste RDV
+              </Link>
               <Link
                 to="/a-propos"
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary"
@@ -158,6 +159,7 @@ const Navbar = () => {
               >
                 Contact
               </Link>
+              
               {currentUser && (
                 <Link
                   to="/dashboard"
@@ -167,7 +169,7 @@ const Navbar = () => {
                   Prise RDV
                 </Link>
               )}
-
+              
               <div className="relative px-3 py-2">
                 <div className="flex items-center border border-gray-300 rounded-md px-2">
                   <Search className="h-4 w-4 text-gray-400" />
@@ -178,7 +180,7 @@ const Navbar = () => {
                     onChange={(e) => handleSearch(e.target.value)}
                   />
                 </div>
-
+                
                 {showSearchResults && searchResults.length > 0 && (
                   <div className="absolute left-3 right-3 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                     {searchResults.map((result) => (
@@ -196,9 +198,9 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-
+              
               {currentUser ? (
-                <Button
+                <Button 
                   onClick={() => {
                     handleLogout();
                     setIsMenuOpen(false);
@@ -217,14 +219,13 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-
-      {/* Détails du rendez-vous sélectionné */}
+      
       {selectedAppointment && (
         <AppointmentDetails
           appointment={selectedAppointment}
           open={showAppointmentDetails}
           onOpenChange={setShowAppointmentDetails}
-          onEdit={() => {}}
+          onEdit={() => {/* handle edit */}}
           onDelete={() => {
             setSelectedAppointment(null);
             setShowAppointmentDetails(false);
