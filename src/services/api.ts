@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Définition de l'URL de base de l'API
-const API_URL = 'https://riziky-agendas-dpb7.onrender.com/api';
+const API_URL = 'https://riziky-agendas.onrender.com/api';
 
 // Création d'une instance Axios avec une configuration par défaut
 const api = axios.create({
