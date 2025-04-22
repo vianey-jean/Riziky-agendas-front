@@ -38,4 +38,3 @@ This project is built with .
 - Tailwind CSS
 
 # Riziky-agendas-front
-# Riziky-agendas-front

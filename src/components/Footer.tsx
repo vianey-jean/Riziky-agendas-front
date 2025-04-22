@@ -57,13 +57,13 @@ const Footer = () => {
               <li className="flex items-center"> {/* Utilisation de flex pour aligner l'icône et le texte */}
                 <Phone className="h-4 w-4 mr-2" /> {/* Icône de téléphone */}
                 <a href="tel:+262692842370" className="hover:text-primary"> {/* Lien tel pour appeler un numéro */}
-                  + (262) 06 12 34 56 78
+                  + (262) 06 92842370
                 </a>
               </li>
               {/* Troisième élément de la liste : lien vers la page de contact */}
               <li>
                 <Link to="/contact" className="hover:text-primary"> {/* Lien vers le formulaire de contact */}
-                  Formulaire de contact
+                  Nous Contacter
                 </Link>
               </li>
             </ul>
