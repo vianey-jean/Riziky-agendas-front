@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { AuthService } from '@/services/AuthService';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import AppointmentDetails from '@/components/AppointmentDetails';
-
+import { LogIn, LogOut } from 'lucide-react';
 // Composant Navbar: Gère la barre de navigation et la recherche
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -111,11 +111,17 @@ const Navbar = () => {
               
               {currentUser ? (
                 <Button onClick={handleLogout} variant="outline">
+                  <LogOut className="h-4 w-4" />
                   Déconnexion
                 </Button>
               ) : (
                 <Link to="/connexion">
-                  <Button>Connexion</Button>
+                   
+                  <Button>
+                  <LogIn className="mr-1 h-4 w-4" />
+                    Connexion
+                  </Button>
+                 
                 </Link>
               )}
             </div>

@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuthService } from '@/services/AuthService';
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
-
+import {LogIn, Info, Reply} from 'lucide-react'
 // Schéma de validation pour l’étape email
 const emailSchema = z.object({
   email: z.string().email({
@@ -155,6 +155,7 @@ const LoginPage = () => {
                     )}
                   />
                   <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    <Info className="mr-1 h-4 w-4" />
                     {isSubmitting ? "Vérification..." : "Continuer"}
                   </Button>
                 </form>
@@ -202,6 +203,7 @@ const LoginPage = () => {
                       onClick={() => setStep('email')} 
                       className="w-1/2"
                     >
+                       <Reply className="mr-1 h-4 w-4" />
                       Retour
                     </Button>
                     <Button 
@@ -209,6 +211,7 @@ const LoginPage = () => {
                       className="w-1/2" 
                       disabled={isSubmitting}
                     >
+                      <LogIn className="mr-1 h-4 w-4" />
                       {isSubmitting ? "Connexion..." : "Se connecter"}
                     </Button>
                   </div>
