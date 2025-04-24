@@ -13,6 +13,7 @@ import {
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {Reply } from 'lucide-react';
 
 type AppointmentSelectorProps = {
   onSelect: (appointment: Appointment) => void;
@@ -154,6 +155,7 @@ const AppointmentSelector = ({
       
       <div className="flex justify-end pt-2">
         <Button variant="outline" onClick={onCancel}>
+        <Reply className="mr-1 h-4 w-4" />
           Annuler
         </Button>
       </div>

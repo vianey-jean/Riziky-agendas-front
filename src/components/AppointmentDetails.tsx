@@ -14,6 +14,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import {Reply } from 'lucide-react';
 
 type AppointmentDetailsProps = {
   appointment: Appointment;
@@ -123,6 +124,7 @@ const AppointmentDetails = ({
                   onClick={() => setConfirmDelete(false)}
                   disabled={isDeleting}
                 >
+                  <Reply className="mr-1 h-4 w-4" />
                   Annuler
                 </Button>
                 <Button 

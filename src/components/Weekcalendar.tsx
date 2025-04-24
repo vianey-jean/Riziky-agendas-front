@@ -4,6 +4,7 @@ import { format, startOfWeek, addDays, isToday, parseISO, isSameDay } from 'date
 import { fr } from 'date-fns/locale';
 import { AppointmentService, Appointment } from '../services/AppointmentService';
 import { toast } from 'sonner';
+import {ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface WeekCalendarProps {
   onAppointmentClick: (appointment: Appointment) => void;
@@ -61,12 +62,15 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
             onClick={previousWeek} 
             className="px-3 py-1 rounded border hover:bg-gray-100"
           >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            
             Précédent
           </button>
           <button 
             onClick={nextWeek} 
             className="px-3 py-1 rounded border hover:bg-gray-100"
           >
+            <ArrowRight className="h-4 w-4 mr-2" />
             Suivant
           </button>
         </div>

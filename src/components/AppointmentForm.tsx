@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { AuthService } from '@/services/AuthService';
 import { toast } from 'sonner';
+import {Reply, Edit } from 'lucide-react';
 
 // Schéma de validation pour le formulaire
 const formSchema = z.object({
@@ -348,12 +349,13 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
         
         <div className="flex justify-end space-x-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
+          <Reply className="mr-1 h-4 w-4" />
             Annuler
           </Button>
           <Button 
             type="submit" 
             disabled={isSubmitting || (!isAvailable && availableHours.length === 0)}
-          >
+          > <Edit className="h-4 w-4 mr-2" />
             {isSubmitting 
               ? "Enregistrement..." 
               : isEditing 
