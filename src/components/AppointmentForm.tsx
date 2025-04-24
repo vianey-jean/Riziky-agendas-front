@@ -95,8 +95,8 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel }: AppointmentFormPr
       
       // Générer toutes les heures possibles (de 7h à 20h par tranche de 30min)
       const allHours = [];
-      for (let hour = 7; hour <= 20; hour++) {
-        for (let min = 0; min < 60; min += 30) {
+      for (let hour = 6; hour <= 20; hour++) {
+        for (let min = 0; min < 60; min += 10) {
           allHours.push(`${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`);
         }
       }
