@@ -1,89 +1,143 @@
 
-import { useState, useEffect } from 'react';
-import { AppointmentService, Appointment } from '@/services/AppointmentService';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import React, { useState, useEffect } from 'react';
+import { format, startOfWeek, addDays, isToday, parseISO, isSameDay } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { AppointmentService, Appointment } from '../services/AppointmentService';
+import { toast } from 'sonner';
 
-// Props du composant WeekCalendar
 interface WeekCalendarProps {
-  userId?: number;
-  onAppointmentClick?: (appointment: Appointment) => void;
+  onAppointmentClick: (appointment: Appointment) => void;
 }
 
-// Composant qui affiche les rendez-vous de la semaine
-const WeekCalendar = ({ userId, onAppointmentClick }: WeekCalendarProps) => {
+const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Récupération des rendez-vous de la semaine
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const data = await AppointmentService.getCurrentWeekAppointments(userId);
-        // Tri des rendez-vous par date puis par heure
-        const sortedData = data.sort((a, b) => {
-          // Comparaison des dates
-          const dateComparison = a.date.localeCompare(b.date);
-          // Si les dates sont identiques, comparer les heures
-          if (dateComparison === 0) {
-            return a.heure.localeCompare(b.heure);
-          }
-          return dateComparison;
-        });
-        setAppointments(sortedData || []);
+        setLoading(true);
+        const data = await AppointmentService.getAll();
+        setAppointments(data);
       } catch (error) {
-        console.error('Erreur récupération rendez-vous:', error);
+        toast.error("Impossible de charger les rendez-vous");
+        console.error("Failed to load appointments:", error);
       } finally {
         setLoading(false);
       }
     };
     
     fetchAppointments();
-  }, [userId]);
+  }, []);
   
-  // Gestion du clic sur un rendez-vous
-  const handleAppointmentClick = (appointment: Appointment) => {
-    if (onAppointmentClick) {
-      onAppointmentClick(appointment);
-    }
+  const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
+  
+  const days = Array.from({ length: 7 }, (_, i) => {
+    return addDays(startOfCurrentWeek, i);
+  });
+  
+  const previousWeek = () => {
+    setCurrentDate(addDays(currentDate, -7));
   };
   
-  // Affichage pendant le chargement
-  if (loading) {
+  const nextWeek = () => {
+    setCurrentDate(addDays(currentDate, 7));
+  };
+  
+  const getAppointmentsForDate = (date: Date) => {
+    return appointments.filter((appointment) => {
+      const appointmentDate = parseISO(appointment.date);
+      return isSameDay(appointmentDate, date);
+    });
+  };
+  
+  return (
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b">
+        <h2 className="text-lg font-semibold">Calendrier Hebdomadaire</h2>
+        <div className="flex space-x-2">
+          <button 
+            onClick={previousWeek} 
+            className="px-3 py-1 rounded border hover:bg-gray-100"
+          >
+            Précédent
+          </button>
+          <button 
+            onClick={nextWeek} 
+            className="px-3 py-1 rounded border hover:bg-gray-100"
+          >
+            Suivant
+          </button>
+        </div>
+      </div>
+      
+      {loading ? (
+        <div className="p-6 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Chargement des rendez-vous...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-7 border-b">
+          {days.map((day, index) => (
+            <div 
+              key={index} 
+              className={`p-2 text-center border-r last:border-r-0 ${
+                isToday(day) ? 'bg-blue-50' : ''
+              }`}
+            >
+              <p className="font-medium">{format(day, 'EEE', { locale: fr })}</p>
+              <p className={`text-sm ${isToday(day) ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center mx-auto' : ''}`}>
+                {format(day, 'd', { locale: fr })}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      <div className="grid grid-cols-7 min-h-[300px]">
+  {days.map((day, dayIndex) => {
+    // Récupération des rendez-vous du jour
+    const dayAppointments = getAppointmentsForDate(day);
+
+    // Tri des rendez-vous par heure croissante
+    const sortedAppointments = [...dayAppointments].sort((a, b) => {
+      const [aHours, aMinutes] = a.heure.split(':').map(Number);
+      const [bHours, bMinutes] = b.heure.split(':').map(Number);
+      return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
+    });
+
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-20 w-full" />
-        <Skeleton className="h-20 w-full" />
-        <Skeleton className="h-20 w-full" />
+      <div 
+        key={dayIndex}
+        className={`p-1 border-r last:border-r-0 ${
+          isToday(day) ? 'bg-blue-50' : ''
+        }`}
+      >
+        {sortedAppointments.length > 0 ? (
+          <div className="space-y-1">
+            {sortedAppointments.map((appointment) => (
+              <div
+                key={appointment.id}
+                onClick={() => onAppointmentClick(appointment)}
+                className="p-2 text-xs bg-rose-100 border-l-4 border-rose-500 rounded hover:bg-rose-200 cursor-pointer"
+              >
+                <p className="font-semibold truncate">{appointment.titre}</p>
+                <p className="text-rose-700">{appointment.heure}</p>
+                <p className="truncate text-gray-600">{appointment.lieu}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="h-full flex items-center justify-center">
+            <p className="text-xs text-gray-400">Aucun rendez-vous</p>
+          </div>
+        )}
       </div>
     );
-  }
-  
-  // Message si aucun rendez-vous
-  if (appointments.length === 0) {
-    return <p className="text-gray-500 py-2">Aucun rendez-vous</p>;
-  }
-  
-  // Affichage des rendez-vous
-  return (
-    <div className="space-y-4">
-      {appointments.map(appointment => (
-        <Card 
-          key={appointment.id} 
-          className="border-l-4 border-l-primary hover:bg-gray-50 transition-colors cursor-pointer"
-          onClick={() => handleAppointmentClick(appointment)}
-        >
-          <CardContent className="p-4">
-            <div className="flex justify-between">
-              <h4 className="font-bold uppercase">{appointment.titre}</h4>
-              <span className="font-bold text-red-500 uppercase">{appointment.heure}</span>
-            </div>
-            <p className="font-bold text-blue-500 uppercase mt-1">{appointment.date}</p>
-            <p className="text-sm text-gray-600 mt-1">{appointment.description}</p>
-            <p className="text-sm text-gray-500 mt-1">{appointment.location}</p>
-          </CardContent>
-        </Card>
-      ))}
+  })}
+</div>
+
     </div>
   );
 };

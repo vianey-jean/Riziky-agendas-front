@@ -13,6 +13,7 @@ import { AuthService } from './AuthService';
 
 // Définition de l'interface TypeScript pour un rendez-vous
 export interface Appointment {
+  lieu: ReactNode;
   id: number;
   userId: number;
   titre: string;
