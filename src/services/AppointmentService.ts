@@ -1,10 +1,9 @@
 import api from './api';
-import { format, parseISO, addDays, startOfWeek, differenceInHours } from 'date-fns';
-import { fr } from 'date-fns/locale'; // Localisation française pour les formats de date
+import { format, parseISO, addDays, startOfWeek } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { AuthService } from './AuthService';
 import { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
 
 export interface Appointment {
   lieu: ReactNode;

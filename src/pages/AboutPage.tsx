@@ -44,7 +44,7 @@ const AboutPage = () => {
                 <li>Gestion simple et intuitive des rendez-vous</li>
                 <li>Vue hebdomadaire pour une meilleure organisation</li>
                 <li>Recherche rapide de rendez-vous</li>
-                <li>Notifications et rappels (à venir)</li>
+                <li>Notifications et rappels (Version Beta)</li>
                 <li>Partage de calendrier avec vos collaborateurs (à venir)</li>
                 <li>Application mobile (à venir)</li>
               </ul>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays, isToday, parseISO, isSameDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { AppointmentService, Appointment } from '../services/AppointmentService';
-//import { useNotificationService } from '../services/NotificationService'; // ✅ Correction ici
+import { useNotificationService } from '../services/NotificationService'; // ✅ Correction ici
 import { toast } from 'sonner';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  //const { resetNotifications } = useNotificationService(appointments); // ✅ Hook utilisé ici
+  const { resetNotifications } = useNotificationService(appointments); // ✅ Hook utilisé ici
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -32,7 +32,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
     };
 
     fetchAppointments();
-    //resetNotifications();
+    resetNotifications();
   }, []);
 
   const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
