@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -39,6 +39,8 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEmailChecking, setIsEmailChecking] = useState(false);
+  const [isEmailAvailable, setIsEmailAvailable] = useState(true);
   const currentUser = AuthService.getCurrentUser();
   const navigate = useNavigate();
   
@@ -56,8 +58,48 @@ const RegisterPage = () => {
       acceptTerms: false
     },
   });
+
+  // Email validation with debounce
+  useEffect(() => {
+    const email = form.watch('email');
+    let debounceTimer: NodeJS.Timeout;
+
+    const checkEmail = async () => {
+      if (!email || !email.includes('@')) return;
+
+      setIsEmailChecking(true);
+      try {
+        const emailExists = await AuthService.checkEmail(email);
+        setIsEmailAvailable(!emailExists);
+        if (emailExists) {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Cet email est déjà utilisé'
+          });
+          toast.error('Cet email est déjà utilisé');
+        } else {
+          form.clearErrors('email');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de l\'email:', error);
+      } finally {
+        setIsEmailChecking(false);
+      }
+    };
+
+    if (email) {
+      debounceTimer = setTimeout(checkEmail, 500);
+    }
+
+    return () => clearTimeout(debounceTimer);
+  }, [form.watch('email')]);
   
   const onSubmit = async (values: FormValues) => {
+    if (!isEmailAvailable) {
+      toast.error('Cet email est déjà utilisé');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -87,6 +129,8 @@ const RegisterPage = () => {
   if (currentUser) {
     return <Navigate to="/" />;
   }
+
+  const isFormDisabled = !isEmailAvailable || isEmailChecking || isSubmitting;
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -132,7 +176,19 @@ const RegisterPage = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="" {...field} />
+                    <div className="relative">
+                      <Input 
+                        type="email" 
+                        placeholder="" 
+                        {...field} 
+                        className={!isEmailAvailable ? "border-red-500" : ""}
+                      />
+                      {isEmailChecking && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -263,7 +319,11 @@ const RegisterPage = () => {
               )}
             />
             
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button 
+              type="submit" 
+              disabled={isFormDisabled} 
+              className="w-full"
+            >
               {isSubmitting ? "Inscription en cours..." : "S'inscrire"}
             </Button>
             
