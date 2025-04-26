@@ -91,34 +91,34 @@ const DashboardPage = () => {
 
         <div className="mb-6 flex flex-wrap gap-3">
           <Button 
-            className="flex items-center gap-2 bg-green-500 hover:bg-green-600" 
+            className="flex items-center gap-2 bg-green-500 hover:bg-green-600 card-3d" 
             onClick={handleOpenAdd}
           >
-            <PlusCircle className="h-4 w-4" />
+            <PlusCircle className="h-4 w-4 " />
             Ajouter un rendez-vous
           </Button>
 
           <Button 
             variant="outline"
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white" 
+            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white card-3d" 
             onClick={() => handleOpenEdit()}
           >
-            <Edit className="h-4 w-4" />
+            <Edit className="h-4 w-4 " />
             Modifier un rendez-vous
           </Button>
 
           <Button 
             variant="destructive" 
-            className="flex items-center gap-2" 
+            className="flex items-center gap-2 card-3d" 
             onClick={handleOpenDelete}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 " />
             Supprimer un rendez-vous
           </Button>
 
           <Button 
             variant="outline"
-            className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white" 
+            className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white card-3d" 
             onClick={handleOpenSearch}
           >
             <Search className="h-4 w-4" />
@@ -126,7 +126,7 @@ const DashboardPage = () => {
           </Button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6 card-3d">
           <WeekCalendar 
             key={`calendar-${refreshTrigger}`} 
             onAppointmentClick={handleViewAppointment} 

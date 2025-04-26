@@ -63,14 +63,14 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
         <div className="flex space-x-2">
           <button
             onClick={previousWeek}
-            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center"
+            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center card-3d"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Précédent
           </button>
           <button
             onClick={nextWeek}
-            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center"
+            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center card-3d"
           >
             <ArrowRight className="h-4 w-4 mr-2" />
             Suivant
@@ -119,12 +119,12 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
           return (
             <div
               key={dayIndex}
-              className={`p-1 border-r last:border-r-0 ${
+              className={`p-1 border-r last:border-r-0 card-3d ${
                 isToday(day) ? 'bg-blue-50' : ''
               }`}
             >
               {sortedAppointments.length > 0 ? (
-                <div className="space-y-1">
+                <div className="space-y-1 card-3d">
                   {sortedAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
