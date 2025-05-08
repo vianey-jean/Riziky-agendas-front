@@ -2,11 +2,11 @@
 import axios from 'axios';
 
 // Définition de l'URL de base de l'API
-const API_URL = 'https://riziky-agendas.onrender.com/api';
+const AUTH_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Création d'une instance Axios avec une configuration par défaut
 const api = axios.create({
-  baseURL: API_URL,                        // Toutes les requêtes utiliseront cette URL de base
+  baseURL: `${AUTH_BASE_URL}/api`,                        // Toutes les requêtes utiliseront cette URL de base
   headers: {
     'Content-Type': 'application/json',   // Format des données envoyées : JSON
   },
