@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -41,6 +42,7 @@ const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmailChecking, setIsEmailChecking] = useState(false);
   const [isEmailAvailable, setIsEmailAvailable] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const currentUser = AuthService.getCurrentUser();
   const navigate = useNavigate();
   
@@ -94,6 +96,11 @@ const RegisterPage = () => {
     return () => clearTimeout(debounceTimer);
   }, [form.watch('email')]);
   
+  // Gestionnaire pour vérifier la validité du mot de passe
+  const handlePasswordValidityChange = (isValid: boolean) => {
+    setIsPasswordValid(isValid);
+  };
+  
   const onSubmit = async (values: FormValues) => {
     if (!isEmailAvailable) {
       toast.error('Cet email est déjà utilisé');
@@ -130,7 +137,7 @@ const RegisterPage = () => {
     return <Navigate to="/" />;
   }
 
-  const isFormDisabled = !isEmailAvailable || isEmailChecking || isSubmitting;
+  const isFormDisabled = !isEmailAvailable || isEmailChecking || isSubmitting || !isPasswordValid;
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -267,7 +274,10 @@ const RegisterPage = () => {
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
-                  <PasswordStrengthIndicator password={field.value} />
+                  <PasswordStrengthIndicator 
+                    password={field.value} 
+                    onValidityChange={handlePasswordValidityChange}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

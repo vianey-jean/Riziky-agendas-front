@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Info, Reply, LogIn, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,15 +18,17 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuthService } from '@/services/AuthService';
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
-import {LogIn, Info, Reply} from 'lucide-react'
-// Schéma de validation pour l’étape email
+import { toast } from '@/components/ui/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+
+// Schéma de validation pour l'étape email
 const emailSchema = z.object({
   email: z.string().email({
     message: "Veuillez entrer une adresse email valide.",
   }),
 });
 
-// Schéma de validation pour l’étape mot de passe
+// Schéma de validation pour l'étape mot de passe
 const passwordSchema = z.object({
   email: z.string().email(),
   password: z.string()
@@ -43,10 +46,12 @@ const LoginPage = () => {
   const [emailValue, setEmailValue] = useState('');
   const [password, setPassword] = useState('');
   const [emailNotFound, setEmailNotFound] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const navigate = useNavigate();
 
-  // Formulaire de saisie de l’email
+  // Formulaire de saisie de l'email
   const emailForm = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
@@ -64,7 +69,7 @@ const LoginPage = () => {
     mode: "onChange"
   });
 
-  // Soumission de l’email
+  // Soumission de l'email
   const onSubmitEmail = async (values: z.infer<typeof emailSchema>) => {
     setIsSubmitting(true);
     setEmailNotFound(false);
@@ -89,20 +94,26 @@ const LoginPage = () => {
     if (step === 'password') {
       passwordForm.setValue('password', '');
       setPassword('');
+      setLoginError(null);
+      setIsPasswordValid(false);
     }
   }, [step, passwordForm]);
+
+  // Gestionnaire pour vérifier la validité du mot de passe
+  const handlePasswordValidityChange = (isValid: boolean) => {
+    setIsPasswordValid(isValid);
+  };
 
   // Soumission du mot de passe
   const onSubmitPassword = async (values: z.infer<typeof passwordSchema>) => {
     setIsSubmitting(true);
+    setLoginError(null);
     try {
       const success = await AuthService.login(values.email, values.password);
       if (success) {
         navigate('/dashboard', { replace: true });
       } else {
-        passwordForm.setError('password', {
-          message: "Mot de passe incorrect"
-        });
+        setLoginError("Mot de passe incorrect");
       }
     } finally {
       setIsSubmitting(false);
@@ -192,7 +203,18 @@ const LoginPage = () => {
                           </div>
                         </FormControl>
                         <FormMessage />
-                        <PasswordStrengthIndicator password={password} />
+                        {loginError && (
+                          <Alert variant="destructive" className="mt-2">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                              {loginError}
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                        <PasswordStrengthIndicator 
+                          password={password} 
+                          onValidityChange={handlePasswordValidityChange}
+                        />
                       </FormItem>
                     )}
                   />
@@ -209,7 +231,7 @@ const LoginPage = () => {
                     <Button 
                       type="submit" 
                       className="w-1/2" 
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !isPasswordValid}
                     >
                       <LogIn className="mr-1 h-4 w-4" />
                       {isSubmitting ? "Connexion..." : "Se connecter"}

@@ -47,6 +47,7 @@ const ForgotPasswordPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState<'email' | 'password'>('email');
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   
   const navigate = useNavigate();
   
@@ -80,6 +81,11 @@ const ForgotPasswordPage = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+  
+  // Vérification de la validité du mot de passe
+  const handlePasswordValidityChange = (isValid: boolean) => {
+    setIsPasswordValid(isValid);
   };
   
   // Soumission du formulaire de mot de passe
@@ -172,7 +178,10 @@ const ForgotPasswordPage = () => {
                           </div>
                         </FormControl>
                         <FormMessage />
-                        <PasswordStrengthIndicator password={password} />
+                        <PasswordStrengthIndicator 
+                          password={password} 
+                          onValidityChange={handlePasswordValidityChange}
+                        />
                       </FormItem>
                     )}
                   />
@@ -212,7 +221,7 @@ const ForgotPasswordPage = () => {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={isSubmitting || !passwordForm.formState.isValid}
+                    disabled={isSubmitting || !isPasswordValid}
                   >
                     {isSubmitting ? "Mise à jour en cours..." : "Réinitialiser le mot de passe"}
                   </Button>
