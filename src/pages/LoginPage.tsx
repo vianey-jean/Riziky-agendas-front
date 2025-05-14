@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff, Info, Reply, LogIn, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Info, Reply, LogIn, AlertCircle, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -51,7 +50,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  // Formulaire de saisie de l'email
   const emailForm = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
@@ -59,7 +57,6 @@ const LoginPage = () => {
     },
   });
 
-  // Formulaire de saisie du mot de passe
   const passwordForm = useForm<z.infer<typeof passwordSchema>>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
@@ -69,7 +66,6 @@ const LoginPage = () => {
     mode: "onChange"
   });
 
-  // Soumission de l'email
   const onSubmitEmail = async (values: z.infer<typeof emailSchema>) => {
     setIsSubmitting(true);
     setEmailNotFound(false);
@@ -82,7 +78,7 @@ const LoginPage = () => {
       } else {
         setEmailNotFound(true);
         emailForm.setError('email', {
-          message: "Cet profil n'existe pas."
+          message: "Ce profil n'existe pas."
         });
       }
     } finally {
@@ -99,12 +95,10 @@ const LoginPage = () => {
     }
   }, [step, passwordForm]);
 
-  // Gestionnaire pour vérifier la validité du mot de passe
   const handlePasswordValidityChange = (isValid: boolean) => {
     setIsPasswordValid(isValid);
   };
 
-  // Soumission du mot de passe
   const onSubmitPassword = async (values: z.infer<typeof passwordSchema>) => {
     setIsSubmitting(true);
     setLoginError(null);
@@ -203,14 +197,27 @@ const LoginPage = () => {
                           </div>
                         </FormControl>
                         <FormMessage />
+
                         {loginError && (
-                          <Alert variant="destructive" className="mt-2">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>
-                              {loginError}
-                            </AlertDescription>
-                          </Alert>
+                          <div className="space-y-2 mt-2">
+                            <Alert variant="destructive">
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertDescription>
+                                {loginError}
+                              </AlertDescription>
+                            </Alert>
+                            <div className="text-sm text-center">
+                              <Link
+                                to="/mot-de-passe-oublie"
+                                className="text-blue-600 underline flex items-center justify-center gap-1"
+                              >
+                                <KeyRound className="w-4 h-4" />
+                                Mot de passe oublié ?
+                              </Link>
+                            </div>
+                          </div>
                         )}
+
                         <PasswordStrengthIndicator 
                           password={password} 
                           onValidityChange={handlePasswordValidityChange}
@@ -225,7 +232,7 @@ const LoginPage = () => {
                       onClick={() => setStep('email')} 
                       className="w-1/2"
                     >
-                       <Reply className="mr-1 h-4 w-4" />
+                      <Reply className="mr-1 h-4 w-4" />
                       Retour
                     </Button>
                     <Button 

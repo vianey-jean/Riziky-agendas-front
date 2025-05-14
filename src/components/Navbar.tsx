@@ -121,11 +121,11 @@ export const Navbar = () => {
               
               {currentUser ? (
                 <div className="flex items-center space-x-4">
-                  <span className="text-foreground">
+                  <span className="text-foreground text-green-600 font-bold">
                     {currentUser.prenom} {currentUser.nom}
                   </span>
                   <Button onClick={handleLogout} variant="outline">
-                    <LogOut className="h-4 w-4 mr-2" />
+                    <LogOut className="h-4 w-4 mr-2 " />
                     Déconnexion
                   </Button>
                 </div>

@@ -1,23 +1,25 @@
-// Importation des composants nécessaires pour la page d'accueil
-import { Link } from 'react-router-dom'; // Permet de créer des liens pour la navigation entre les pages
-import { Button } from '@/components/ui/button'; // Composant de bouton pour les actions utilisateur
-import WeekCalendar from '@/components/Weekcalendar'; // Composant personnalisé pour afficher le calendrier de la semaine
-import { AuthService } from '@/services/AuthService'; // Service d'authentification pour gérer l'utilisateur actuel
-import { Info, LogIn } from 'lucide-react'; // Icônes utilisées pour l'interface
-import { Appointment } from '@/services/AppointmentService'; // Typage des rendez-vous
-import { toast } from 'sonner'; // Pour afficher des notifications
 
-// Définition du composant HomePage
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import WeekCalendar from '@/components/Weekcalendar';
+import { AuthService } from '@/services/AuthService';
+import { Info, LogIn } from 'lucide-react';
+import { Appointment } from '@/services/AppointmentService';
+import { toast } from 'sonner';
+
+/**
+ * Composant pour la page d'accueil
+ * Présente l'application et affiche un calendrier hebdomadaire
+ */
 const HomePage = () => {
   // Vérifie si l'utilisateur est actuellement authentifié
   const currentUser = AuthService.getCurrentUser();
 
-  // Fonction appelée quand on clique sur un rendez-vous
-  
-
+  /**
+   * Affiche un toast avec les détails du rendez-vous lorsqu'on clique dessus
+   */
   const handleAppointmentClick = (appointment: Appointment) => {
-    toast.success(`Rendez-vous : ${appointment.titre} à ${appointment.heure}  au : ${appointment.location}`, {
-      
+    toast.success(`Rendez-vous : ${appointment.titre} à ${appointment.heure} au : ${appointment.location}`, {
       duration: 3000, // 3 secondes
       style: {
         background: 'green',     // Fond vert
@@ -30,7 +32,6 @@ const HomePage = () => {
     });
   };
   
-
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Conteneur principal */}
@@ -42,7 +43,7 @@ const HomePage = () => {
             La solution simple et efficace pour gérer vos rendez-vous
           </p>
 
-          {/* Si l'utilisateur n'est pas connecté */}
+          {/* Si l'utilisateur n'est pas connecté, afficher les boutons d'inscription/connexion */}
           {!currentUser && (
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
               <Link to="/inscription">

@@ -1,22 +1,34 @@
+
 import React, { useState, useEffect } from 'react';
-import { format, startOfWeek, addDays, isToday, parseISO, isSameDay } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { startOfWeek, addDays, parseISO, isSameDay } from 'date-fns';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { useNotificationService } from '@/services/NotificationService';
 import { toast } from 'sonner';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import CalendarHeader from './CalendarHeader';
+import CalendarDayHeader from './CalendarDayHeader';
+import CalendarDay from './CalendarDay';
 
+/**
+ * Props pour le calendrier hebdomadaire
+ */
 interface WeekCalendarProps {
   onAppointmentClick: (appointment: Appointment) => void;
 }
 
+/**
+ * Composant de calendrier hebdomadaire
+ * Affiche les rendez-vous sur une semaine avec navigation
+ */
 const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
+  // États pour gérer la date courante, les rendez-vous et le chargement
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Service de notifications pour les rappels de rendez-vous
   const { resetNotifications } = useNotificationService(appointments);
 
+  // Récupère tous les rendez-vous lors du premier chargement
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -35,17 +47,21 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
     resetNotifications();
   }, []);
 
+  // Calcul des jours de la semaine courante
   const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(startOfCurrentWeek, i));
 
+  // Navigation vers la semaine précédente
   const previousWeek = () => {
     setCurrentDate(addDays(currentDate, -7));
   };
 
+  // Navigation vers la semaine suivante
   const nextWeek = () => {
     setCurrentDate(addDays(currentDate, 7));
   };
 
+  // Filtre les rendez-vous pour une date spécifique
   const getAppointmentsForDate = (date: Date) => {
     return appointments.filter((appointment) => {
       const appointmentDate = parseISO(appointment.date);
@@ -53,101 +69,45 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick }) => {
     });
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      {/* En-tête du calendrier */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-lg font-semibold">Calendrier Hebdomadaire</h2>
-        <div className="flex space-x-2">
-          <button
-            onClick={previousWeek}
-            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center card-3d"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Précédent
-          </button>
-          <button
-            onClick={nextWeek}
-            className="px-3 py-1 rounded border hover:bg-gray-100 flex items-center card-3d"
-          >
-            <ArrowRight className="h-4 w-4 mr-2" />
-            Suivant
-          </button>
-        </div>
-      </div>
-
-      {/* Affichage des jours */}
-      {loading ? (
+  // Affichage d'un indicateur de chargement pendant la récupération des données
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="p-6 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-2 text-gray-600">Chargement des rendez-vous...</p>
         </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-7 border-b">
-            {days.map((day, index) => (
-              <div
-                key={index}
-                className={`p-2 text-center border-r last:border-r-0 ${
-                  isToday(day) ? 'bg-blue-50' : ''
-                }`}
-              >
-                <p className="font-medium">{format(day, 'EEE', { locale: fr })}</p>
-                <p
-                  className={`text-sm ${
-                    isToday(day)
-                      ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center mx-auto'
-                      : ''
-                  }`}
-                >
-                  {format(day, 'd', { locale: fr })}
-                </p>
-              </div>
-            ))}
-          </div>
+      </div>
+    );
+  }
 
-          {/* Affichage des rendez-vous */}
-          <div className="grid grid-cols-7 min-h-[300px]">
-            {days.map((day, dayIndex) => {
-              const dayAppointments = getAppointmentsForDate(day);
-              const sortedAppointments = [...dayAppointments].sort((a, b) => {
-                const [aHours, aMinutes] = a.heure.split(':').map(Number);
-                const [bHours, bMinutes] = b.heure.split(':').map(Number);
-                return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
-              });
+  return (
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* En-tête du calendrier avec boutons de navigation */}
+      <CalendarHeader 
+        title="Calendrier Hebdomadaire"
+        onPrevious={previousWeek}
+        onNext={nextWeek}
+      />
 
-              return (
-                <div
-                  key={dayIndex}
-                  className={`p-1 border-r last:border-r-0 card-3d ${
-                    isToday(day) ? 'bg-blue-50' : ''
-                  }`}
-                >
-                  {sortedAppointments.length > 0 ? (
-                    <div className="space-y-1">
-                      {sortedAppointments.map((appointment) => (
-                        <div
-                          key={appointment.id}
-                          onClick={() => onAppointmentClick(appointment)}
-                          className="p-2 text-xs bg-rose-100 border-l-4 border-rose-500 rounded hover:bg-rose-200 cursor-pointer"
-                        >
-                          <p className="font-semibold truncate">{appointment.titre}</p>
-                          <p className="text-rose-700">{appointment.heure}</p>
-                          <p className="truncate text-gray-600">{appointment.location}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="h-full flex items-center justify-center">
-                      <p className="text-xs text-gray-400">Aucun rendez-vous</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
+      {/* En-têtes des jours de la semaine */}
+      <div className="grid grid-cols-7 border-b">
+        {days.map((day, index) => (
+          <CalendarDayHeader key={index} day={day} />
+        ))}
+      </div>
+
+      {/* Contenu du calendrier avec les rendez-vous pour chaque jour */}
+      <div className="grid grid-cols-7 min-h-[300px]">
+        {days.map((day, dayIndex) => (
+          <CalendarDay 
+            key={dayIndex} 
+            day={day}
+            appointments={getAppointmentsForDate(day)}
+            onAppointmentClick={onAppointmentClick}
+          />
+        ))}
+      </div>
     </div>
   );
 };
