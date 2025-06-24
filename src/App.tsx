@@ -24,7 +24,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
-import NotFoundPage from './pages/NotFound';
+import NotFoundPage from './pages/NotFoundPage';
 
 
 // Création d'un client React Query pour gérer les requêtes réseau, le cache, etc.
