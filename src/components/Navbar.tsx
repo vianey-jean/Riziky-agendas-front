@@ -103,7 +103,7 @@ export const Navbar = () => {
               </Link>
               {currentUser && (
                 <Link to="/dashboard" className="nav-link relative font-bold text-purple-600 hover:text-purple-700 transition-colors duration-200 group">
-                  Prise RDV
+                  Tableau de Bord
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-pink-600"></span>
                 </Link>
               )}
@@ -143,7 +143,7 @@ export const Navbar = () => {
               {currentUser ? (
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <div className="text-sm font-semibold text-gray-800">
+                    <div className="text-sm font-semibold text-red-800">
                       {currentUser.prenom} {currentUser.nom}
                     </div>
                     <div className="text-xs text-green-600 font-medium">Connecté</div>
@@ -228,7 +228,7 @@ export const Navbar = () => {
                     className="block px-4 py-3 rounded-lg text-base font-bold text-purple-600 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Prise RDV
+                    tableau de Bord
                   </Link>
                   <div className="px-4 py-2 bg-green-50 rounded-lg">
                     <div className="font-bold text-green-800">
