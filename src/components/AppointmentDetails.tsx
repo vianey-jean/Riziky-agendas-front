@@ -74,7 +74,7 @@ const AppointmentDetails = ({
         <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-transparent"></div>
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-violet-400/20 to-purple-400/20 rounded-full blur-2xl"></div>
         
-        <div className="relative z-10">
+        <div className="relative z-10 overflow-y-auto max-h-[90vh] pr-1">
           <DialogHeader className="pb-6 border-b border-gray-200/50">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
