@@ -7,6 +7,7 @@ import CalendarHeader from './CalendarHeader';
 import CalendarDayHeader from './CalendarDayHeader';
 import CalendarDay from './CalendarDay';
 import { Calendar, Sparkles, Crown, Star } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
  * Props pour le calendrier hebdomadaire
@@ -26,6 +27,8 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
   onAppointmentDrop,
   enableDragAndDrop = true 
 }) => {
+  const isMobile = useIsMobile();
+  
   // États pour gérer la date courante, les rendez-vous et le chargement
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -183,15 +186,21 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
         onNext={nextWeek}
       />
 
-      {/* En-têtes des jours de la semaine premium */}
-      <div className="grid grid-cols-7 bg-gradient-to-r from-primary/5 to-purple-500/5 border-b border-primary/20">
-        {days.map((day, index) => (
-          <CalendarDayHeader key={index} day={day} />
-        ))}
-      </div>
+      {/* En-têtes des jours de la semaine premium - masqué sur mobile */}
+      {!isMobile && (
+        <div className="grid grid-cols-7 bg-gradient-to-r from-primary/5 to-purple-500/5 border-b border-primary/20">
+          {days.map((day, index) => (
+            <CalendarDayHeader key={index} day={day} />
+          ))}
+        </div>
+      )}
 
       {/* Contenu du calendrier avec les rendez-vous pour chaque jour */}
-      <div className="grid grid-cols-7 min-h-[400px] bg-gradient-to-br from-white via-primary/2 to-purple-500/5">
+      <div className={`${
+        isMobile 
+          ? 'flex flex-col bg-gradient-to-b from-white via-primary/2 to-purple-500/5 max-h-[600px] overflow-y-auto premium-scroll'
+          : 'grid grid-cols-7 min-h-[400px] bg-gradient-to-br from-white via-primary/2 to-purple-500/5'
+      }`}>
         {days.map((day, dayIndex) => (
           <CalendarDay 
             key={dayIndex} 

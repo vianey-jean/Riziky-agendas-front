@@ -1,6 +1,7 @@
 
 import { Appointment } from '@/services/AppointmentService';
 import { Clock, MapPin, Sparkles, Calendar, Star } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
  * Props pour un rendez-vous dans le calendrier
@@ -21,6 +22,8 @@ const CalendarAppointment = ({
   onDragStart,
   enableDragAndDrop = true 
 }: CalendarAppointmentProps) => {
+  const isMobile = useIsMobile();
+  
   const handleDragStart = (e: React.DragEvent) => {
     if (!enableDragAndDrop) {
       e.preventDefault();
@@ -40,6 +43,64 @@ const CalendarAppointment = ({
     onClick(appointment);
   };
 
+  // Version mobile compacte
+  if (isMobile) {
+    return (
+      <div
+        draggable={enableDragAndDrop}
+        onDragStart={enableDragAndDrop ? handleDragStart : undefined}
+        onClick={handleClick}
+        className={`group relative p-3 appointment-luxury text-white rounded-xl premium-shadow overflow-hidden glow-effect ${
+          enableDragAndDrop ? 'cursor-grab active:cursor-grabbing premium-hover' : 'cursor-pointer'
+        }`}
+        style={{ userSelect: 'none' }}
+      >
+        {/* Luxury background decoration */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute top-1 right-1 w-8 h-8 bg-white/10 rounded-full blur-lg"></div>
+        
+        {/* Premium border effect */}
+        <div className="absolute inset-0 rounded-xl border border-white/20 group-hover:border-white/40 transition-all duration-300"></div>
+        
+        <div className="relative z-10">
+          {/* Title et heure sur la même ligne */}
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                <Calendar className="w-3 h-3 text-white" />
+              </div>
+              <p className="font-bold text-sm text-white group-hover:text-white/90 transition-colors truncate">
+                {appointment.titre}
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-white/90 font-medium">
+              <Clock className="w-3 h-3 flex-shrink-0" />
+              <span>{appointment.heure}</span>
+            </div>
+          </div>
+          
+          {/* Location */}
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-white/15 rounded flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-2 h-2 text-white/90" />
+            </div>
+            <p className="text-xs text-white/90 truncate font-medium">{appointment.location}</p>
+          </div>
+        </div>
+        
+        {/* Premium hover indicators */}
+        <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <div className="w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse"></div>
+          <div className="w-1 h-1 bg-yellow-400 rounded-full animate-pulse delay-75"></div>
+        </div>
+        
+        {/* Luxury shine effect */}
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
+      </div>
+    );
+  }
+
+  // Version desktop originale
   return (
     <div
       draggable={enableDragAndDrop}
