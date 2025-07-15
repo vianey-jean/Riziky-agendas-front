@@ -9,13 +9,24 @@ type CalendarAppointmentProps = {
   appointment: Appointment;
   onClick: (appointment: Appointment) => void;
   onDragStart?: (appointment: Appointment, e: React.DragEvent) => void;
+  enableDragAndDrop?: boolean;
 };
 
 /**
  * Composant pour afficher un rendez-vous dans le calendrier avec design moderne et drag & drop
  */
-const CalendarAppointment = ({ appointment, onClick, onDragStart }: CalendarAppointmentProps) => {
+const CalendarAppointment = ({ 
+  appointment, 
+  onClick, 
+  onDragStart,
+  enableDragAndDrop = true 
+}: CalendarAppointmentProps) => {
   const handleDragStart = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) {
+      e.preventDefault();
+      return;
+    }
+    
     console.log('Drag start for appointment:', appointment.titre);
     e.dataTransfer.setData('text/plain', JSON.stringify(appointment));
     e.dataTransfer.effectAllowed = 'move';
@@ -31,10 +42,12 @@ const CalendarAppointment = ({ appointment, onClick, onDragStart }: CalendarAppo
 
   return (
     <div
-      draggable={true}
-      onDragStart={handleDragStart}
+      draggable={enableDragAndDrop}
+      onDragStart={enableDragAndDrop ? handleDragStart : undefined}
       onClick={handleClick}
-      className="group relative p-4 appointment-luxury text-white rounded-2xl premium-shadow cursor-grab active:cursor-grabbing premium-hover overflow-hidden glow-effect"
+      className={`group relative p-4 appointment-luxury text-white rounded-2xl premium-shadow overflow-hidden glow-effect ${
+        enableDragAndDrop ? 'cursor-grab active:cursor-grabbing premium-hover' : 'cursor-pointer'
+      }`}
       style={{ userSelect: 'none' }}
     >
       {/* Luxury background decoration */}

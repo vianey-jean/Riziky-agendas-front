@@ -115,7 +115,10 @@ const HomePage = () => {
               </h2>
               <p className="text-center text-gray-600">Visualisez vos rendez-vous en un coup d'œil</p>
             </div>
-            <WeekCalendar onAppointmentClick={handleAppointmentClick} />
+            <WeekCalendar 
+              onAppointmentClick={handleAppointmentClick} 
+              enableDragAndDrop={false}
+            />
           </div>
         </div>
       </div>

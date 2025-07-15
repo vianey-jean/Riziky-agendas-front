@@ -16,13 +16,23 @@ type CalendarDayProps = {
   onDragStart?: (appointment: Appointment, e: React.DragEvent) => void;
   onCancelDrop?: () => void;
   onConfirmDrop?: (appointment: Appointment) => void;
+  enableDragAndDrop?: boolean;
 };
 
 /**
  * Composant pour afficher un jour dans le calendrier hebdomadaire moderne
  * avec tous les rendez-vous associés à ce jour et support du drag & drop
  */
-const CalendarDay = ({ day, appointments, onAppointmentClick, onDrop, onDragStart, onCancelDrop, onConfirmDrop }: CalendarDayProps) => {
+const CalendarDay = ({ 
+  day, 
+  appointments, 
+  onAppointmentClick, 
+  onDrop, 
+  onDragStart, 
+  onCancelDrop, 
+  onConfirmDrop,
+  enableDragAndDrop = true 
+}: CalendarDayProps) => {
   // Trier les rendez-vous par heure
   const sortedAppointments = [...appointments].sort((a, b) => {
     const [aHours, aMinutes] = a.heure.split(':').map(Number);
@@ -33,11 +43,13 @@ const CalendarDay = ({ day, appointments, onAppointmentClick, onDrop, onDragStar
   const isCurrentDay = isToday(day);
 
   const handleDragOver = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDrop = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
     e.preventDefault();
     console.log('Drop event triggered on day:', format(day, 'yyyy-MM-dd'));
     
@@ -59,19 +71,21 @@ const CalendarDay = ({ day, appointments, onAppointmentClick, onDrop, onDragStar
   };
 
   const handleDragEnter = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
     e.preventDefault();
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
     e.preventDefault();
   };
 
   return (
     <div 
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+      onDragOver={enableDragAndDrop ? handleDragOver : undefined}
+      onDragEnter={enableDragAndDrop ? handleDragEnter : undefined}
+      onDragLeave={enableDragAndDrop ? handleDragLeave : undefined}
+      onDrop={enableDragAndDrop ? handleDrop : undefined}
       className={`p-4 border-r last:border-r-0 min-h-[400px] transition-all duration-300 relative group premium-hover ${
         isCurrentDay 
           ? 'bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30' 
@@ -95,7 +109,8 @@ const CalendarDay = ({ day, appointments, onAppointmentClick, onDrop, onDragStar
               key={appointment.id} 
               appointment={appointment} 
               onClick={onAppointmentClick}
-              onDragStart={onDragStart}
+              onDragStart={enableDragAndDrop ? onDragStart : undefined}
+              enableDragAndDrop={enableDragAndDrop}
             />
           ))}
           

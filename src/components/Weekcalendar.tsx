@@ -14,13 +14,18 @@ import { Calendar, Sparkles, Crown, Star } from 'lucide-react';
 interface WeekCalendarProps {
   onAppointmentClick: (appointment: Appointment) => void;
   onAppointmentDrop?: (appointment: Appointment, newDate: Date, originalAppointment: Appointment) => void;
+  enableDragAndDrop?: boolean;
 }
 
 /**
  * Composant de calendrier hebdomadaire
  * Affiche les rendez-vous sur une semaine avec navigation et drag & drop
  */
-const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick, onAppointmentDrop }) => {
+const WeekCalendar: React.FC<WeekCalendarProps> = ({ 
+  onAppointmentClick, 
+  onAppointmentDrop,
+  enableDragAndDrop = true 
+}) => {
   // États pour gérer la date courante, les rendez-vous et le chargement
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -74,6 +79,8 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick, onAppoi
 
   // Gestion du début du drag
   const handleDragStart = (appointment: Appointment, e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
+    
     console.log('Week calendar - drag start:', appointment.titre);
     setDraggedAppointment(appointment);
     // Conserver l'état original du rendez-vous
@@ -82,6 +89,8 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick, onAppoi
 
   // Gestion du drop
   const handleDrop = (appointment: Appointment, newDate: Date) => {
+    if (!enableDragAndDrop) return;
+    
     console.log('Week calendar - handleDrop called with:', {
       appointmentId: appointment.id,
       appointmentTitle: appointment.titre,
@@ -189,10 +198,11 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ onAppointmentClick, onAppoi
             day={day}
             appointments={getAppointmentsForDate(day)}
             onAppointmentClick={onAppointmentClick}
-            onDrop={handleDrop}
-            onDragStart={handleDragStart}
-            onCancelDrop={handleCancelDrop}
-            onConfirmDrop={handleConfirmDrop}
+            onDrop={enableDragAndDrop ? handleDrop : undefined}
+            onDragStart={enableDragAndDrop ? handleDragStart : undefined}
+            onCancelDrop={enableDragAndDrop ? handleCancelDrop : undefined}
+            onConfirmDrop={enableDragAndDrop ? handleConfirmDrop : undefined}
+            enableDragAndDrop={enableDragAndDrop}
           />
         ))}
       </div>
