@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import WeekCalendar from '@/components/Weekcalendar';
 import AppointmentForm from '@/components/AppointmentForm';
 import AppointmentSelector from '@/components/AppointmentSelector';
@@ -15,6 +16,8 @@ import { Calendar, Sparkles, Zap, Star, Crown, Diamond } from 'lucide-react';
  * Centre de gestion des rendez-vous avec calendrier et actions CRUD
  */
 const DashboardPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  
   // États pour gérer les rendez-vous et les différentes modales
   const [activeAppointment, setActiveAppointment] = useState<Appointment | null>(null);
   const [originalAppointment, setOriginalAppointment] = useState<Appointment | null>(null);
@@ -24,6 +27,30 @@ const DashboardPage = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Gérer le paramètre edit de l'URL
+  useEffect(() => {
+    const editId = searchParams.get('edit');
+    if (editId) {
+      const appointmentId = parseInt(editId, 10);
+      if (!isNaN(appointmentId)) {
+        // Charger le rendez-vous à modifier
+        AppointmentService.getById(appointmentId).then(appointment => {
+          if (appointment) {
+            setActiveAppointment(appointment);
+            setIsAddModalOpen(true);
+            // Nettoyer le paramètre URL
+            setSearchParams(params => {
+              params.delete('edit');
+              return params;
+            });
+          }
+        }).catch(error => {
+          console.error('Erreur lors du chargement du rendez-vous:', error);
+        });
+      }
+    }
+  }, [searchParams, setSearchParams]);
 
   const refreshData = () => {
     setRefreshTrigger(prev => prev + 1);

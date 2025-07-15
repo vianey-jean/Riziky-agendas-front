@@ -296,13 +296,18 @@ export const Navbar = () => {
         )}
       </nav>
       
-      {/* ... keep existing code (AppointmentDetails modal) */}
+      {/* AppointmentDetails modal */}
       {selectedAppointment && (
         <AppointmentDetails
           appointment={selectedAppointment}
           open={showAppointmentDetails}
           onOpenChange={setShowAppointmentDetails}
-          onEdit={() => {/* handle edit */}}
+          onEdit={() => {
+            // Fermer le modal et rediriger vers la page de modification
+            setShowAppointmentDetails(false);
+            navigate(`/dashboard?edit=${selectedAppointment.id}`);
+            setSelectedAppointment(null);
+          }}
           onDelete={() => {
             setSelectedAppointment(null);
             setShowAppointmentDetails(false);
