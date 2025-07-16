@@ -133,6 +133,11 @@ export const Navbar = () => {
                         <div className="text-sm text-gray-500 mt-1">
                           {result.date} à {result.heure}
                         </div>
+                        {(result.nom || result.prenom) && (
+                          <div className="text-sm text-gray-600 mt-1">
+                            {result.prenom} {result.nom}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -143,7 +148,7 @@ export const Navbar = () => {
               {currentUser ? (
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <div className="text-sm font-semibold text-red-800">
+                    <div className="text-sm font-semibold text-purple-800">
                       {currentUser.prenom} {currentUser.nom}
                     </div>
                     <div className="text-xs text-green-600 font-medium">Connecté</div>
@@ -231,7 +236,7 @@ export const Navbar = () => {
                     tableau de Bord
                   </Link>
                   <div className="px-4 py-2 bg-green-50 rounded-lg">
-                    <div className="font-bold text-green-800">
+                    <div className="font-bold text-purple-800">
                       {currentUser.prenom} {currentUser.nom}
                     </div>
                     <div className="text-sm text-green-600">Connecté</div>

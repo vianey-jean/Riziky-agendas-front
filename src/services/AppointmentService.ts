@@ -9,6 +9,11 @@ export interface Appointment {
   lieu: ReactNode;
   id: number;
   userId: number;
+  statut?: string;
+  nom?: string;
+  prenom?: string;
+  dateNaissance?: string;
+  telephone?: string;
   titre: string;
   description: string;
   date: string;
@@ -27,6 +32,25 @@ export const AppointmentService = {
         headers: { 'user-id': currentUser.id.toString() }
       });
 
+      // Filtrer seulement les rendez-vous validés pour l'affichage du calendrier
+      const appointments = response.data.appointments || [];
+      return appointments.filter((appointment: Appointment) => appointment.statut === 'validé');
+    } catch (error) {
+      console.error('Erreur lors de la récupération des rendez-vous:', error);
+      return [];
+    }
+  },
+
+  getAllWithStatus: async (): Promise<Appointment[]> => {
+    try {
+      const currentUser = AuthService.getCurrentUser();
+      if (!currentUser) return [];
+
+      const response = await api.get('/appointments', {
+        headers: { 'user-id': currentUser.id.toString() }
+      });
+
+      // Retourner tous les rendez-vous (validés et annulés) pour la recherche
       return response.data.appointments || [];
     } catch (error) {
       console.error('Erreur lors de la récupération des rendez-vous:', error);
@@ -54,14 +78,31 @@ export const AppointmentService = {
     if (query.length < 3) return [];
 
     try {
-      const currentUser = AuthService.getCurrentUser();
-      if (!currentUser) return [];
-
-      const response = await api.get(`/appointments/search/${query}`, {
-        headers: { 'user-id': currentUser.id.toString() }
+      // Utiliser getAllWithStatus pour obtenir tous les rendez-vous
+      const allAppointments = await AppointmentService.getAllWithStatus();
+      
+      // Filtrer localement pour inclure tous les champs
+      const filteredAppointments = allAppointments.filter(appointment => {
+        const searchableFields = [
+          appointment.titre?.toLowerCase() || '',
+          appointment.description?.toLowerCase() || '',
+          appointment.location?.toLowerCase() || '',
+          appointment.nom?.toLowerCase() || '',
+          appointment.prenom?.toLowerCase() || '',
+          appointment.telephone || '',
+          appointment.dateNaissance || '',
+          appointment.date || '',
+          appointment.heure || ''
+        ];
+        
+        const searchTerm = query.toLowerCase();
+        
+        return searchableFields.some(field => 
+          field.includes(searchTerm)
+        );
       });
 
-      return response.data.appointments || [];
+      return filteredAppointments;
     } catch (error) {
       console.error('Erreur lors de la recherche de rendez-vous:', error);
       return [];
@@ -76,6 +117,8 @@ export const AppointmentService = {
         return null;
       }
 
+      console.log('Envoi des données au serveur:', appointment);
+
       const response = await api.post('/appointments', appointment, {
         headers: { 'user-id': currentUser.id.toString() }
       });
@@ -83,6 +126,7 @@ export const AppointmentService = {
       toast.success('Rendez-vous ajouté avec succès');
       return response.data.appointment;
     } catch (error: any) {
+      console.error('Erreur lors de l\'ajout:', error);
       toast.error(error.response?.data?.error || 'Erreur lors de l\'ajout du rendez-vous');
       return null;
     }
@@ -96,6 +140,8 @@ export const AppointmentService = {
         return false;
       }
 
+      console.log('Mise à jour des données au serveur:', appointment);
+
       await api.put(`/appointments/${appointment.id}`, appointment, {
         headers: { 'user-id': currentUser.id.toString() }
       });
@@ -103,6 +149,7 @@ export const AppointmentService = {
       toast.success('Rendez-vous mis à jour avec succès');
       return true;
     } catch (error: any) {
+      console.error('Erreur lors de la mise à jour:', error);
       toast.error(error.response?.data?.error || 'Erreur lors de la mise à jour du rendez-vous');
       return false;
     }
@@ -144,7 +191,9 @@ export const AppointmentService = {
         headers: { 'user-id': (userId || currentUser?.id || 0).toString() }
       });
 
-      return response.data.appointments || [];
+      // Filtrer seulement les rendez-vous validés pour l'affichage du calendrier
+      const appointments = response.data.appointments || [];
+      return appointments.filter((appointment: Appointment) => appointment.statut === 'validé');
     } catch (error) {
       console.error('Erreur lors de la récupération des rendez-vous de la semaine:', error);
       return [];

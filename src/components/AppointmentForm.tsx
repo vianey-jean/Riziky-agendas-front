@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar as CalendarIcon, Clock, Crown, Star, Sparkles } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Crown, Star, Sparkles, User, Phone, Cake, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -20,15 +20,30 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { AuthService } from '@/services/AuthService';
 import { toast } from 'sonner';
 import {Reply, Edit } from 'lucide-react';
+import DateOfBirthInput from './DateOfBirthInput';
 
 // Schéma de validation pour le formulaire
 const formSchema = z.object({
+  statut: z.enum(['validé', 'annulé'], {
+    required_error: "Veuillez sélectionner un statut.",
+  }),
+  nom: z.string().optional(),
+  prenom: z.string().optional(),
+  dateNaissance: z.string().optional(),
+  telephone: z.string().optional(),
   titre: z.string().min(2, {
     message: "Le titre doit contenir au moins 2 caractères.",
   }),
@@ -70,6 +85,11 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: appointment ? {
+      statut: (appointment.statut || 'validé') as 'validé' | 'annulé',
+      nom: appointment.nom || '',
+      prenom: appointment.prenom || '',
+      dateNaissance: appointment.dateNaissance || '',
+      telephone: appointment.telephone || '',
       titre: appointment.titre,
       description: appointment.description,
       date: new Date(appointment.date),
@@ -77,6 +97,11 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
       duree: appointment.duree,
       location: appointment.location,
     } : {
+      statut: 'validé' as const,
+      nom: '',
+      prenom: '',
+      dateNaissance: '',
+      telephone: '',
       titre: "",
       description: "",
       date: new Date(),
@@ -206,6 +231,31 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
+            name="statut"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  Action
+                </FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium">
+                      <SelectValue placeholder="Sélectionner le statut" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="validé">Validé</SelectItem>
+                    <SelectItem value="annulé">Annulé</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="titre"
             render={({ field }) => (
               <FormItem>
@@ -224,6 +274,94 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
               </FormItem>
             )}
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="nom"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Nom (facultatif)
+                  </FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Nom de famille" 
+                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="prenom"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Prénom (facultatif)
+                  </FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Prénom" 
+                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="dateNaissance"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                    <Cake className="w-4 h-4" />
+                    Date de naissance (facultatif)
+                  </FormLabel>
+                  <FormControl>
+                    <DateOfBirthInput 
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="telephone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    Numéro de téléphone (facultatif)
+                  </FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="06 XX XX XX XX" 
+                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField

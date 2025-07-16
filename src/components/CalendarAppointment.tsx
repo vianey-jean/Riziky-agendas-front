@@ -1,6 +1,6 @@
 
 import { Appointment } from '@/services/AppointmentService';
-import { Clock, MapPin, Sparkles, Calendar, Star } from 'lucide-react';
+import { Clock, MapPin, Sparkles, Calendar, Star, User, Phone } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
@@ -79,6 +79,28 @@ const CalendarAppointment = ({
             </div>
           </div>
           
+          {/* Nom/Prénom */}
+          {(appointment.nom || appointment.prenom) && (
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-4 h-4 bg-white/15 rounded flex items-center justify-center flex-shrink-0">
+                <User className="w-2 h-2 text-white/90" />
+              </div>
+              <p className="text-xs text-white/90 truncate font-medium">
+                {appointment.prenom} {appointment.nom}
+              </p>
+            </div>
+          )}
+
+          {/* Téléphone */}
+          {appointment.telephone && (
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-4 h-4 bg-white/15 rounded flex items-center justify-center flex-shrink-0">
+                <Phone className="w-2 h-2 text-white/90" />
+              </div>
+              <p className="text-xs text-white/90 truncate font-medium">{appointment.telephone}</p>
+            </div>
+          )}
+          
           {/* Location */}
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-white/15 rounded flex items-center justify-center flex-shrink-0">
@@ -100,7 +122,7 @@ const CalendarAppointment = ({
     );
   }
 
-  // Version desktop originale
+  // Version desktop
   return (
     <div
       draggable={enableDragAndDrop}
@@ -133,6 +155,38 @@ const CalendarAppointment = ({
             <Sparkles className="w-3 h-3 text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100" />
           </div>
         </div>
+
+        {/* Nom/Prénom avec style premium */}
+        {(appointment.nom || appointment.prenom) && (
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-6 h-6 bg-white/15 rounded-lg flex items-center justify-center">
+              <User className="w-3 h-3 text-white/90 flex-shrink-0" />
+            </div>
+            <p className="text-xs text-white/90 font-medium tracking-wide truncate">
+              {appointment.prenom} {appointment.nom}
+            </p>
+          </div>
+        )}
+
+        {/* Téléphone */}
+        {appointment.telephone && (
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-6 h-6 bg-white/15 rounded-lg flex items-center justify-center">
+              <Phone className="w-3 h-3 text-white/90 flex-shrink-0" />
+            </div>
+            <p className="text-xs text-white/90 font-medium tracking-wide truncate">{appointment.telephone}</p>
+          </div>
+        )}
+
+        {/* Date de naissance */}
+        {appointment.dateNaissance && (
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-6 h-6 bg-white/15 rounded-lg flex items-center justify-center">
+              <Calendar className="w-3 h-3 text-white/90 flex-shrink-0" />
+            </div>
+            <p className="text-xs text-white/90 font-medium tracking-wide truncate">{appointment.dateNaissance}</p>
+          </div>
+        )}
         
         {/* Time avec style premium */}
         <div className="flex items-center gap-3 mb-3">
