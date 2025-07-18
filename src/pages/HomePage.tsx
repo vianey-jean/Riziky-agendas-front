@@ -44,7 +44,7 @@ const HomePage = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12 relative">
-        <div className="max-w-6xl mx-auto">
+        <div className=" mx-auto">
           {/* Section héro modernisée */}
           <div className="text-center mb-16 animate-fade-in">
             <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full text-sm font-medium text-purple-800 mb-6 shadow-lg">
