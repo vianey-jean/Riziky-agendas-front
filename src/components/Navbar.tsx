@@ -89,7 +89,7 @@ export const Navbar = () => {
             
             {/* Navigation desktop */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="nav-link relative text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 group">
+              <Link to="/" className="ml-12 nav-link relative text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 group">
                 Liste RDV
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
@@ -206,7 +206,7 @@ export const Navbar = () => {
             <div className="px-4 pt-4 pb-6 space-y-4">
               <Link
                 to="/"
-                className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200"
+                className="ml-12 block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Liste RDV

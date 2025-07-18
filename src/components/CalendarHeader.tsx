@@ -37,14 +37,14 @@ const CalendarHeader = ({ title, onPrevious, onNext }: CalendarHeaderProps) => {
             className="group flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white font-medium hover:bg-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-            <span className="hidden sm:inline">Précédent</span>
+            <span className="text-green-900 font-bold hidden sm:inline">Précédent</span>
           </button>
           
           <button
             onClick={onNext}
             className="group flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white font-medium hover:bg-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
           >
-            <span className="hidden sm:inline">Suivant</span>
+            <span className="text-red-900 font-bold hidden sm:inline">Suivant</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
           </button>
         </div>
