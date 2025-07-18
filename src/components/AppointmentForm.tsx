@@ -68,12 +68,13 @@ const formSchema = z.object({
 
 type AppointmentFormProps = {
   appointment?: Appointment;
-  onSuccess: () => void;
+  onSuccess: (updatedAppointment?: Appointment) => void;
   onCancel: () => void;
   disableDate?: boolean;
+  mode?: 'add' | 'edit';
 };
 
-const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false }: AppointmentFormProps) => {
+const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false, mode }: AppointmentFormProps) => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availableHours, setAvailableHours] = useState<string[]>([]);
@@ -531,9 +532,10 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
               type="button" 
               variant="outline" 
               onClick={onCancel}
-              className="px-8 py-3 border-2 border-primary/30 luxury-card hover:border-primary/50 font-semibold rounded-2xl premium-hover"
+            className="px-8 py-3 text-black border-2 border-red-500 luxury-card hover:border-red-600 font-semibold rounded-2xl premium-hover"
             >
-              <Reply className="mr-2 h-4 w-4" />
+              <Reply className="mr-2 h-4 w-4 text-black" />
+
               Annuler
             </Button>
             <Button 

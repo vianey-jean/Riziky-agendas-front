@@ -1,0 +1,211 @@
+
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import WeekCalendar from '@/components/Weekcalendar';
+import MonthlyCalendar from '@/components/MonthlyCalendar';
+import DashboardCalendar from '@/components/DashboardCalendar';
+import AppointmentDetails from '@/components/AppointmentDetails';
+import AppointmentForm from '@/components/AppointmentForm';
+import AppointmentModal from '@/components/AppointmentModal';
+import { Appointment, AppointmentService } from '@/services/AppointmentService';
+import { Calendar, CalendarDays, BarChart3, Crown, Star, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
+
+const CalendarPage: React.FC = () => {
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleAppointmentClick = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setShowAppointmentDetails(true);
+  };
+
+  const handleDateClick = (date: Date) => {
+    console.log('Date cliquée:', date);
+  };
+
+  const handleEdit = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setShowAppointmentDetails(false);
+    setShowEditForm(true);
+  };
+
+  const handleDelete = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setShowAppointmentDetails(false);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedAppointment) return;
+    
+    try {
+      const success = await AppointmentService.delete(selectedAppointment.id);
+      if (success) {
+        toast.success('Rendez-vous supprimé avec succès');
+        setRefreshKey(prev => prev + 1);
+        setShowDeleteModal(false);
+        setSelectedAppointment(null);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast.error('Erreur lors de la suppression du rendez-vous');
+    }
+  };
+
+  const handleEditSuccess = async (updatedAppointment: Appointment) => {
+    try {
+      const success = await AppointmentService.update(updatedAppointment);
+      if (success) {
+        toast.success('Rendez-vous modifié avec succès');
+        setRefreshKey(prev => prev + 1);
+        setShowEditForm(false);
+        setSelectedAppointment(null);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la modification:', error);
+      toast.error('Erreur lors de la modification du rendez-vous');
+    }
+  };
+
+  const handleDragAndDrop = async (appointment: Appointment, newDate: Date, originalAppointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setShowEditForm(true);
+  };
+
+  return (
+    <div className="min-h-screen relative overflow-hidden mt-[80px]">
+      {/* Background premium */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-purple-400/20 rounded-full blur-3xl animate-pulse floating-animation"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000 floating-animation"></div>
+        <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-gradient-to-br from-pink-400/10 to-rose-400/10 rounded-full blur-3xl animate-spin" style={{ animationDuration: '25s' }}></div>
+      </div>
+
+      <div className="container mx-auto px-6 py-12 relative z-10">
+        {/* En-tête premium */}
+        <div className="mb-12 text-center">
+          <div className="inline-flex items-center justify-center w-28 h-28 premium-gradient rounded-3xl premium-shadow-xl mb-8 relative overflow-hidden floating-animation">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-3xl"></div>
+            <Calendar className="w-14 h-14 text-white relative z-10" />
+            <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center premium-shadow">
+              <Crown className="w-5 h-5 text-white" />
+            </div>
+            <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
+              <Star className="w-4 h-4 text-white" />
+            </div>
+          </div>
+          <h1 className="text-5xl font-bold luxury-text-gradient mb-4">
+            Calendrier Complet Premium
+          </h1>
+          <div className="flex items-center justify-center gap-3 max-w-2xl mx-auto">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <p className="text-xl text-muted-foreground font-medium">
+              Visualisez vos rendez-vous sous tous les angles
+            </p>
+            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+          </div>
+        </div>
+
+        {/* Onglets de calendrier */}
+        <Tabs defaultValue="week" className="space-y-8" key={refreshKey}>
+          <TabsList className="grid w-full grid-cols-3 h-14 p-1 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20">
+            <TabsTrigger value="week" className="flex items-center gap-2 h-12 font-medium">
+              <Calendar className="w-4 h-4" />
+              Vue Semaine
+            </TabsTrigger>
+            <TabsTrigger value="month" className="flex items-center gap-2 h-12 font-medium">
+              <CalendarDays className="w-4 h-4" />
+              Vue Mensuelle
+            </TabsTrigger>
+            <TabsTrigger value="dashboard" className="flex items-center gap-2 h-12 font-medium">
+              <BarChart3 className="w-4 h-4" />
+              Vue Dashboard
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="week" className="space-y-6">
+            <WeekCalendar 
+              onAppointmentClick={handleAppointmentClick}
+              onAppointmentDrop={handleDragAndDrop}
+              enableDragAndDrop={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="month" className="space-y-6">
+            <MonthlyCalendar 
+              onDateClick={handleDateClick}
+              onAppointmentClick={handleAppointmentClick}
+            />
+          </TabsContent>
+
+          <TabsContent value="dashboard" className="space-y-6">
+            <DashboardCalendar />
+          </TabsContent>
+        </Tabs>
+
+        {/* Modal des détails de rendez-vous */}
+        {selectedAppointment && showAppointmentDetails && (
+          <AppointmentDetails
+            appointment={selectedAppointment}
+            open={showAppointmentDetails}
+            onOpenChange={setShowAppointmentDetails}
+            onEdit={() => handleEdit(selectedAppointment)}
+            onDelete={() => handleDelete(selectedAppointment)}
+          />
+        )}
+
+        {/* Modal de modification */}
+        {selectedAppointment && showEditForm && (
+          <AppointmentModal
+            isOpen={showEditForm}
+            onClose={() => {
+              setShowEditForm(false);
+              setSelectedAppointment(null);
+            }}
+            title="Modifier le rendez-vous"
+            mode="edit"
+            appointment={selectedAppointment}
+            onSuccess={() => {
+              setRefreshKey(prev => prev + 1);
+              setShowEditForm(false);
+              setSelectedAppointment(null);
+            }}
+          >
+            <AppointmentForm
+              mode="edit"
+              appointment={selectedAppointment}
+              onSuccess={() => {
+                setRefreshKey(prev => prev + 1);
+                setShowEditForm(false);
+                setSelectedAppointment(null);
+              }}
+              onCancel={() => {
+                setShowEditForm(false);
+                setSelectedAppointment(null);
+              }}
+            />
+          </AppointmentModal>
+        )}
+
+        {/* Modal de suppression */}
+        <AppointmentModal
+          isOpen={showDeleteModal}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setSelectedAppointment(null);
+          }}
+          title="Supprimer le rendez-vous"
+          mode="delete"
+          appointment={selectedAppointment}
+          onSuccess={handleDeleteConfirm}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default CalendarPage;

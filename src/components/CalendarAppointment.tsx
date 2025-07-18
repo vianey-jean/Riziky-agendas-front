@@ -145,9 +145,9 @@ const CalendarAppointment = ({
         {/* Title avec icon premium */}
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <Calendar className="w-4 h-4 text-white flex-shrink-0" />
+            <Calendar className="w-4 h-4 text-red flex-shrink-0" />
           </div>
-          <p className="font-bold text-sm text-white group-hover:text-white/90 transition-colors truncate flex-1">
+          <p className="font-bold text-sm text-red group-hover:text-white/90 transition-colors truncate flex-1">
             {appointment.titre}
           </p>
           <div className="flex items-center gap-1">
@@ -160,9 +160,9 @@ const CalendarAppointment = ({
         {(appointment.nom || appointment.prenom) && (
           <div className="flex items-center gap-3 mb-2">
             <div className="w-6 h-6 bg-white/15 rounded-lg flex items-center justify-center">
-              <User className="w-3 h-3 text-white/90 flex-shrink-0" />
+              <User className="w-3 h-3 text-red flex-shrink-0" />
             </div>
-            <p className="text-xs text-white/90 font-medium tracking-wide truncate">
+            <p className="text-xs text-red font-medium tracking-wide truncate">
               {appointment.prenom} {appointment.nom}
             </p>
           </div>
@@ -172,9 +172,9 @@ const CalendarAppointment = ({
         {appointment.telephone && (
           <div className="flex items-center gap-3 mb-2">
             <div className="w-6 h-6 bg-white/15 rounded-lg flex items-center justify-center">
-              <Phone className="w-3 h-3 text-white/90 flex-shrink-0" />
+              <Phone className="w-3 h-3 text-red flex-shrink-0" />
             </div>
-            <p className="text-xs text-white/90 font-medium tracking-wide truncate">{appointment.telephone}</p>
+            <p className="text-xs text-red font-medium tracking-wide truncate">{appointment.telephone}</p>
           </div>
         )}
 

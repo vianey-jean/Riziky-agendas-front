@@ -47,7 +47,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-100 mt-[80px]">
       {/* Éléments décoratifs */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-teal-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>

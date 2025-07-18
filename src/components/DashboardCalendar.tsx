@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { format } from 'date-fns';
 import { Calendar, Clock, Sparkles, Zap, Crown, Star } from 'lucide-react';
+import { toast } from 'sonner';
 
 const DashboardCalendar = () => {
   const weekDays = AppointmentService.getWeekDays();
@@ -10,21 +10,22 @@ const DashboardCalendar = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(true);
+  const [draggedAppointment, setDraggedAppointment] = useState<Appointment | null>(null);
   
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const data = await AppointmentService.getCurrentWeekAppointments();
-        setAppointments(data);
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     fetchAppointments();
   }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      const data = await AppointmentService.getCurrentWeekAppointments();
+      setAppointments(data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   // Organiser les rendez-vous par jour et par heure
   const appointmentGrid: Record<string, Record<string, Appointment[]>> = {};
@@ -39,6 +40,65 @@ const DashboardCalendar = () => {
       );
     });
   });
+
+  const handleDragStart = (appointment: Appointment, e: React.DragEvent) => {
+    console.log('Starting drag for appointment:', appointment.titre);
+    setDraggedAppointment(appointment);
+    e.dataTransfer.setData('text/plain', JSON.stringify(appointment));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDrop = async (targetDate: Date, targetHour: string, e: React.DragEvent) => {
+    e.preventDefault();
+    console.log('Drop event on:', targetDate, targetHour);
+    
+    if (draggedAppointment) {
+      const originalDate = draggedAppointment.date;
+      const originalHour = draggedAppointment.heure;
+      const newDate = format(targetDate, 'yyyy-MM-dd');
+      const newHour = targetHour;
+      
+      // Vérifier si la date ou l'heure a changé
+      if (originalDate !== newDate || !originalHour.startsWith(targetHour.split(':')[0])) {
+        console.log('Time/Date changed, updating appointment automatically');
+        
+        try {
+          // Créer l'appointment mis à jour
+          const updatedAppointment = {
+            ...draggedAppointment,
+            date: newDate,
+            heure: newHour
+          };
+
+          // Sauvegarder directement dans la base de données
+          const success = await AppointmentService.update(updatedAppointment);
+          
+          if (success) {
+            toast.success(`Rendez-vous déplacé vers ${format(targetDate, 'dd/MM/yyyy')} à ${newHour}`);
+            // Rafraîchir les données
+            await fetchAppointments();
+          } else {
+            toast.error('Erreur lors du déplacement du rendez-vous');
+          }
+        } catch (error) {
+          console.error('Error updating appointment:', error);
+          toast.error('Erreur lors du déplacement du rendez-vous');
+        }
+      }
+    }
+    
+    setDraggedAppointment(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleAppointmentClick = (appointment: Appointment) => {
+    console.log('Appointment clicked:', appointment);
+    setSelectedAppointment(appointment);
+  };
   
   if (loading) {
     return (
@@ -112,7 +172,7 @@ const DashboardCalendar = () => {
               </div>
             ))}
             
-            {/* Time slots and appointments */}
+            {/* Time slots and appointments avec drag & drop */}
             {hours.map((hour, hourIndex) => (
               <React.Fragment key={`row-${hourIndex}`}>
                 {/* Hour cell */}
@@ -128,16 +188,20 @@ const DashboardCalendar = () => {
                   return (
                     <div 
                       key={`cell-${hourIndex}-${dayIndex}`}
-                      className={`p-3 min-h-[100px] border-r border-primary/10 transition-all duration-300 premium-hover ${
+                      className={`p-3 min-h-[100px] border-r border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
                         day.isToday ? 'bg-gradient-to-br from-primary/5 to-purple-500/5' : 'luxury-card hover:bg-primary/5'
                       }`}
+                      onDrop={(e) => handleDrop(day.fullDate, hour, e)}
+                      onDragOver={handleDragOver}
                     >
                       <div className="space-y-2">
                         {cellAppointments.map(appointment => (
                           <div 
                             key={appointment.id}
-                            className="appointment-luxury text-white p-3 text-xs rounded-xl cursor-pointer premium-shadow premium-hover relative overflow-hidden glow-effect"
-                            onClick={() => setSelectedAppointment(appointment)}
+                            className="appointment-luxury text-white p-3 text-xs rounded-xl cursor-grab hover:cursor-grabbing premium-shadow premium-hover relative overflow-hidden glow-effect active:cursor-grabbing"
+                            draggable
+                            onDragStart={(e) => handleDragStart(appointment, e)}
+                            onClick={() => handleAppointmentClick(appointment)}
                           >
                             <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                             <div className="relative z-10">

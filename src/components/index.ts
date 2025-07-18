@@ -18,3 +18,4 @@ export { default as Navbar } from './Navbar';
 export { default as WeekCalendar } from './Weekcalendar';
 export { default as DashboardCalendar } from './DashboardCalendar';
 export { default as PasswordStrengthIndicator } from './PasswordStrengthIndicator';
+export { default as ScrollToTop } from './ScrollToTop';
