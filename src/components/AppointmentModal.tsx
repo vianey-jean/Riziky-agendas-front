@@ -80,12 +80,12 @@ const AppointmentModal = ({
         
         <div className="relative z-10">
           {/* Close button */}
-          <button
+          {/* <button
             onClick={handleCloseModal}
             className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
           >
         
-          </button>
+          </button> */}
 
           {/* Header premium */}
           <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200">

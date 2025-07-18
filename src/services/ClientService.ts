@@ -34,6 +34,7 @@ export const ClientService = {
     try {
       const response = await api.post('/clients', {
         ...clientData,
+        email: clientData.email || '',
         dateCreation: new Date().toISOString().split('T')[0],
         status: 'actif',
         totalRendezVous: 0

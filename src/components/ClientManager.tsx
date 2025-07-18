@@ -46,7 +46,7 @@ const ClientManager: React.FC = () => {
   );
 
   const handleAddClient = async () => {
-    if (!formData.nom || !formData.prenom || !formData.email) {
+    if (!formData.nom || !formData.prenom) {
       return;
     }
 
@@ -177,7 +177,7 @@ const ClientManager: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email" className='text-black font-bold'>Email *</Label>
+                <Label htmlFor="email" className='text-black font-bold'>Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -273,7 +273,7 @@ const ClientManager: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="edit-email" className='text-black font-bold'>Email *</Label>
+                <Label htmlFor="edit-email" className='text-black font-bold'>Email</Label>
                 <Input
                   id="edit-email"
                   type="email"
@@ -304,7 +304,7 @@ const ClientManager: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="edit-dateNaissance"className='text-black font-bold'>Date de naissance</Label>
+                <Label htmlFor="edit-dateNaissance" className='text-black font-bold'>Date de naissance</Label>
                 <Input
                   id="edit-dateNaissance"
                   type="date"
@@ -357,11 +357,11 @@ const ClientManager: React.FC = () => {
                       {client.prenom} {client.nom}
                       {client.totalRendezVous > 10 && <Star className="w-4 h-4 text-yellow-500" />}
                     </CardTitle>
-                    <CardDescription className="mt-1">
+                    <div className="mt-1">
                       <Badge variant={client.status === 'actif' ? 'default' : 'secondary'} className="text-xs">
                         {client.status}
                       </Badge>
-                    </CardDescription>
+                    </div>
                   </div>
                   
                   <div className="flex gap-2">
@@ -386,10 +386,12 @@ const ClientManager: React.FC = () => {
               </CardHeader>
               
               <CardContent className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="w-4 h-4 text-black" />
-                  <span className="truncate text-black">{client.email}</span>
-                </div>
+                {client.email && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="w-4 h-4 text-black" />
+                    <span className="truncate text-black">{client.email}</span>
+                  </div>
+                )}
                 
                 {client.telephone && (
                   <div className="flex items-center gap-2 text-sm">
