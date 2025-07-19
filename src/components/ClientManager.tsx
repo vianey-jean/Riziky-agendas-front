@@ -293,7 +293,7 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded }) => {
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                      className="bg-gray-50/80 border-2 border-gray-200 focus:border-primary/40 rounded-xl min-h-[100px] resize-none"
+                      className="bg-gray-50/80  text-black border-2 border-gray-200 focus:border-primary/40 rounded-xl min-h-[100px] resize-none"
                       placeholder="Notes supplémentaires..."
                     />
                   </div>
