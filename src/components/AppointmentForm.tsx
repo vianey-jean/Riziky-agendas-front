@@ -370,7 +370,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+                  <FormLabel className=" font-bold text-primary flex items-center gap-2">
                     <CalendarIcon className="w-4 h-4" />
                     Date
                   </FormLabel>
@@ -380,12 +380,12 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                         <Button
                           variant={"outline"}
                           disabled={disableDate}
-                          className={`pl-4 text-left font-medium h-12 rounded-xl border-2 border-gray-200 hover:border-primary/40 ${!field.value ? "text-muted-foreground" : ""} ${disableDate ? "opacity-60 cursor-not-allowed bg-gray-100" : "bg-gray-50/50 hover:bg-gray-50"}`}
+                          className={`pl-4 text-black font-medium h-12 rounded-xl border-2 border-gray-200 hover:border-primary/40 ${!field.value ? "text-muted-foreground" : ""} ${disableDate ? "opacity-60 cursor-not-allowed bg-gray-100" : "bg-gray-50/50 hover:bg-white hover:text-black"}`}
                         >
                           {field.value ? (
                             format(field.value, "EEEE d MMMM yyyy", { locale: fr })
                           ) : (
-                            <span>Sélectionner une date</span>
+                            <span >Sélectionner une date</span>
                           )}
                           <CalendarIcon className="ml-auto h-5 w-5 opacity-50" />
                         </Button>
