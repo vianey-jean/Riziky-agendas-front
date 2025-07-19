@@ -179,9 +179,10 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
 
   return (
     <div className="calendar-luxury rounded-3xl premium-shadow-xl overflow-hidden border-0 premium-hover glow-effect">
-      {/* En-tête du calendrier premium */}
+      {/* En-tête du calendrier premium avec affichage du mois */}
       <CalendarHeader 
         title="Calendrier Hebdomadaire Premium"
+        currentDate={currentDate}
         onPrevious={previousWeek}
         onNext={nextWeek}
       />

@@ -227,7 +227,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
   };
   
   return (
-    <div className="luxury-card rounded-2xl p-6 max-h-[80vh] overflow-y-auto">
+    <div className="bg-white rounded-2xl p-6 max-h-[80vh] overflow-y-auto border border-gray-100">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -241,13 +241,13 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                 </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium">
+                    <SelectTrigger className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50">
                       <SelectValue placeholder="Sélectionner le statut" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="validé">Validé</SelectItem>
-                    <SelectItem value="annulé">Annulé</SelectItem>
+                  <SelectContent className="bg-white border border-gray-200">
+                    <SelectItem value="validé" className="bg-green-50 text-green-800 font-medium hover:bg-green-100">Validé</SelectItem>
+                    <SelectItem value="annulé" className="bg-red-50 text-red-800 font-medium hover:bg-red-100">Annulé</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -267,7 +267,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                 <FormControl>
                   <Input 
                     placeholder="Rendez-vous avec..." 
-                    className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                    className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                     {...field} 
                   />
                 </FormControl>
@@ -289,7 +289,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                   <FormControl>
                     <Input 
                       placeholder="Nom de famille" 
-                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                       {...field} 
                     />
                   </FormControl>
@@ -310,7 +310,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                   <FormControl>
                     <Input 
                       placeholder="Prénom" 
-                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                       {...field} 
                     />
                   </FormControl>
@@ -334,7 +334,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                     <DateOfBirthInput 
                       value={field.value || ''}
                       onChange={field.onChange}
-                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                     />
                   </FormControl>
                   <FormMessage />
@@ -354,7 +354,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                   <FormControl>
                     <Input 
                       placeholder="06 XX XX XX XX" 
-                      className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                       {...field} 
                     />
                   </FormControl>
@@ -380,7 +380,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                         <Button
                           variant={"outline"}
                           disabled={disableDate}
-                          className={`pl-4 text-left font-medium h-12 rounded-xl border-2 border-primary/20 hover:border-primary/40 ${!field.value ? "text-muted-foreground" : ""} ${disableDate ? "opacity-60 cursor-not-allowed luxury-card" : "premium-input"}`}
+                          className={`pl-4 text-left font-medium h-12 rounded-xl border-2 border-gray-200 hover:border-primary/40 ${!field.value ? "text-muted-foreground" : ""} ${disableDate ? "opacity-60 cursor-not-allowed bg-gray-100" : "bg-gray-50/50 hover:bg-gray-50"}`}
                         >
                           {field.value ? (
                             format(field.value, "EEEE d MMMM yyyy", { locale: fr })
@@ -392,20 +392,20 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                       </FormControl>
                     </PopoverTrigger>
                     {!disableDate && (
-                      <PopoverContent className="w-auto p-0 calendar-luxury border-0 premium-shadow-lg" align="start">
+                      <PopoverContent className="w-auto p-0 bg-white border border-gray-200 premium-shadow-lg" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                           initialFocus
-                          className="rounded-2xl"
+                          className="rounded-2xl bg-white"
                         />
                       </PopoverContent>
                     )}
                   </Popover>
                   {disableDate && (
-                    <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 rounded-lg p-2">
+                    <div className="flex items-center gap-2 text-sm text-primary bg-blue-50 rounded-lg p-2">
                       <Star className="w-4 h-4" />
                       <span>Date fixée suite au déplacement du rendez-vous</span>
                     </div>
@@ -427,7 +427,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                   <FormControl>
                     <div className="relative">
                       <select
-                        className="w-full px-4 py-3 border-2 border-primary/20 rounded-xl premium-input focus:border-primary/60 h-12 text-base font-medium"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50/50 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                         value={field.value}
                         onChange={field.onChange}
                         disabled={!isAvailable || availableHours.length === 0}
@@ -466,7 +466,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                     min={15} 
                     max={180} 
                     step={15}
-                    className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                    className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                     {...field} 
                     onChange={e => field.onChange(parseInt(e.target.value))}
                   />
@@ -488,7 +488,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                 <FormControl>
                   <Input 
                     placeholder="Adresse du rendez-vous"
-                    className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 h-12 text-base font-medium"
+                    className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
                     {...field} 
                   />
                 </FormControl>
@@ -509,7 +509,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                 <FormControl>
                   <Textarea 
                     placeholder="Détails du rendez-vous..."
-                    className="premium-input rounded-xl border-2 border-primary/20 focus:border-primary/60 min-h-[120px] text-base font-medium resize-none"
+                    className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 min-h-[120px] text-base font-medium resize-none hover:bg-gray-50"
                     {...field} 
                   />
                 </FormControl>

@@ -1,10 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
-import { format } from 'date-fns';
-import { Calendar, Clock, Sparkles, Zap, Crown, Star } from 'lucide-react';
+import { addWeeks, format, subWeeks } from 'date-fns';
+import { Calendar, Clock, Sparkles, Zap, Crown, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+
+import { CardHeader, CardTitle } from './ui/card';
+import { fr } from 'date-fns/locale';
 
 const DashboardCalendar = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const weekDays = AppointmentService.getWeekDays();
   const hours = AppointmentService.getHours();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -15,7 +21,14 @@ const DashboardCalendar = () => {
   useEffect(() => {
     fetchAppointments();
   }, []);
+  const previousWeek = () => {
+    setCurrentDate(subWeeks(currentDate, 1));
+  };
 
+  const nextWeek = () => {
+    setCurrentDate(addWeeks(currentDate, 1));
+  };
+  
   const fetchAppointments = async () => {
     try {
       const data = await AppointmentService.getCurrentWeekAppointments();
@@ -102,73 +115,98 @@ const DashboardCalendar = () => {
   
   if (loading) {
     return (
-      <div className="calendar-luxury rounded-3xl premium-shadow-xl border-0 overflow-hidden">
-        <div className="p-16 text-center">
-          <div className="relative mb-8 floating-animation">
-            <div className="w-20 h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-purple-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
-            <div className="absolute inset-4 w-12 h-12 bg-primary/10 rounded-full blur-sm"></div>
+      <div className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
+        <div className="p-8 lg:p-16 text-center">
+          <div className="relative mb-6 lg:mb-8 floating-animation">
+            <div className="w-16 lg:w-20 h-16 lg:h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 lg:w-20 h-16 lg:h-20 border-4 border-transparent border-r-purple-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+            <div className="absolute inset-3 lg:inset-4 w-10 lg:w-12 h-10 lg:h-12 bg-primary/10 rounded-full blur-sm"></div>
           </div>
-          <div className="flex items-center justify-center gap-3 text-xl font-bold luxury-text-gradient mb-3">
-            <Crown className="w-6 h-6 text-primary" />
+          <div className="flex items-center justify-center gap-2 lg:gap-3 text-lg lg:text-xl font-bold luxury-text-gradient mb-2 lg:mb-3">
+            <Crown className="w-5 lg:w-6 h-5 lg:h-6 text-primary" />
             <span>Chargement du calendrier premium...</span>
-            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            <Sparkles className="w-4 lg:w-5 h-4 lg:h-5 text-primary animate-pulse" />
           </div>
-          <p className="text-muted-foreground font-medium">Synchronisation des données de luxe</p>
+          <p className="text-sm lg:text-base text-muted-foreground font-medium">Synchronisation des données de luxe</p>
         </div>
       </div>
     );
   }
   
   return (
-    <div className="calendar-luxury rounded-3xl premium-shadow-xl border-0 overflow-hidden">
+    <div className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
       {/* En-tête premium */}
-      <div className="premium-gradient p-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
-        
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="w-14 h-14 bg-white/30 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-            <Zap className="w-7 h-7 text-white" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-2xl font-bold text-white mb-1">Calendrier Premium</h3>
-            <p className="text-white/80 text-base font-medium">Vue détaillée hebdomadaire de luxe</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm text-white font-medium">En temps réel</span>
+      <CardHeader className="premium-gradient text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+          
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-bold text-white mb-1">
+                  Calendrier Dashboard Premium
+                </CardTitle>
+                <p className="text-white/90 text-lg font-medium">
+                  {format(currentDate, 'MMMM yyyy', { locale: fr })}
+                </p>
+              </div>
             </div>
-            <Star className="w-6 h-6 text-yellow-300 animate-pulse" />
+            
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-white font-medium">Live</span>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={previousWeek}
+                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={nextWeek}
+                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+              <Star className="w-5 h-5 text-yellow-300 animate-pulse" />
+            </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+
 
       <div className="overflow-x-auto premium-scroll">
         <div className="min-w-[900px] relative">
           <div className="grid grid-cols-8 gap-px bg-gradient-to-r from-primary/5 to-purple-500/5">
             {/* Header - Empty cell for hours column */}
-            <div className="luxury-card p-4 flex items-center justify-center border-b-2 border-primary/20">
-              <Clock className="w-5 h-5 text-primary" />
+            <div className="luxury-card p-3 lg:p-4 flex items-center justify-center border-b-2 border-primary/20">
+              <Clock className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
             </div>
             
             {/* Header - Days of the week */}
             {weekDays.map((day, index) => (
               <div 
                 key={index}
-                className={`p-4 text-center font-bold border-b-2 transition-all duration-300 ${
+                className={`p-3 lg:p-4 text-center font-bold border-b-2 transition-all duration-300 ${
                   day.isToday 
                     ? 'premium-gradient text-white border-primary premium-shadow glow-effect' 
                     : 'luxury-card text-primary/80 border-primary/20 hover:border-primary/40 premium-hover'
                 }`}
               >
-                <div className="font-bold text-lg">{day.dayName}</div>
-                <div className={`text-sm mt-1 font-medium ${day.isToday ? 'text-white/90' : 'text-muted-foreground'}`}>
+                <div className="font-bold text-base lg:text-lg">{day.dayName}</div>
+                <div className={`text-xs lg:text-sm mt-1 font-medium ${day.isToday ? 'text-white/90' : 'text-muted-foreground'}`}>
                   {day.dayNumber} {day.month}
                 </div>
-                {day.isToday && <Crown className="w-4 h-4 mx-auto mt-1 text-yellow-300" />}
+                {day.isToday && <Crown className="w-3 lg:w-4 h-3 lg:h-4 mx-auto mt-1 text-yellow-300" />}
               </div>
             ))}
             
@@ -176,8 +214,8 @@ const DashboardCalendar = () => {
             {hours.map((hour, hourIndex) => (
               <React.Fragment key={`row-${hourIndex}`}>
                 {/* Hour cell */}
-                <div className="luxury-card p-4 text-center border-r border-primary/10 flex items-center justify-center">
-                  <span className="text-base font-bold text-primary">{hour}</span>
+                <div className="luxury-card p-3 lg:p-4 text-center border-r border-primary/10 flex items-center justify-center">
+                  <span className="text-sm lg:text-base font-bold text-primary">{hour}</span>
                 </div>
                 
                 {/* Day cells for this hour */}
@@ -188,32 +226,49 @@ const DashboardCalendar = () => {
                   return (
                     <div 
                       key={`cell-${hourIndex}-${dayIndex}`}
-                      className={`p-3 min-h-[100px] border-r border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
+                      className={`p-2 lg:p-3 min-h-[80px] lg:min-h-[100px] border-r border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
                         day.isToday ? 'bg-gradient-to-br from-primary/5 to-purple-500/5' : 'luxury-card hover:bg-primary/5'
                       }`}
                       onDrop={(e) => handleDrop(day.fullDate, hour, e)}
                       onDragOver={handleDragOver}
                     >
-                      <div className="space-y-2">
-                        {cellAppointments.map(appointment => (
-                          <div 
-                            key={appointment.id}
-                            className="appointment-luxury text-white p-3 text-xs rounded-xl cursor-grab hover:cursor-grabbing premium-shadow premium-hover relative overflow-hidden glow-effect active:cursor-grabbing"
-                            draggable
-                            onDragStart={(e) => handleDragStart(appointment, e)}
-                            onClick={() => handleAppointmentClick(appointment)}
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className="relative z-10">
-                              <div className="font-bold truncate flex items-center gap-2 mb-1">
-                                <Sparkles className="w-3 h-3 flex-shrink-0" />
-                                {appointment.titre}
-                                <Star className="w-2 h-2 text-yellow-300" />
+                      <div className="space-y-1 lg:space-y-2">
+                        {cellAppointments.map((appointment, index) => {
+                          const isMultiple = cellAppointments.length > 1;
+                          return (
+                            <div 
+                              key={appointment.id}
+                              className={`appointment-luxury text-white p-2 lg:p-3 text-xs rounded-xl cursor-grab hover:cursor-grabbing premium-shadow premium-hover relative overflow-hidden glow-effect active:cursor-grabbing ${
+                                isMultiple ? 'min-h-[40px] lg:min-h-[50px]' : 'min-h-[60px] lg:min-h-[70px]'
+                              }`}
+                              draggable
+                              onDragStart={(e) => handleDragStart(appointment, e)}
+                              onClick={() => handleAppointmentClick(appointment)}
+                              style={{ 
+                                transform: isMultiple ? `scale(${0.9 - index * 0.05})` : 'scale(1)',
+                                zIndex: cellAppointments.length - index,
+                                marginTop: isMultiple && index > 0 ? '-8px' : '0'
+                              }}
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                              <div className="relative z-10">
+                                <div className="font-bold truncate flex items-center gap-1 lg:gap-2 mb-1">
+                                  <Sparkles className="w-2 lg:w-3 h-2 lg:h-3 flex-shrink-0" />
+                                  <span className="truncate">{appointment.titre}</span>
+                                  <Star className="w-1.5 lg:w-2 h-1.5 lg:h-2 text-yellow-300 flex-shrink-0" />
+                                </div>
+                                {!isMultiple && (
+                                  <div className="truncate text-white/90 font-medium text-xs">{appointment.location}</div>
+                                )}
+                                {isMultiple && (
+                                  <div className="text-white/70 text-xs">
+                                    {appointment.heure}
+                                  </div>
+                                )}
                               </div>
-                              <div className="truncate text-white/90 font-medium">{appointment.location}</div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   );
