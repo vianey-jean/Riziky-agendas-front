@@ -202,7 +202,7 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                   <div 
                     key={index}
                     className={`min-h-[120px] p-2 border-r border-b border-primary/10 last:border-r-0 transition-all duration-300 cursor-pointer premium-hover ${
-                      !isCurrentMonth ? 'bg-gray-50/50 text-muted-foreground' : 'luxury-card hover:bg-primary/5'
+                      !isCurrentMonth ? 'bg-gray-50/50 text-muted-foreground' : 'luxury-card hover:bg-gray'
                     } ${isTodayDate ? 'premium-gradient text-white glow-effect' : ''}`}
                     onClick={() => onDateClick?.(day)}
                     onDrop={(e) => handleDrop(day, e)}

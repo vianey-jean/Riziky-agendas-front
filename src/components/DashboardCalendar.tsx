@@ -196,7 +196,7 @@ const DashboardCalendar = () => {
             {weekDays.map((day, index) => (
               <div 
                 key={index}
-                className={`p-3 lg:p-4 text-center font-bold border-b-2 transition-all duration-300 ${
+                className={`p-3 lg:p-4 text-center border-black font-bold border-b-2 transition-all duration-300 ${
                   day.isToday 
                     ? 'premium-gradient text-white border-primary premium-shadow glow-effect' 
                     : 'luxury-card text-primary/80 border-primary/20 hover:border-primary/40 premium-hover'
@@ -226,7 +226,7 @@ const DashboardCalendar = () => {
                   return (
                     <div 
                       key={`cell-${hourIndex}-${dayIndex}`}
-                      className={`p-2 lg:p-3 min-h-[80px] lg:min-h-[100px] border-r border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
+                      className={`p-2 lg:p-3 min-h-[80px] lg:min-h-[100px] border- border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
                         day.isToday ? 'bg-gradient-to-br from-primary/5 to-purple-500/5' : 'luxury-card hover:bg-primary/5'
                       }`}
                       onDrop={(e) => handleDrop(day.fullDate, hour, e)}
