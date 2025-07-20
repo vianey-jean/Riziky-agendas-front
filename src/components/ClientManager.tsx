@@ -9,13 +9,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from '@/components/ui/badge';
 import { Client, ClientService } from '@/services/ClientService';
 import { toast } from 'sonner';
+import ClientStatsDisplay from '@/components/ClientStatsDisplay';
 
 interface ClientManagerProps {
   onClientAdded?: () => void;
   onClientUpdate?: () => void;
 }
+  
 
 const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUpdate }) => {
+  const [refreshTrigger]= useState(0);
   const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -177,7 +180,7 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUp
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
           </div>
         </div>
-
+          <ClientStatsDisplay refreshTrigger={refreshTrigger} />
         {/* Actions et recherche */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="relative flex-1">

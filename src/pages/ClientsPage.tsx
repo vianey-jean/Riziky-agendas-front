@@ -21,7 +21,7 @@ const ClientsPage: React.FC = () => {
 
       <div className="container mx-auto px-6 py-12 relative z-10">
         {/* Statistiques des clients */}
-        <ClientStatsDisplay refreshTrigger={refreshTrigger} />
+        {/* <ClientStatsDisplay refreshTrigger={refreshTrigger} /> */}
         
         <ClientManager onClientUpdate={handleClientUpdate} />
       </div>

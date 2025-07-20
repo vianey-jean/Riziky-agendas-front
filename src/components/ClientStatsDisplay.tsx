@@ -39,12 +39,12 @@ const ClientStatsDisplay: React.FC<ClientStatsDisplayProps> = ({ refreshTrigger 
   }
 
   return (
-    <div className="mb-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
       <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4 rounded-xl premium-shadow-lg relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
         <div className="relative z-10 flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium opacity-90 mb-1">
+            <p className="text-sm font-bold font-medium opacity-90 mb-1">
               Nombre total de clients
             </p>
             <p className="text-2xl font-bold">
