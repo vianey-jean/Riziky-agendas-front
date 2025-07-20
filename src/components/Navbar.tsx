@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const navItems: NavItem[] = [
     { name: 'Accueil', path: '/', icon: Home },
-    { name: 'Tableau de bord', path: '/dashboard', icon: Calendar, protected: true },
+    { name: 'Dashbord', path: '/dashboard', icon: Calendar, protected: true },
     { name: 'Calendrier', path: '/calendar', icon: CalendarDays, protected: true },
     { name: 'Clients', path: '/clients', icon: Users, protected: true },
     { name: 'À propos', path: '/about', icon: Info },
@@ -66,8 +66,8 @@ const Navbar = () => {
                     )
                   }
                 >
-                  <item.icon className="w-4 h-4 text-black " />
-                  <span className="text-sm font-medium text-black ">{item.name}</span>
+                  <item.icon className="w-5 h-5 text-white " />
+                  <span className=" text-white font-bold ">{item.name}</span>
                 </NavLink>
               )
             ))}

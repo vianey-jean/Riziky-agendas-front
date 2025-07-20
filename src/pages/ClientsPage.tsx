@@ -1,8 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import ClientManager from '@/components/ClientManager';
+import ClientStatsDisplay from '@/components/ClientStatsDisplay';
 
 const ClientsPage: React.FC = () => {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleClientUpdate = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden mt-[80px]">
       {/* Background premium - plus clair */}
@@ -13,7 +20,10 @@ const ClientsPage: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 py-12 relative z-10">
-        <ClientManager />
+        {/* Statistiques des clients */}
+        <ClientStatsDisplay refreshTrigger={refreshTrigger} />
+        
+        <ClientManager onClientUpdate={handleClientUpdate} />
       </div>
     </div>
   );

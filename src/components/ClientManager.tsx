@@ -12,9 +12,10 @@ import { toast } from 'sonner';
 
 interface ClientManagerProps {
   onClientAdded?: () => void;
+  onClientUpdate?: () => void;
 }
 
-const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded }) => {
+const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUpdate }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -74,6 +75,10 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded }) => {
         if (!isEditing && onClientAdded) {
           onClientAdded();
         }
+        
+        if (onClientUpdate) {
+          onClientUpdate();
+        }
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
@@ -105,6 +110,9 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded }) => {
         const success = await ClientService.deleteClient(client.id);
         if (success) {
           await loadClients();
+          if (onClientUpdate) {
+            onClientUpdate();
+          }
         }
       } catch (error) {
         console.error('Erreur lors de la suppression:', error);

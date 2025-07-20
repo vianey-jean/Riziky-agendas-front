@@ -186,9 +186,9 @@ const DashboardCalendar = () => {
 
       <div className="overflow-x-auto premium-scroll">
         <div className="min-w-[900px] relative">
-          <div className="grid grid-cols-8 gap-px bg-gradient-to-r from-primary/5 to-purple-500/5">
+          <div className="grid grid-cols-8 bg-gradient-to-r from-primary/5 to-purple-500/5 border-2 border-primary/30 rounded-lg overflow-hidden">
             {/* Header - Empty cell for hours column */}
-            <div className="luxury-card p-3 lg:p-4 flex items-center justify-center border-b-2 border-primary/20">
+            <div className="luxury-card p-3 lg:p-4 flex items-center justify-center border-b-2 border-r-2 border-primary/40">
               <Clock className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
             </div>
             
@@ -196,10 +196,12 @@ const DashboardCalendar = () => {
             {weekDays.map((day, index) => (
               <div 
                 key={index}
-                className={`p-3 lg:p-4 text-center border-black font-bold border-b-2 transition-all duration-300 ${
+                className={`p-3 lg:p-4 text-center font-bold border-b-2 border-primary/40 transition-all duration-300 ${
+                  index < weekDays.length - 1 ? 'border-r-2 border-primary/40' : ''
+                } ${
                   day.isToday 
                     ? 'premium-gradient text-white border-primary premium-shadow glow-effect' 
-                    : 'luxury-card text-primary/80 border-primary/20 hover:border-primary/40 premium-hover'
+                    : 'luxury-card text-primary/80 hover:border-primary/60 premium-hover'
                 }`}
               >
                 <div className="font-bold text-base lg:text-lg">{day.dayName}</div>
@@ -214,7 +216,7 @@ const DashboardCalendar = () => {
             {hours.map((hour, hourIndex) => (
               <React.Fragment key={`row-${hourIndex}`}>
                 {/* Hour cell */}
-                <div className="luxury-card p-3 lg:p-4 text-center border-r border-primary/10 flex items-center justify-center">
+                <div className="luxury-card p-3 lg:p-4 text-center border-r-2 border-primary/40 flex items-center justify-center">
                   <span className="text-sm lg:text-base font-bold text-primary">{hour}</span>
                 </div>
                 
@@ -226,8 +228,10 @@ const DashboardCalendar = () => {
                   return (
                     <div 
                       key={`cell-${hourIndex}-${dayIndex}`}
-                      className={`p-2 lg:p-3 min-h-[80px] lg:min-h-[100px] border- border-primary/10 transition-all duration-300 premium-hover cursor-pointer ${
-                        day.isToday ? 'bg-gradient-to-br from-primary/5 to-purple-500/5' : 'luxury-card hover:bg-primary/5'
+                      className={`p-2 lg:p-3 min-h-[80px] lg:min-h-[100px] transition-all duration-300 relative group premium-hover cursor-pointer ${
+                        dayIndex < weekDays.length - 1 ? 'border-r-2 border-primary/40' : ''
+                      } ${
+                        day.isToday ? 'bg-gradient-to-br from-primary/10 to-purple-500/10' : 'luxury-card hover:bg-primary/5'
                       }`}
                       onDrop={(e) => handleDrop(day.fullDate, hour, e)}
                       onDragOver={handleDragOver}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import WeekCalendar from '@/components/Weekcalendar';
@@ -7,6 +6,7 @@ import DashboardCalendar from '@/components/DashboardCalendar';
 import AppointmentDetails from '@/components/AppointmentDetails';
 import AppointmentForm from '@/components/AppointmentForm';
 import AppointmentModal from '@/components/AppointmentModal';
+import AppointmentStatsDisplay from '@/components/AppointmentStatsDisplay';
 import { Appointment, AppointmentService } from '@/services/AppointmentService';
 import { Calendar, CalendarDays, BarChart3, Crown, Star, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -109,6 +109,9 @@ const CalendarPage: React.FC = () => {
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
           </div>
         </div>
+
+        {/* Statistiques des rendez-vous */}
+        <AppointmentStatsDisplay refreshTrigger={refreshKey} />
 
         {/* Onglets de calendrier */}
         <Tabs defaultValue="week" className="space-y-8" key={refreshKey}>
