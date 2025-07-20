@@ -31,7 +31,7 @@ const Navbar = () => {
     { name: 'Dashbord', path: '/dashboard', icon: Calendar, protected: true },
     { name: 'Calendrier', path: '/calendar', icon: CalendarDays, protected: true },
     { name: 'Clients', path: '/clients', icon: Users, protected: true },
-    { name: 'À propos', path: '/about', icon: Info },
+    { name: 'Àpropos', path: '/about', icon: Info },
     { name: 'Contact', path: '/contact', icon: Mail }
   ];
 

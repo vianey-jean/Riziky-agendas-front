@@ -17,7 +17,7 @@ const ScrollToTop: React.FC = () => {
   // Gérer la visibilité du bouton selon le scroll
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 100) {
+      if (window.pageYOffset > 500) {
         setIsVisible(true);
       } else {
         setIsVisible(false);

@@ -26,7 +26,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-white" />
+            <Calendar className="w-6 h-6 text-black" />
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white mb-1">

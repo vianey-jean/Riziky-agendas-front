@@ -145,7 +145,7 @@ const CalendarAppointment = ({
         {/* Title avec icon premium */}
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <Calendar className="w-4 h-4 text-red flex-shrink-0" />
+            <Calendar className="w-4 h-4 text-black flex-shrink-0" />
           </div>
           <p className="font-bold text-sm text-red group-hover:text-white/90 transition-colors truncate flex-1">
             {appointment.titre}
