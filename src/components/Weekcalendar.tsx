@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import CalendarHeader from './CalendarHeader';
 import CalendarDayHeader from './CalendarDayHeader';
 import CalendarDay from './CalendarDay';
+import RizikyLoadingSpinner from './RizikyLoadingSpinner';
 import { Calendar, Sparkles, Crown, Star } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -47,7 +48,9 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
         const data = await AppointmentService.getAll();
         setAppointments(data);
       } catch (error) {
-        toast.error("Impossible de charger les rendez-vous");
+        toast.error("Impossible de charger les rendez-vous", {
+          className: "bg-indigo-700 text-white"
+        });
         console.error("Erreur chargement des rendez-vous:", error);
       } finally {
         setLoading(false);
@@ -72,11 +75,16 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
     setCurrentDate(addDays(currentDate, 7));
   };
 
-  // Filtre les rendez-vous pour une date spécifique
+  // Filtre les rendez-vous pour une date spécifique et les trie par heure
   const getAppointmentsForDate = (date: Date) => {
     return appointments.filter((appointment) => {
       const appointmentDate = parseISO(appointment.date);
       return isSameDay(appointmentDate, date);
+    }).sort((a, b) => {
+      // Trier par heure
+      const [aHours, aMinutes] = a.heure.split(':').map(Number);
+      const [bHours, bMinutes] = b.heure.split(':').map(Number);
+      return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
     });
   };
 
@@ -122,7 +130,9 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
         onAppointmentDrop(updatedAppointment, newDate, originalAppointment);
       }
 
-      toast.success(`Rendez-vous préparé pour le ${format(newDate, 'dd/MM/yyyy')}`);
+      toast.success(`Rendez-vous préparé pour le ${format(newDate, 'dd/MM/yyyy')}`, {
+        className: "bg-indigo-700 text-white"
+      });
     } else {
       console.log('Date unchanged, no action needed');
     }
@@ -161,17 +171,10 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
     return (
       <div className="calendar-luxury rounded-3xl premium-shadow-xl overflow-hidden border-0">
         <div className="p-16 text-center">
-          <div className="relative mb-8 floating-animation">
-            <div className="w-20 h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-purple-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
-            <div className="absolute inset-4 w-12 h-12 bg-primary/10 rounded-full blur-sm"></div>
-          </div>
-          <div className="flex items-center justify-center gap-3 text-xl font-bold luxury-text-gradient mb-3">
-            <Crown className="w-6 h-6 text-primary" />
-            <span>Chargement des rendez-vous...</span>
-            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-          </div>
-          <p className="text-muted-foreground font-medium">Préparation de votre calendrier premium</p>
+          <RizikyLoadingSpinner 
+            size="lg"
+            text="Préparation de votre calendrier premium"
+          />
         </div>
       </div>
     );
@@ -199,7 +202,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
       {/* Contenu du calendrier avec les rendez-vous pour chaque jour */}
       <div className={`${
         isMobile 
-          ? 'flex flex-col bg-gradient-to-b from-white via-primary/2 to-purple-500/5 max-h-[600px] overflow-y-auto premium-scroll'
+          ? 'flex flex-col bg-gradient-to-b from-white via-primary/2 to-purple-500/5 max-h-[70vh] overflow-y-auto premium-scroll'
           : 'grid grid-cols-7 min-h-[400px] bg-gradient-to-br from-white via-primary/2 to-purple-500/5'
       }`}>
         {days.map((day, dayIndex) => (

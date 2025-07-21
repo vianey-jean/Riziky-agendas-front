@@ -37,7 +37,10 @@ export const AuthService = {
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
         // Affichage d'un message de bienvenue personnalisé selon le genre
-        toast.success(`Bienvenue ${response.data.user.genre === 'homme' ? 'M.' : 'Mme'} ${response.data.user.nom}`);
+        toast.success(`Bienvenue ${response.data.user.genre === 'homme' ? 'M.' : 'Mme'} ${response.data.user.nom}`,{
+          
+          className: "bg-indigo-700 text-white"
+        });
 
         // Retourne "true" pour indiquer une connexion réussie
         return true;
@@ -47,7 +50,9 @@ export const AuthService = {
       return false;
     } catch (error: any) {
       // En cas d'erreur (ex : mauvais identifiants), afficher une erreur toast
-      toast.error(error.response?.data?.error || "Email ou mot de passe erroné");
+      toast.error(error.response?.data?.error || "Email ou mot de passe erroné", {
+        className: "bg-indigo-700 text-white"
+      });
       return false;
     }
   },
@@ -60,7 +65,9 @@ export const AuthService = {
 
       // Si la réponse contient un utilisateur, l'inscription est réussie
       if (response.data.user) {
-        toast.success("Compte créé avec succès");
+        toast.success("Compte créé avec succès", {
+          className: "bg-indigo-700 text-white"
+        });
         return true;
       }
 
@@ -68,7 +75,9 @@ export const AuthService = {
       return false;
     } catch (error: any) {
       // Affichage d'une erreur si l'email est déjà utilisé ou autre problème
-      toast.error(error.response?.data?.error || "Un compte existe déjà avec cet email");
+      toast.error(error.response?.data?.error || "Un compte existe déjà avec cet email", {
+        className: "bg-indigo-700 text-white"
+      });
       return false;
     }
   },
@@ -81,7 +90,9 @@ export const AuthService = {
 
       // Si l'API confirme la modification
       if (response.data.message) {
-        toast.success("Mot de passe modifié avec succès");
+        toast.success("Mot de passe modifié avec succès", {
+          className: "bg-indigo-700 text-white"
+        });
         return true;
       }
 
@@ -89,7 +100,9 @@ export const AuthService = {
       return false;
     } catch (error: any) {
       // Affichage d'une erreur en cas d'échec
-      toast.error(error.response?.data?.error || "Erreur lors de la réinitialisation du mot de passe");
+      toast.error(error.response?.data?.error || "Erreur lors de la réinitialisation du mot de passe", {
+        className: "bg-indigo-700 text-white"
+      });
       return false;
     }
   },
@@ -106,11 +119,14 @@ export const AuthService = {
   },
 
   // Fonction de déconnexion
-  logout: (): void => {
-    loggedInUser = null; // Réinitialise l'utilisateur en mémoire
-    localStorage.removeItem('user'); // Supprime les données locales
-    toast.info("Vous êtes déconnecté"); // Notification d'information
-  },
+logout: (): void => {
+  loggedInUser = null; // Réinitialise l'utilisateur en mémoire
+  localStorage.removeItem('user'); // Supprime les données locales
+
+  toast.info("Vous êtes déconnecté", {
+    className: "bg-indigo-700 text-white"
+  });
+},
 
   // Fonction qui retourne l'utilisateur actuellement connecté
   getCurrentUser: (): User | null => {

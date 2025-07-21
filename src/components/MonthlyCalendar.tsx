@@ -8,6 +8,7 @@ import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Calendar, Crown, Star, Zap } from 'lucide-react';
 import AppointmentModal from './AppointmentModal';
 import AppointmentForm from './AppointmentForm';
+import RizikyLoadingSpinner from './RizikyLoadingSpinner';
 
 interface MonthlyCalendarProps {
   onDateClick?: (date: Date) => void;
@@ -55,7 +56,12 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   const getAppointmentsForDate = (date: Date) => {
     return appointments.filter(appointment => 
       isSameDay(new Date(appointment.date), date)
-    );
+    ).sort((a, b) => {
+      // Trier par heure
+      const [aHours, aMinutes] = a.heure.split(':').map(Number);
+      const [bHours, bMinutes] = b.heure.split(':').map(Number);
+      return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
+    });
   };
 
   const handleDragStart = (appointment: Appointment, e: React.DragEvent) => {
@@ -72,11 +78,9 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
     if (draggedAppointment) {
       const originalDate = new Date(draggedAppointment.date);
       
-      // Vérifier si la date a changé
       if (!isSameDay(originalDate, targetDate)) {
         console.log('Date changed, opening edit modal with new date');
         
-        // Créer l'appointment avec la nouvelle date
         const updatedAppointment = {
           ...draggedAppointment,
           date: format(targetDate, 'yyyy-MM-dd')
@@ -123,12 +127,11 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   if (loading) {
     return (
       <Card className="calendar-luxury premium-shadow-xl border-0">
-        <CardContent className="p-16 text-center">
-          <div className="relative mb-8 floating-animation">
-            <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
-            <Crown className="absolute inset-0 w-6 h-6 m-auto text-primary" />
-          </div>
-          <p className="text-lg font-bold luxury-text-gradient">Chargement du calendrier mensuel...</p>
+        <CardContent className="p-8 lg:p-16 text-center">
+          <RizikyLoadingSpinner 
+            size="lg"
+            text="Chargement du calendrier mensuel premium"
+          />
         </CardContent>
       </Card>
     );
@@ -137,57 +140,57 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   return (
     <>
       <Card className="calendar-luxury premium-shadow-xl border-0 overflow-hidden">
-        <CardHeader className="premium-gradient text-white relative overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-blue-600 to-violet-600 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
           
           <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2 lg:gap-4">
+              <div className="w-8 lg:w-12 h-8 lg:h-12 bg-white/30 backdrop-blur-sm rounded-lg lg:rounded-xl flex items-center justify-center">
+                <Calendar className="w-4 lg:w-6 h-4 lg:h-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-2xl font-bold text-white">
+                <CardTitle className="text-lg lg:text-2xl font-bold text-white">
                   {format(currentDate, 'MMMM yyyy', { locale: fr })}
                 </CardTitle>
-                <p className="text-white/80 text-sm font-medium">Vue mensuelle premium</p>
+                <p className="text-white/80 text-xs lg:text-sm font-medium">Vue mensuelle premium</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="hidden sm:flex items-center gap-2 bg-white/20 rounded-full px-2 lg:px-3 py-1">
+                <div className="w-1.5 lg:w-2 h-1.5 lg:h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-white font-medium">Live</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1 lg:gap-2">
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={previousMonth}
-                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                  className="text-white hover:bg-white/20 w-8 lg:w-10 h-8 lg:h-10 p-0"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-4 lg:w-5 h-4 lg:h-5" />
                 </Button>
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={nextMonth}
-                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                  className="text-white hover:bg-white/20 w-8 lg:w-10 h-8 lg:h-10 p-0"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-4 lg:w-5 h-4 lg:h-5" />
                 </Button>
               </div>
-              <Star className="w-5 h-5 text-yellow-300 animate-pulse" />
+              <Star className="w-4 lg:w-5 h-4 lg:h-5 text-yellow-300 animate-pulse" />
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="p-0">
-          <div className="bg-gradient-to-br from-white via-primary/2 to-purple-500/5">
-            <div className="grid grid-cols-7 border-b border-primary/20">
+          <div className="bg-gradient-to-br from-white via-blue-50/30 to-violet-50/30">
+            <div className="grid grid-cols-7 border-b border-blue-200">
               {weekDays.map(day => (
-                <div key={day} className="p-4 text-center font-bold text-primary/80 luxury-card border-r border-primary/10 last:border-r-0">
-                  {day}
+                <div key={day} className="p-2 lg:p-4 text-center font-bold text-blue-700 luxury-card border-r border-blue-100 last:border-r-0">
+                  <span className="text-xs lg:text-sm">{day}</span>
                 </div>
               ))}
             </div>
@@ -201,25 +204,25 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                 return (
                   <div 
                     key={index}
-                    className={`min-h-[120px] p-2 border-r border-b border-primary/10 last:border-r-0 transition-all duration-300 cursor-pointer premium-hover ${
-                      !isCurrentMonth ? 'bg-gray-50/50 text-muted-foreground' : 'luxury-card hover:bg-gray'
-                    } ${isTodayDate ? 'premium-gradient text-white glow-effect' : ''}`}
+                    className={`min-h-[60px] sm:min-h-[80px] lg:min-h-[120px] p-1 lg:p-2 border-r border-b border-blue-100 last:border-r-0 transition-all duration-300 cursor-pointer premium-hover ${
+                      !isCurrentMonth ? 'bg-gray-50/50 text-muted-foreground' : 'luxury-card hover:bg-blue-50/50'
+                    } ${isTodayDate ? 'bg-gradient-to-br from-blue-500 to-violet-600 text-white' : ''}`}
                     onClick={() => onDateClick?.(day)}
                     onDrop={(e) => handleDrop(day, e)}
                     onDragOver={handleDragOver}
                   >
-                    <div className={`flex items-center justify-between mb-2 ${isTodayDate ? 'text-white' : ''}`}>
-                      <span className={`text-sm font-bold ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-primary' : 'text-muted-foreground'}`}>
+                    <div className={`flex items-center justify-between mb-1 lg:mb-2 ${isTodayDate ? 'text-white' : ''}`}>
+                      <span className={`text-xs lg:text-sm font-bold ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-blue-700' : 'text-muted-foreground'}`}>
                         {format(day, 'd')}
                       </span>
-                      {isTodayDate && <Crown className="w-3 h-3 text-yellow-300" />}
+                      {isTodayDate && <Crown className="w-2 lg:w-3 h-2 lg:h-3 text-yellow-300" />}
                     </div>
 
-                    <div className="space-y-1">
-                      {dayAppointments.slice(0, 3).map(appointment => (
+                    <div className={`space-y-0.5 lg:space-y-1 ${dayAppointments.length > 3 ? 'appointment-stack' : ''}`}>
+                      {dayAppointments.slice(0, window.innerWidth < 768 ? 2 : 3).map((appointment, appointmentIndex) => (
                         <div
                           key={appointment.id}
-                          className="text-xs p-1 rounded appointment-luxury text-white cursor-grab hover:opacity-80 transition-opacity glow-effect"
+                          className="appointment-luxury text-white cursor-grab hover:opacity-80 transition-opacity touch-manipulation"
                           draggable
                           onDragStart={(e) => handleDragStart(appointment, e)}
                           onClick={(e) => {
@@ -229,15 +232,15 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                         >
                           <div className="flex items-center gap-1">
                             <Zap className="w-2 h-2 flex-shrink-0" />
-                            <span className="truncate font-medium">{appointment.heure}</span>
+                            <span className="appointment-time">{appointment.heure}</span>
                           </div>
-                          <div className="truncate text-white/90">{appointment.titre}</div>
+                          <div className="appointment-title truncate">{appointment.titre}</div>
                         </div>
                       ))}
                       
-                      {dayAppointments.length > 3 && (
+                      {dayAppointments.length > (window.innerWidth < 768 ? 2 : 3) && (
                         <Badge variant="secondary" className="text-xs w-full justify-center">
-                          +{dayAppointments.length - 3} autres
+                          +{dayAppointments.length - (window.innerWidth < 768 ? 2 : 3)} autre{dayAppointments.length - (window.innerWidth < 768 ? 2 : 3) > 1 ? 's' : ''}
                         </Badge>
                       )}
                     </div>

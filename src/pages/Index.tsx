@@ -11,6 +11,10 @@ import DashboardPage from './DashboardPage';
 import NotFoundPage from './NotFoundPage';
 import ClientsPage from './ClientsPage';
 import CalendarPage from './CalendarPage';
+import MissionPage from './MissionPage';
+import PrivacyPage from './PrivacyPage';
+import TermsPage from './TermsPage';
+import SupportPage from './SupportPage';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -30,6 +34,11 @@ const Index = () => {
       <Route path="/mot-de-passe-oublie" element={<ForgotPasswordPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/mission" element={<MissionPage />} />
+      <Route path="/confidentialite" element={<PrivacyPage />} />
+      <Route path="/conditions" element={<TermsPage />} />
+      <Route path="/support" element={<SupportPage />} />
+      
       <Route
         path="/dashboard"
         element={

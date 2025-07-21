@@ -1,8 +1,8 @@
-
 import { format, isToday } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Appointment } from '@/services/AppointmentService';
 import CalendarAppointment from './CalendarAppointment';
+import MobileAppointmentGrid from './MobileAppointmentGrid';
 import { Calendar, Plus, Crown, Star, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -91,89 +91,73 @@ const CalendarDay = ({
         onDragEnter={enableDragAndDrop ? handleDragEnter : undefined}
         onDragLeave={enableDragAndDrop ? handleDragLeave : undefined}
         onDrop={enableDragAndDrop ? handleDrop : undefined}
-        className={`flex border-b border-primary/20 min-h-[120px] transition-all duration-300 relative group premium-hover ${
+        className={`flex flex-col border-b border-primary/20 transition-all duration-300 relative group premium-hover ${
           isCurrentDay 
             ? 'bg-gradient-to-r from-primary/10 to-purple-500/10' 
             : 'luxury-card hover:bg-gradient-to-r hover:from-primary/5 hover:to-purple-500/5'
         }`}
       >
-        {/* Date section - côté gauche */}
-        <div className={`flex-shrink-0 w-24 p-4 flex flex-col items-center justify-center border-r border-primary/20 ${
-          isCurrentDay ? 'bg-gradient-to-b from-primary/20 to-purple-500/20' : 'bg-gradient-to-b from-primary/5 to-purple-500/5'
+        {/* Date section - en haut */}
+        <div className={`flex-shrink-0 p-4 flex items-center justify-center border-b border-primary/20 ${
+          isCurrentDay ? 'bg-gradient-to-r from-primary/20 to-purple-500/20' : 'bg-gradient-to-r from-primary/5 to-purple-500/5'
         }`}>
           {/* Premium indicator pour le jour actuel */}
           {isCurrentDay && (
-            <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center gap-2 mr-4">
               <div className="w-3 h-3 premium-gradient rounded-full premium-shadow relative">
                 <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75"></div>
               </div>
-              <Crown className="w-3 h-3 text-primary" />
+              <Crown className="w-4 h-4 text-primary" />
             </div>
           )}
           
           <div className="text-center">
-            <div className={`text-xs font-medium mb-1 ${
+            <div className={`text-sm font-medium mb-1 ${
               isCurrentDay ? 'text-primary' : 'text-muted-foreground'
             }`}>
-              {format(day, 'EEE', { locale: fr })}
+              {format(day, 'EEEE', { locale: fr })}
             </div>
-            <div className={`text-lg font-bold ${
+            <div className={`text-2xl font-bold ${
               isCurrentDay ? 'luxury-text-gradient' : 'text-primary'
             }`}>
               {format(day, 'd')}
             </div>
-            <div className={`text-xs font-medium ${
+            <div className={`text-sm font-medium ${
               isCurrentDay ? 'text-primary' : 'text-muted-foreground'
             }`}>
-              {format(day, 'MMM', { locale: fr })}
+              {format(day, 'MMM yyyy', { locale: fr })}
             </div>
           </div>
         </div>
 
-        {/* Appointments section - côté droit */}
-        <div className="flex-1 p-4">
+        {/* Appointments section - en bas avec grille */}
+        <div className="flex-1 min-h-[200px]">
           {sortedAppointments.length > 0 ? (
-            <div className="space-y-2">
-              {sortedAppointments.map((appointment) => (
-                <CalendarAppointment 
-                  key={appointment.id} 
-                  appointment={appointment} 
-                  onClick={onAppointmentClick}
-                  onDragStart={enableDragAndDrop ? onDragStart : undefined}
-                  enableDragAndDrop={enableDragAndDrop}
-                />
-              ))}
-              
-              {/* Premium indicator pour plus de rendez-vous */}
-              {sortedAppointments.length > 2 && (
-                <div className="text-center py-2">
-                  <div className="inline-flex items-center gap-2 text-xs text-primary bg-gradient-to-r from-primary/10 to-purple-500/10 px-3 py-1 rounded-full border border-primary/20 premium-shadow">
-                    <Star className="w-2 h-2" />
-                    <span className="font-bold">{sortedAppointments.length - 2} autres</span>
-                    <Sparkles className="w-2 h-2" />
-                  </div>
-                </div>
-              )}
-            </div>
+            <MobileAppointmentGrid
+              appointments={sortedAppointments}
+              onAppointmentClick={onAppointmentClick}
+              onDragStart={enableDragAndDrop ? onDragStart : undefined}
+              enableDragAndDrop={enableDragAndDrop}
+            />
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center py-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
+            <div className="h-full flex flex-col items-center justify-center text-center py-8">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-all duration-300 ${
                 isCurrentDay 
                   ? 'premium-gradient' 
                   : 'luxury-card border border-primary/20 group-hover:border-primary/40'
               }`}>
-                <Calendar className={`w-4 h-4 ${
+                <Calendar className={`w-6 h-6 ${
                   isCurrentDay ? 'text-white' : 'text-primary group-hover:text-primary/80'
                 }`} />
               </div>
-              <p className={`text-xs font-bold mb-1 ${
+              <p className={`text-sm font-bold mb-1 ${
                 isCurrentDay ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'
               }`}>
                 Aucun RDV
               </p>
               <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                <Sparkles className="w-2 h-2" />
-                Libre
+                <Sparkles className="w-3 h-3" />
+                Journée libre
               </p>
             </div>
           )}

@@ -126,6 +126,7 @@ const LoginPage = () => {
           title: "Connexion réussie !",
           description: "Vous êtes maintenant connecté.",
           variant: "default",
+          className: "bg-indigo-700 text-white",  
         });
         // Redirection vers la page d'accueil
         navigate('/', { replace: true });

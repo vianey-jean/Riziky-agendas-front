@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from "@/lib/utils";
-import { Home, Calendar, Info, Mail, Users, CalendarDays, Crown, Menu, X } from 'lucide-react';
+import { Home, Calendar, Info, Mail, Users, CalendarDays, Crown, Menu, X, User } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -41,10 +41,10 @@ const Navbar = () => {
 
   return (
     <nav className={cn(
-      "fixed top-0 left-0 w-full z-50 premium-gradient backdrop-blur-md transition-all duration-300 border-b border-white/20 ",
-      isScrolled ? "premium-shadow-xl" : "shadow-none"
+      "fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-600 to-violet-600 backdrop-blur-md transition-all duration-300 border-b border-white/20",
+      isScrolled ? "shadow-xl" : "shadow-none"
     )}>
-      <div className="container mx-auto px-4 py-3 ">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center text-xl font-bold text-white floating-animation">
@@ -62,12 +62,12 @@ const Navbar = () => {
                   className={({ isActive }) =>
                     cn(
                       "py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/20 hover:backdrop-blur-sm flex items-center space-x-2 text-white/90 hover:text-white premium-hover",
-                      isActive ? "bg-white/20 text-white font-semibold glow-effect" : ""
+                      isActive ? "bg-white/20 text-white font-semibold" : ""
                     )
                   }
                 >
-                  <item.icon className="w-5 h-5 text-white " />
-                  <span className=" text-white font-bold ">{item.name}</span>
+                  <item.icon className="w-5 h-5 text-white" />
+                  <span className="text-white font-bold">{item.name}</span>
                 </NavLink>
               )
             ))}
@@ -86,36 +86,38 @@ const Navbar = () => {
           </button>
 
           {/* Auth Section Desktop */}
-          <div className="hidden lg:flex items-center space-x-4">
-            {user ? (
-              <>
-                <span className="text-sm text-white/90 font-bold">
-                  Connecté en tant que : <span className="text-green-300 font-bold">{user.prenom} {user.nom}</span>
-                </span>
-                <button 
-                  onClick={logout} 
-                  className="py-2 px-4 rounded-lg bg-red-500 text-white border border-red-400/30 hover:bg-red-500/30 transition-all duration-200 font-medium"
-                >
-                  Déconnexion
-                </button>
-              </>
-            ) : (
-              <>
-                <Link 
-                  to="/connexion" 
-                  className="py-2 px-4 rounded-lg hover:bg-white/20 hover:backdrop-blur-sm transition-all duration-200 text-white/90 hover:text-white font-medium"
-                >
-                  Connexion
-                </Link>
-                <Link 
-                  to="/inscription" 
-                  className="py-2 px-4 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-200 font-medium backdrop-blur-sm border border-white/30"
-                >
-                  Inscription
-                </Link>
-              </>
-            )}
-          </div>
+<div className="hidden lg:flex items-center space-x-4">
+  {user ? (
+    <>
+      <div className="flex items-center gap-2 py-2 px-4 rounded-lg text-white/90 font-medium">
+        <User className="w-5 h-5" />
+        <span className="text-green-300 font-bold">{user.prenom} {user.nom}</span>
+      </div>
+      <button 
+        onClick={logout} 
+        className="py-2 px-4 rounded-lg bg-red-500/80 text-white border border-red-400/30 hover:bg-red-500/60 transition-all duration-200 font-medium"
+      >
+        Déconnexion
+      </button>
+    </>
+  ) : (
+    <>
+      <Link 
+        to="/connexion" 
+        className="py-2 px-4 rounded-lg hover:bg-white/20 hover:backdrop-blur-sm transition-all duration-200 text-white/90 hover:text-white font-medium"
+      >
+        Connexion
+      </Link>
+      <Link 
+        to="/inscription" 
+        className="py-2 px-4 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-200 font-medium backdrop-blur-sm border border-white/30"
+      >
+        Inscription
+      </Link>
+    </>
+  )}
+</div>
+
         </div>
 
         {/* Mobile Menu */}
@@ -145,11 +147,14 @@ const Navbar = () => {
               <div className="mt-4 pt-4 border-t border-white/20">
                 {user ? (
                   <>
-                    <div className="mb-3 px-4 py-2 bg-white/10 rounded-lg">
-                      <span className="text-sm text-white/90 font-medium">
-                        Connecté : <span className="text-green-300 font-bold">{user.prenom} {user.nom}</span>
-                      </span>
-                    </div>
+                    <Link 
+                      to="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 mb-3 px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-200"
+                    >
+                      <User className="w-5 h-5 text-white" />
+                      <span className="text-white font-medium">Profil - {user.prenom}</span>
+                    </Link>
                     <button 
                       onClick={() => {
                         logout();
@@ -184,9 +189,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
-    
   );
-  
 };
 
 export default Navbar;

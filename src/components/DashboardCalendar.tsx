@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { addWeeks, format, subWeeks } from 'date-fns';
@@ -40,17 +39,23 @@ const DashboardCalendar = () => {
     }
   };
   
-  // Organiser les rendez-vous par jour et par heure
+  // Organiser les rendez-vous par jour et par heure avec regroupement précis
   const appointmentGrid: Record<string, Record<string, Appointment[]>> = {};
   
   weekDays.forEach(day => {
     const dateStr = format(day.fullDate, 'yyyy-MM-dd');
     appointmentGrid[dateStr] = {};
     
+    // Obtenir tous les rendez-vous de cette journée
+    const dayAppointments = appointments.filter(a => a.date === dateStr);
+    
     hours.forEach(hour => {
-      appointmentGrid[dateStr][hour] = appointments.filter(
-        a => a.date === dateStr && a.heure.startsWith(hour.split(':')[0])
-      );
+      const hourPrefix = hour.split(':')[0];
+      // Grouper tous les rendez-vous qui commencent dans cette heure (ex: 8:00, 8:25, 8:45 vont tous dans 8:00)
+      appointmentGrid[dateStr][hour] = dayAppointments.filter(appointment => {
+        const appointmentHour = appointment.heure.split(':')[0];
+        return appointmentHour === hourPrefix;
+      });
     });
   });
 
@@ -87,15 +92,21 @@ const DashboardCalendar = () => {
           const success = await AppointmentService.update(updatedAppointment);
           
           if (success) {
-            toast.success(`Rendez-vous déplacé vers ${format(targetDate, 'dd/MM/yyyy')} à ${newHour}`);
+            toast.success(`Rendez-vous déplacé vers ${format(targetDate, 'dd/MM/yyyy')} à ${newHour}`, {
+              className: "bg-indigo-700 text-white"
+            });
             // Rafraîchir les données
             await fetchAppointments();
           } else {
-            toast.error('Erreur lors du déplacement du rendez-vous');
+            toast.error('Erreur lors du déplacement du rendez-vous', {
+              className: "bg-indigo-700 text-white"
+            });
           }
         } catch (error) {
           console.error('Error updating appointment:', error);
-          toast.error('Erreur lors du déplacement du rendez-vous');
+          toast.error('Erreur lors du déplacement du rendez-vous', {
+            className: "bg-indigo-700 text-white"
+          });
         }
       }
     }
@@ -243,15 +254,15 @@ const DashboardCalendar = () => {
                             <div 
                               key={appointment.id}
                               className={`appointment-luxury text-white p-2 lg:p-3 text-xs rounded-xl cursor-grab hover:cursor-grabbing premium-shadow premium-hover relative overflow-hidden glow-effect active:cursor-grabbing ${
-                                isMultiple ? 'min-h-[40px] lg:min-h-[50px]' : 'min-h-[60px] lg:min-h-[70px]'
+                                isMultiple ? 'min-h-[35px] lg:min-h-[40px]' : 'min-h-[60px] lg:min-h-[70px]'
                               }`}
                               draggable
                               onDragStart={(e) => handleDragStart(appointment, e)}
                               onClick={() => handleAppointmentClick(appointment)}
                               style={{ 
-                                transform: isMultiple ? `scale(${0.9 - index * 0.05})` : 'scale(1)',
+                                transform: isMultiple ? `scale(${0.95 - index * 0.02})` : 'scale(1)',
                                 zIndex: cellAppointments.length - index,
-                                marginTop: isMultiple && index > 0 ? '-8px' : '0'
+                                marginTop: isMultiple && index > 0 ? '-4px' : '0'
                               }}
                             >
                               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
@@ -261,13 +272,11 @@ const DashboardCalendar = () => {
                                   <span className="truncate">{appointment.titre}</span>
                                   <Star className="w-1.5 lg:w-2 h-1.5 lg:h-2 text-yellow-300 flex-shrink-0" />
                                 </div>
+                                <div className="text-white/90 font-medium text-xs mb-1">
+                                  {appointment.heure}
+                                </div>
                                 {!isMultiple && (
                                   <div className="truncate text-white/90 font-medium text-xs">{appointment.location}</div>
-                                )}
-                                {isMultiple && (
-                                  <div className="text-white/70 text-xs">
-                                    {appointment.heure}
-                                  </div>
                                 )}
                               </div>
                             </div>

@@ -83,20 +83,22 @@ export function useNotificationService(appointments: Appointment[]) {
             // Jouer le son et afficher la notification
         playNotificationSound();
 
-        toast(
-          `Vous avez un rendez-vous le ${format(appointmentDate, 'dd/MM/yyyy', { locale: fr })} à ${appointment.heure} au ${appointment.location}`,
-          {
-            description: appointment.description,
-            duration: 5000,
-            action: {
-              label: "Ok",
-              onClick: () => {
-                saveConfirmedNotification(appointment.id);
-                confirmedNotifications.current.add(appointment.id);
-              }
-            }
-          }
-        );
+      toast(
+  `Vous avez un rendez-vous le ${format(appointmentDate, 'dd/MM/yyyy', { locale: fr })} à ${appointment.heure} au ${appointment.location}`,
+  {
+    description: appointment.description,
+    duration: 5000,
+    action: {
+      label: "Ok",
+      onClick: () => {
+        saveConfirmedNotification(appointment.id);
+        confirmedNotifications.current.add(appointment.id);
+      }
+    },
+    className: "bg-indigo-700 text-white"
+  }
+);
+
       }
     });
   }, [appointments]);
