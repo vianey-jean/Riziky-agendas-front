@@ -113,7 +113,9 @@ export const AppointmentService = {
     try {
       const currentUser = AuthService.getCurrentUser();
       if (!currentUser) {
-        toast.error('Vous devez être connecté pour ajouter un rendez-vous');
+        toast.error('Vous devez être connecté pour ajouter un rendez-vous', {
+          className: "bg-indigo-700 text-white border-indigo-600"
+        });
         return null;
       }
 
@@ -123,11 +125,15 @@ export const AppointmentService = {
         headers: { 'user-id': currentUser.id.toString() }
       });
 
-      toast.success('Rendez-vous ajouté avec succès');
+      toast.success('Rendez-vous ajouté avec succès', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return response.data.appointment;
     } catch (error: any) {
       console.error('Erreur lors de l\'ajout:', error);
-      toast.error(error.response?.data?.error || 'Erreur lors de l\'ajout du rendez-vous');
+      toast.error(error.response?.data?.error || 'Erreur lors de l\'ajout du rendez-vous', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return null;
     }
   },
@@ -136,7 +142,9 @@ export const AppointmentService = {
     try {
       const currentUser = AuthService.getCurrentUser();
       if (!currentUser) {
-        toast.error('Vous devez être connecté pour modifier un rendez-vous');
+        toast.error('Vous devez être connecté pour modifier un rendez-vous', {
+          className: "bg-indigo-700 text-white border-indigo-600"
+        });
         return false;
       }
 
@@ -146,11 +154,15 @@ export const AppointmentService = {
         headers: { 'user-id': currentUser.id.toString() }
       });
 
-      toast.success('Rendez-vous mis à jour avec succès');
+      toast.success('Rendez-vous mis à jour avec succès', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return true;
     } catch (error: any) {
       console.error('Erreur lors de la mise à jour:', error);
-      toast.error(error.response?.data?.error || 'Erreur lors de la mise à jour du rendez-vous');
+      toast.error(error.response?.data?.error || 'Erreur lors de la mise à jour du rendez-vous', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return false;
     }
   },
@@ -159,7 +171,9 @@ export const AppointmentService = {
     try {
       const currentUser = AuthService.getCurrentUser();
       if (!currentUser) {
-        toast.error('Vous devez être connecté pour supprimer un rendez-vous');
+        toast.error('Vous devez être connecté pour supprimer un rendez-vous', {
+          className: "bg-indigo-700 text-white border-indigo-600"
+        });
         return false;
       }
 
@@ -167,10 +181,14 @@ export const AppointmentService = {
         headers: { 'user-id': currentUser.id.toString() }
       });
 
-      toast.success('Rendez-vous supprimé avec succès');
+      toast.success('Rendez-vous supprimé avec succès', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return true;
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Erreur lors de la suppression du rendez-vous');
+      toast.error(error.response?.data?.error || 'Erreur lors de la suppression du rendez-vous', {
+        className: "bg-indigo-700 text-white border-indigo-600"
+      });
       return false;
     }
   },

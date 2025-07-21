@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { addWeeks, format, subWeeks } from 'date-fns';
@@ -20,6 +21,7 @@ const DashboardCalendar = () => {
   useEffect(() => {
     fetchAppointments();
   }, []);
+  
   const previousWeek = () => {
     setCurrentDate(subWeeks(currentDate, 1));
   };
@@ -39,7 +41,7 @@ const DashboardCalendar = () => {
     }
   };
   
-  // Organiser les rendez-vous par jour et par heure avec regroupement précis
+  // Organiser les rendez-vous par jour et par heure - CORRIGÉ
   const appointmentGrid: Record<string, Record<string, Appointment[]>> = {};
   
   weekDays.forEach(day => {
@@ -50,11 +52,26 @@ const DashboardCalendar = () => {
     const dayAppointments = appointments.filter(a => a.date === dateStr);
     
     hours.forEach(hour => {
-      const hourPrefix = hour.split(':')[0];
-      // Grouper tous les rendez-vous qui commencent dans cette heure (ex: 8:00, 8:25, 8:45 vont tous dans 8:00)
-      appointmentGrid[dateStr][hour] = dayAppointments.filter(appointment => {
-        const appointmentHour = appointment.heure.split(':')[0];
-        return appointmentHour === hourPrefix;
+      // Initialiser le tableau pour cette heure
+      appointmentGrid[dateStr][hour] = [];
+      
+      // Pour chaque rendez-vous de la journée
+      dayAppointments.forEach(appointment => {
+        const appointmentTime = appointment.heure;
+        const appointmentHour = parseInt(appointmentTime.split(':')[0]);
+        const currentHour = parseInt(hour.split(':')[0]);
+        
+        // Vérifier si ce rendez-vous appartient à cette heure
+        if (appointmentHour === currentHour) {
+          appointmentGrid[dateStr][hour].push(appointment);
+        }
+      });
+      
+      // Trier les rendez-vous par heure exacte dans le créneau
+      appointmentGrid[dateStr][hour].sort((a, b) => {
+        const timeA = a.heure.split(':').map(Number);
+        const timeB = b.heure.split(':').map(Number);
+        return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
       });
     });
   });
@@ -193,7 +210,6 @@ const DashboardCalendar = () => {
             </div>
           </div>
         </CardHeader>
-
 
       <div className="overflow-x-auto premium-scroll">
         <div className="min-w-[900px] relative">
