@@ -115,20 +115,34 @@ const CalendarPage: React.FC = () => {
 
         {/* Onglets de calendrier */}
         <Tabs defaultValue="week" className="space-y-8" key={refreshKey}>
-          <TabsList className="grid w-full grid-cols-3 h-14 p-1 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20">
-            <TabsTrigger value="week" className="flex items-center gap-2 h-12 font-medium">
-              <Calendar className="w-4 h-4" />
-              Vue Semaine
-            </TabsTrigger>
-            <TabsTrigger value="month" className="flex items-center gap-2 h-12 font-medium">
-              <CalendarDays className="w-4 h-4" />
-              Vue Mensuelle
-            </TabsTrigger>
-            <TabsTrigger value="dashboard" className="flex items-center gap-2 h-12 font-medium">
-              <BarChart3 className="w-4 h-4" />
-              Vue Dashboard
-            </TabsTrigger>
-          </TabsList>
+         <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 gap-2 h-auto p-1 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-xl">
+  
+  <TabsTrigger
+    value="week"
+    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+  >
+    <Calendar className="w-4 h-4" />
+    Vue Semaine
+  </TabsTrigger>
+
+  <TabsTrigger
+    value="month"
+    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+  >
+    <CalendarDays className="w-4 h-4" />
+    Vue Mensuelle
+  </TabsTrigger>
+
+  <TabsTrigger
+    value="dashboard"
+    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+  >
+    <BarChart3 className="w-4 h-4" />
+    Vue Dashboard
+  </TabsTrigger>
+
+</TabsList>
+
 
           <TabsContent value="week" className="space-y-6">
             <WeekCalendar 
