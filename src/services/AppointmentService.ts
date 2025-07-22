@@ -1,3 +1,4 @@
+
 import api from './api';
 import { format, parseISO, addDays, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -5,6 +6,10 @@ import { toast } from 'sonner';
 import { AuthService } from './AuthService';
 import { ReactNode } from 'react';
 
+/**
+ * Interface pour les rendez-vous
+ * Représente les données d'un rendez-vous dans l'application
+ */
 export interface Appointment {
   lieu: ReactNode;
   id: number;
@@ -22,7 +27,15 @@ export interface Appointment {
   location: string;
 }
 
+/**
+ * Service de gestion des rendez-vous
+ * Centralise toute la logique métier liée aux rendez-vous
+ */
 export const AppointmentService = {
+  /**
+   * Récupère tous les rendez-vous validés de l'utilisateur connecté
+   * @returns Promise<Appointment[]> Liste des rendez-vous validés
+   */
   getAll: async (): Promise<Appointment[]> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -36,11 +49,16 @@ export const AppointmentService = {
       const appointments = response.data.appointments || [];
       return appointments.filter((appointment: Appointment) => appointment.statut === 'validé');
     } catch (error) {
-      console.error('Erreur lors de la récupération des rendez-vous:', error);
+      // En cas d'erreur, retourner un array vide plutôt que de faire planter l'app
       return [];
     }
   },
 
+  /**
+   * Récupère tous les rendez-vous (tous statuts) de l'utilisateur connecté
+   * Utilisé pour la recherche qui doit inclure les rendez-vous annulés
+   * @returns Promise<Appointment[]> Liste complète des rendez-vous
+   */
   getAllWithStatus: async (): Promise<Appointment[]> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -53,11 +71,15 @@ export const AppointmentService = {
       // Retourner tous les rendez-vous (validés et annulés) pour la recherche
       return response.data.appointments || [];
     } catch (error) {
-      console.error('Erreur lors de la récupération des rendez-vous:', error);
       return [];
     }
   },
 
+  /**
+   * Récupère un rendez-vous par son ID
+   * @param id - ID du rendez-vous
+   * @returns Promise<Appointment | undefined>
+   */
   getById: async (id: number): Promise<Appointment | undefined> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -69,11 +91,16 @@ export const AppointmentService = {
 
       return response.data.appointment;
     } catch (error) {
-      console.error(`Erreur lors de la récupération du rendez-vous ${id}:`, error);
       return undefined;
     }
   },
 
+  /**
+   * Recherche des rendez-vous selon une requête
+   * La recherche nécessite au minimum 3 caractères pour éviter trop de résultats
+   * @param query - Terme de recherche
+   * @returns Promise<Appointment[]> Résultats de la recherche
+   */
   search: async (query: string): Promise<Appointment[]> => {
     if (query.length < 3) return [];
 
@@ -104,11 +131,15 @@ export const AppointmentService = {
 
       return filteredAppointments;
     } catch (error) {
-      console.error('Erreur lors de la recherche de rendez-vous:', error);
       return [];
     }
   },
 
+  /**
+   * Crée un nouveau rendez-vous
+   * @param appointment - Données du rendez-vous (sans ID)
+   * @returns Promise<Appointment | null> Rendez-vous créé ou null si erreur
+   */
   add: async (appointment: Omit<Appointment, 'id'>): Promise<Appointment | null> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -119,8 +150,6 @@ export const AppointmentService = {
         return null;
       }
 
-      console.log('Envoi des données au serveur:', appointment);
-
       const response = await api.post('/appointments', appointment, {
         headers: { 'user-id': currentUser.id.toString() }
       });
@@ -130,7 +159,6 @@ export const AppointmentService = {
       });
       return response.data.appointment;
     } catch (error: any) {
-      console.error('Erreur lors de l\'ajout:', error);
       toast.error(error.response?.data?.error || 'Erreur lors de l\'ajout du rendez-vous', {
         className: "bg-indigo-700 text-white border-indigo-600"
       });
@@ -138,6 +166,11 @@ export const AppointmentService = {
     }
   },
 
+  /**
+   * Met à jour un rendez-vous existant
+   * @param appointment - Données complètes du rendez-vous
+   * @returns Promise<boolean> True si succès, false sinon
+   */
   update: async (appointment: Appointment): Promise<boolean> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -148,8 +181,6 @@ export const AppointmentService = {
         return false;
       }
 
-      console.log('Mise à jour des données au serveur:', appointment);
-
       await api.put(`/appointments/${appointment.id}`, appointment, {
         headers: { 'user-id': currentUser.id.toString() }
       });
@@ -159,7 +190,6 @@ export const AppointmentService = {
       });
       return true;
     } catch (error: any) {
-      console.error('Erreur lors de la mise à jour:', error);
       toast.error(error.response?.data?.error || 'Erreur lors de la mise à jour du rendez-vous', {
         className: "bg-indigo-700 text-white border-indigo-600"
       });
@@ -167,6 +197,11 @@ export const AppointmentService = {
     }
   },
 
+  /**
+   * Supprime un rendez-vous
+   * @param id - ID du rendez-vous à supprimer
+   * @returns Promise<boolean> True si succès, false sinon
+   */
   delete: async (id: number): Promise<boolean> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -193,6 +228,11 @@ export const AppointmentService = {
     }
   },
 
+  /**
+   * Récupère les rendez-vous de la semaine courante
+   * @param userId - ID utilisateur (optionnel)
+   * @returns Promise<Appointment[]> Rendez-vous de la semaine
+   */
   getCurrentWeekAppointments: async (userId?: number): Promise<Appointment[]> => {
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -213,11 +253,15 @@ export const AppointmentService = {
       const appointments = response.data.appointments || [];
       return appointments.filter((appointment: Appointment) => appointment.statut === 'validé');
     } catch (error) {
-      console.error('Erreur lors de la récupération des rendez-vous de la semaine:', error);
       return [];
     }
   },
 
+  /**
+   * Génère les jours de la semaine courante pour l'affichage calendrier
+   * Fonction pure qui ne dépend que de la date courante
+   * @returns Array des jours avec métadonnées
+   */
   getWeekDays: () => {
     const today = new Date();
     const monday = startOfWeek(today, { weekStartsOn: 1 });
@@ -236,6 +280,11 @@ export const AppointmentService = {
       });
   },
 
+  /**
+   * Génère les heures de travail (7h à 20h)
+   * Fonction pure qui retourne toujours la même liste
+   * @returns Array des heures
+   */
   getHours: () => {
     return Array(14)
       .fill(null)

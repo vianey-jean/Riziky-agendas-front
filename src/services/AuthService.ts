@@ -1,28 +1,41 @@
+
 // Importation de l'instance Axios personnalisée pour les appels API
 import api from './api';
 
 // Importation du module "sonner" pour afficher des notifications (toast)
 import { toast } from 'sonner';
 
-// Définition de l'interface utilisateur (User) pour typer les objets utilisateurs
+/**
+ * Interface utilisateur pour typer les objets utilisateurs
+ * Définit la structure des données utilisateur dans l'application
+ */
 export interface User {
-  id: number;            // Identifiant unique
-  nom: string;           // Nom de famille
-  prenom: string;        // Prénom
-  email: string;         // Adresse email
-  password: string;      // Mot de passe (stocké temporairement côté client ici)
-  genre: string;         // Sexe de l'utilisateur (ex : "homme", "femme")
-  adresse: string;       // Adresse postale
-  phone: string;         // Numéro de téléphone
+  readonly id: number;            // Identifiant unique
+  readonly nom: string;           // Nom de famille
+  readonly prenom: string;        // Prénom
+  readonly email: string;         // Adresse email
+  readonly password: string;      // Mot de passe (stocké temporairement côté client)
+  readonly genre: string;         // Sexe de l'utilisateur (ex : "homme", "femme")
+  readonly adresse: string;       // Adresse postale
+  readonly phone: string;         // Numéro de téléphone
 }
 
 // Variable globale pour stocker l'utilisateur actuellement connecté
 let loggedInUser: User | null = null;
 
-// Déclaration du service d'authentification
+/**
+ * Service d'authentification centralisé
+ * Gère toutes les opérations liées à l'authentification utilisateur
+ */
 export const AuthService = {
 
-  // Fonction de connexion (login)
+  /**
+   * Fonction de connexion utilisateur
+   * Vérifie les identifiants auprès du serveur et stocke la session
+   * @param email - Adresse email de l'utilisateur
+   * @param password - Mot de passe de l'utilisateur
+   * @returns Promise<boolean> True si connexion réussie, false sinon
+   */
   login: async (email: string, password: string): Promise<boolean> => {
     try {
       // Envoi d'une requête POST à l'API pour vérifier les identifiants
@@ -56,7 +69,12 @@ export const AuthService = {
     }
   },
 
-  // Fonction d'inscription (register)
+  /**
+   * Fonction d'inscription d'un nouvel utilisateur
+   * Crée un compte utilisateur avec validation côté serveur
+   * @param user - Données de l'utilisateur (sans ID qui sera généré)
+   * @returns Promise<boolean> True si inscription réussie, false sinon
+   */
   register: async (user: Omit<User, 'id'>): Promise<boolean> => {
     try {
       // Envoi des données du nouvel utilisateur à l'API
@@ -81,7 +99,13 @@ export const AuthService = {
     }
   },
 
-  // Fonction de réinitialisation du mot de passe
+  /**
+   * Fonction de réinitialisation du mot de passe
+   * Permet à un utilisateur de changer son mot de passe
+   * @param email - Email de l'utilisateur
+   * @param newPassword - Nouveau mot de passe
+   * @returns Promise<boolean> True si réinitialisation réussie, false sinon
+   */
   resetPassword: async (email: string, newPassword: string): Promise<boolean> => {
     try {
       // Envoi de la demande de réinitialisation à l'API
@@ -106,7 +130,12 @@ export const AuthService = {
     }
   },
 
-  // Vérifie si un email est déjà enregistré (utile pour formulaire dynamique)
+  /**
+   * Vérifie si un email est déjà enregistré
+   * Utile pour la validation dynamique des formulaires
+   * @param email - Email à vérifier
+   * @returns Promise<boolean> True si email existe, false sinon
+   */
   checkEmail: async (email: string): Promise<boolean> => {
     try {
       // Requête GET à l'API pour vérifier l'existence d'un email
@@ -117,7 +146,10 @@ export const AuthService = {
     }
   },
 
-  // Fonction de déconnexion
+  /**
+   * Fonction de déconnexion
+   * Nettoie la session utilisateur locale
+   */
   logout: (): void => {
     loggedInUser = null; // Réinitialise l'utilisateur en mémoire
     localStorage.removeItem('user'); // Supprime les données locales
@@ -127,7 +159,11 @@ export const AuthService = {
     });
   },
 
-  // Fonction qui retourne l'utilisateur actuellement connecté
+  /**
+   * Fonction qui retourne l'utilisateur actuellement connecté
+   * Vérifie d'abord la mémoire, puis le localStorage
+   * @returns User | null Utilisateur connecté ou null si aucun
+   */
   getCurrentUser: (): User | null => {
     // Si déjà chargé en mémoire, retourne directement
     if (loggedInUser) return loggedInUser;
