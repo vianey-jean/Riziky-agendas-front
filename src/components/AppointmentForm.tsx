@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,15 +73,30 @@ type AppointmentFormProps = {
   onCancel: () => void;
   disableDate?: boolean;
   mode?: 'add' | 'edit';
+  selectedDate?: Date | null;
 };
 
-const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false, mode }: AppointmentFormProps) => {
+const AppointmentForm = ({ 
+  appointment, 
+  onSuccess, 
+  onCancel, 
+  disableDate = false, 
+  mode, 
+  selectedDate 
+}: AppointmentFormProps) => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availableHours, setAvailableHours] = useState<string[]>([]);
   const isEditing = !!appointment;
   
   const currentUser = AuthService.getCurrentUser();
+  
+  // Déterminer la date par défaut
+  const getDefaultDate = () => {
+    if (appointment) return new Date(appointment.date);
+    if (selectedDate) return selectedDate;
+    return new Date();
+  };
   
   // Initialiser le formulaire avec les valeurs par défaut ou les valeurs de l'appointment existant
   const form = useForm<z.infer<typeof formSchema>>({
@@ -105,7 +121,7 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
       telephone: '',
       titre: "",
       description: "",
-      date: new Date(),
+      date: getDefaultDate(),
       heure: "09:00",
       duree: 60,
       location: "",
@@ -408,6 +424,12 @@ const AppointmentForm = ({ appointment, onSuccess, onCancel, disableDate = false
                     <div className="flex items-center gap-2 text-sm text-primary bg-blue-50 rounded-lg p-2">
                       <Star className="w-4 h-4" />
                       <span>Date fixée suite au déplacement du rendez-vous</span>
+                    </div>
+                  )}
+                  {selectedDate && !disableDate && (
+                    <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-lg p-2">
+                      <Star className="w-4 h-4" />
+                      <span>Date sélectionnée dans le calendrier</span>
                     </div>
                   )}
                   <FormMessage />

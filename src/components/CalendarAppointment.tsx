@@ -1,6 +1,6 @@
 
 import { Appointment } from '@/services/AppointmentService';
-import { Clock, MapPin, Sparkles, Calendar, Star, User, Phone } from 'lucide-react';
+import { Clock, MapPin, Calendar, Star, User, Phone, Edit, Trash2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
@@ -11,6 +11,8 @@ type CalendarAppointmentProps = {
   onClick: (appointment: Appointment) => void;
   onDragStart?: (appointment: Appointment, e: React.DragEvent) => void;
   enableDragAndDrop?: boolean;
+  onEditAppointment?: (appointment: Appointment) => void;
+  onDeleteAppointment?: (appointment: Appointment) => void;
 };
 
 /**
@@ -20,7 +22,9 @@ const CalendarAppointment = ({
   appointment, 
   onClick, 
   onDragStart,
-  enableDragAndDrop = true 
+  enableDragAndDrop = true,
+  onEditAppointment,
+  onDeleteAppointment
 }: CalendarAppointmentProps) => {
   const isMobile = useIsMobile();
   
@@ -43,6 +47,20 @@ const CalendarAppointment = ({
     onClick(appointment);
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEditAppointment) {
+      onEditAppointment(appointment);
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDeleteAppointment) {
+      onDeleteAppointment(appointment);
+    }
+  };
+
   // Version mobile compacte
   if (isMobile) {
     return (
@@ -61,6 +79,30 @@ const CalendarAppointment = ({
         
         {/* Premium border effect */}
         <div className="absolute inset-0 rounded-xl border border-white/20 group-hover:border-white/40 transition-all duration-300"></div>
+        
+        {/* Icônes d'actions - visibles seulement si les props sont fournies */}
+        {(onEditAppointment || onDeleteAppointment) && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            {onEditAppointment && (
+              <button
+                onClick={handleEdit}
+                className="w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                title="Modifier"
+              >
+                <Edit className="w-3 h-3" />
+              </button>
+            )}
+            {onDeleteAppointment && (
+              <button
+                onClick={handleDelete}
+                className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                title="Supprimer"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        )}
         
         <div className="relative z-10">
           {/* Title et heure sur la même ligne */}
@@ -110,12 +152,6 @@ const CalendarAppointment = ({
           </div>
         </div>
         
-        {/* Premium hover indicators */}
-        <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <div className="w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse"></div>
-          <div className="w-1 h-1 bg-yellow-400 rounded-full animate-pulse delay-75"></div>
-        </div>
-        
         {/* Luxury shine effect */}
         <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
       </div>
@@ -141,19 +177,39 @@ const CalendarAppointment = ({
       {/* Premium border effect */}
       <div className="absolute inset-0 rounded-2xl border-2 border-white/20 group-hover:border-white/40 transition-all duration-300"></div>
       
+      {/* Icônes d'actions - visibles seulement si les props sont fournies */}
+      {(onEditAppointment || onDeleteAppointment) && (
+        <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+          {onEditAppointment && (
+            <button
+              onClick={handleEdit}
+              className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 premium-shadow"
+              title="Modifier"
+            >
+              <Edit className="w-4 h-4" />
+            </button>
+          )}
+          {onDeleteAppointment && (
+            <button
+              onClick={handleDelete}
+              className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 premium-shadow"
+              title="Supprimer"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
+      
       <div className="relative z-10">
         {/* Title avec icon premium */}
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-3 mb-3 pr-20">
           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
             <Calendar className="w-4 h-4 text-black flex-shrink-0" />
           </div>
           <p className="font-bold text-sm text-red group-hover:text-white/90 transition-colors truncate flex-1">
             {appointment.titre}
           </p>
-          <div className="flex items-center gap-1">
-            <Star className="w-3 h-3 text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <Sparkles className="w-3 h-3 text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100" />
-          </div>
         </div>
 
         {/* Nom/Prénom avec style premium */}
@@ -203,13 +259,6 @@ const CalendarAppointment = ({
           </div>
           <p className="text-xs text-white/90 truncate font-medium">{appointment.location}</p>
         </div>
-      </div>
-      
-      {/* Premium hover indicators */}
-      <div className="absolute bottom-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
-        <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
-        <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse delay-75"></div>
-        <div className="w-1 h-1 bg-yellow-200 rounded-full animate-pulse delay-150"></div>
       </div>
       
       {/* Luxury shine effect */}

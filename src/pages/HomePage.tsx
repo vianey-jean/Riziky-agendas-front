@@ -118,6 +118,7 @@ const HomePage = () => {
             <WeekCalendar 
               onAppointmentClick={handleAppointmentClick} 
               enableDragAndDrop={false}
+              showActionButtons={false}
             />
           </div>
         </div>

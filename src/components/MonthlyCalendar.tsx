@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,19 +6,25 @@ import { Badge } from '@/components/ui/badge';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, addMonths, subMonths, startOfWeek, endOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Calendar, Crown, Star, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Crown, Star, Zap, Plus, Edit, Trash2 } from 'lucide-react';
 import AppointmentModal from './AppointmentModal';
 import AppointmentForm from './AppointmentForm';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 import RizikyLoadingSpinner from './RizikyLoadingSpinner';
+import { toast } from 'sonner';
 
 interface MonthlyCalendarProps {
   onDateClick?: (date: Date) => void;
   onAppointmentClick?: (appointment: Appointment) => void;
+  onAddAppointment?: (date: Date) => void;
+  onEditAppointment?: (appointment: Appointment) => void;
 }
 
 const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   onDateClick,
-  onAppointmentClick
+  onAppointmentClick,
+  onAddAppointment,
+  onEditAppointment
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -26,6 +33,9 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [appointmentToEdit, setAppointmentToEdit] = useState<Appointment | null>(null);
   const [newDate, setNewDate] = useState<Date | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [appointmentToDelete, setAppointmentToDelete] = useState<Appointment | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -112,6 +122,59 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
     setIsEditModalOpen(false);
     setAppointmentToEdit(null);
     setNewDate(null);
+  };
+
+  const handleAddClick = (date: Date, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onAddAppointment) {
+      onAddAppointment(date);
+    }
+  };
+
+  const handleEditClick = (appointment: Appointment, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEditAppointment) {
+      onEditAppointment(appointment);
+    }
+  };
+
+  const handleDeleteClick = (appointment: Appointment, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAppointmentToDelete(appointment);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!appointmentToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      const success = await AppointmentService.delete(appointmentToDelete.id);
+      if (success) {
+        setAppointments(prev => prev.filter(apt => apt.id !== appointmentToDelete.id));
+        toast.success("Rendez-vous supprimé avec succès", {
+          className: "bg-green-700 text-white"
+        });
+        setShowDeleteModal(false);
+        setAppointmentToDelete(null);
+      } else {
+        toast.error("Erreur lors de la suppression", {
+          className: "bg-red-700 text-white"
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast.error("Erreur lors de la suppression", {
+        className: "bg-red-700 text-white"
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setAppointmentToDelete(null);
   };
 
   const previousMonth = () => {
@@ -215,14 +278,24 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                       <span className={`text-xs lg:text-sm font-bold ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-blue-700' : 'text-muted-foreground'}`}>
                         {format(day, 'd')}
                       </span>
-                      {isTodayDate && <Crown className="w-2 lg:w-3 h-2 lg:h-3 text-yellow-300" />}
+                      <div className="flex items-center gap-1">
+                        {isTodayDate && <Crown className="w-2 lg:w-3 h-2 lg:h-3 text-yellow-300" />}
+                        {/* Bouton d'ajout + rouge */}
+                        <button
+                          onClick={(e) => handleAddClick(day, e)}
+                          className="w-5 h-5 lg:w-6 lg:h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                          title="Ajouter un rendez-vous"
+                        >
+                          <Plus className="w-2 lg:w-3 h-2 lg:h-3" />
+                        </button>
+                      </div>
                     </div>
 
                     <div className={`space-y-0.5 lg:space-y-1 ${dayAppointments.length > 3 ? 'appointment-stack' : ''}`}>
                       {dayAppointments.slice(0, window.innerWidth < 768 ? 2 : 3).map((appointment, appointmentIndex) => (
                         <div
                           key={appointment.id}
-                          className="appointment-luxury text-white cursor-grab hover:opacity-80 transition-opacity touch-manipulation"
+                          className="appointment-luxury text-white cursor-grab hover:opacity-80 transition-opacity touch-manipulation relative group"
                           draggable
                           onDragStart={(e) => handleDragStart(appointment, e)}
                           onClick={(e) => {
@@ -230,11 +303,29 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                             onAppointmentClick?.(appointment);
                           }}
                         >
-                          <div className="flex items-center gap-1">
+                          {/* Icônes d'actions */}
+                          <div className="absolute top-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10">
+                            <button
+                              onClick={(e) => handleEditClick(appointment, e)}
+                              className="w-4 h-4 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                              title="Modifier"
+                            >
+                              <Edit className="w-2 h-2" />
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteClick(appointment, e)}
+                              className="w-4 h-4 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-2 h-2" />
+                            </button>
+                          </div>
+                          
+                          <div className="flex items-center gap-1 pr-10">
                             <Zap className="w-2 h-2 flex-shrink-0" />
                             <span className="appointment-time">{appointment.heure}</span>
                           </div>
-                          <div className="appointment-title truncate">{appointment.titre}</div>
+                          <div className="appointment-title truncate pr-10">{appointment.titre}</div>
                         </div>
                       ))}
                       
@@ -267,6 +358,17 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
             disableDate={true}
           />
         </AppointmentModal>
+      )}
+
+      {/* Modal de confirmation de suppression */}
+      {showDeleteModal && appointmentToDelete && (
+        <ConfirmDeleteModal
+          isOpen={showDeleteModal}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          appointment={appointmentToDelete}
+          isDeleting={isDeleting}
+        />
       )}
     </>
   );

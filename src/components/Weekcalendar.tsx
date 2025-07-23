@@ -1,225 +1,302 @@
+
+/**
+ * Composant calendrier hebdomadaire premium avec design moderne
+ * Affiche les rendez-vous de la semaine avec fonctionnalités avancées
+ */
+
 import React, { useState, useEffect } from 'react';
-import { startOfWeek, addDays, parseISO, isSameDay, format } from 'date-fns';
+import { format, startOfWeek, addDays, subWeeks, addWeeks } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight, Calendar, Crown, Sparkles, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
-import { useNotificationService } from '@/services/NotificationService';
-import { toast } from 'sonner';
+import CalendarDay from './CalendarDay';
 import CalendarHeader from './CalendarHeader';
 import CalendarDayHeader from './CalendarDayHeader';
-import CalendarDay from './CalendarDay';
-import RizikyLoadingSpinner from './RizikyLoadingSpinner';
-import { Calendar, Sparkles, Crown, Star } from 'lucide-react';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
- * Props pour le calendrier hebdomadaire
+ * Interface pour les props du composant WeekCalendar
  */
 interface WeekCalendarProps {
   onAppointmentClick: (appointment: Appointment) => void;
-  onAppointmentDrop?: (appointment: Appointment, newDate: Date, originalAppointment: Appointment) => void;
   enableDragAndDrop?: boolean;
+  showActionButtons?: boolean;
+  onAddAppointment?: (date: Date, hour: string) => void;
+  onEditAppointment?: (appointment: Appointment) => void;
+  onDeleteAppointment?: (appointment: Appointment) => void;
 }
 
 /**
- * Composant de calendrier hebdomadaire
- * Affiche les rendez-vous sur une semaine avec navigation et drag & drop
+ * Composant principal du calendrier hebdomadaire
  */
-const WeekCalendar: React.FC<WeekCalendarProps> = ({ 
+const WeekCalendar = ({ 
   onAppointmentClick, 
-  onAppointmentDrop,
-  enableDragAndDrop = true 
-}) => {
-  const isMobile = useIsMobile();
-  
-  // États pour gérer la date courante, les rendez-vous et le chargement
+  enableDragAndDrop = true,
+  showActionButtons = true,
+  onAddAppointment,
+  onEditAppointment,
+  onDeleteAppointment
+}: WeekCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [draggedAppointment, setDraggedAppointment] = useState<Appointment | null>(null);
-  const [originalAppointment, setOriginalAppointment] = useState<Appointment | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [appointmentToDelete, setAppointmentToDelete] = useState<Appointment | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const isMobile = useIsMobile();
 
-  // Service de notifications pour les rappels de rendez-vous
-  const { resetNotifications } = useNotificationService(appointments);
-
-  // Récupère tous les rendez-vous lors du premier chargement
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
-        const data = await AppointmentService.getAll();
-        setAppointments(data);
-      } catch (error) {
-        toast.error("Impossible de charger les rendez-vous", {
-          className: "bg-indigo-700 text-white"
-        });
-        console.error("Erreur chargement des rendez-vous:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAppointments();
-    resetNotifications();
-  }, []);
-
-  // Calcul des jours de la semaine courante
+  // Calculer le lundi de la semaine actuelle
   const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const days = Array.from({ length: 7 }, (_, i) => addDays(startOfCurrentWeek, i));
+  
+  // Générer les 7 jours de la semaine
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(startOfCurrentWeek, i);
+    const dateStr = format(date, 'yyyy-MM-dd');
+    return {
+      date,
+      dateStr,
+      dayName: format(date, 'EEEE', { locale: fr }),
+      dayNumber: format(date, 'd'),
+      monthName: format(date, 'MMMM', { locale: fr }),
+      isToday: format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd'),
+      appointments: appointments.filter(app => app.date === dateStr)
+    };
+  });
 
-  // Navigation vers la semaine précédente
-  const previousWeek = () => {
-    setCurrentDate(addDays(currentDate, -7));
+  // Charger les rendez-vous
+  useEffect(() => {
+    fetchAppointments();
+  }, [currentDate]);
+
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      const data = await AppointmentService.getCurrentWeekAppointments();
+      setAppointments(data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des rendez-vous:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Navigation vers la semaine suivante
-  const nextWeek = () => {
-    setCurrentDate(addDays(currentDate, 7));
+  const handlePreviousWeek = () => {
+    setCurrentDate(subWeeks(currentDate, 1));
   };
 
-  // Filtre les rendez-vous pour une date spécifique et les trie par heure
-  const getAppointmentsForDate = (date: Date) => {
-    return appointments.filter((appointment) => {
-      const appointmentDate = parseISO(appointment.date);
-      return isSameDay(appointmentDate, date);
-    }).sort((a, b) => {
-      // Trier par heure
-      const [aHours, aMinutes] = a.heure.split(':').map(Number);
-      const [bHours, bMinutes] = b.heure.split(':').map(Number);
-      return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
-    });
+  const handleNextWeek = () => {
+    setCurrentDate(addWeeks(currentDate, 1));
   };
 
-  // Gestion du début du drag
   const handleDragStart = (appointment: Appointment, e: React.DragEvent) => {
-    if (!enableDragAndDrop) return;
+    if (!enableDragAndDrop) {
+      e.preventDefault();
+      return;
+    }
     
-    console.log('Week calendar - drag start:', appointment.titre);
+    console.log('Drag start for appointment:', appointment.titre);
     setDraggedAppointment(appointment);
-    // Conserver l'état original du rendez-vous
-    setOriginalAppointment({ ...appointment });
+    e.dataTransfer.setData('text/plain', JSON.stringify(appointment));
+    e.dataTransfer.effectAllowed = 'move';
   };
 
-  // Gestion du drop
-  const handleDrop = (appointment: Appointment, newDate: Date) => {
+  const handleDrop = async (targetDate: Date, targetHour: string, e: React.DragEvent) => {
     if (!enableDragAndDrop) return;
     
-    console.log('Week calendar - handleDrop called with:', {
-      appointmentId: appointment.id,
-      appointmentTitle: appointment.titre,
-      originalDate: appointment.date,
-      newDate: format(newDate, 'yyyy-MM-dd')
-    });
-
-    const newDateString = format(newDate, 'yyyy-MM-dd');
-    const originalDateString = appointment.date;
-
-    // Vérifier si la date a vraiment changé
-    if (newDateString !== originalDateString) {
-      console.log('Date has changed, triggering appointment drop callback');
+    e.preventDefault();
+    console.log('Drop event on:', targetDate, targetHour);
+    
+    if (draggedAppointment) {
+      const newDate = format(targetDate, 'yyyy-MM-dd');
+      const newHour = targetHour;
       
-      const updatedAppointment = {
-        ...appointment,
-        date: newDateString
-      };
+      // Vérifier si la date ou l'heure a changé
+      if (draggedAppointment.date !== newDate || draggedAppointment.heure !== newHour) {
+        console.log('Updating appointment position');
+        
+        try {
+          const updatedAppointment = {
+            ...draggedAppointment,
+            date: newDate,
+            heure: newHour
+          };
 
-      // NE PAS mettre à jour localement l'état ici
-      // L'état sera mis à jour seulement après confirmation
-
-      // Déclencher l'ouverture du formulaire de modification avec la nouvelle date
-      if (onAppointmentDrop && originalAppointment) {
-        console.log('Calling onAppointmentDrop callback');
-        onAppointmentDrop(updatedAppointment, newDate, originalAppointment);
+          const success = await AppointmentService.update(updatedAppointment);
+          
+          if (success) {
+            console.log('Appointment updated successfully');
+            await fetchAppointments();
+          }
+        } catch (error) {
+          console.error('Error updating appointment:', error);
+        }
       }
-
-      toast.success(`Rendez-vous préparé pour le ${format(newDate, 'dd/MM/yyyy')}`, {
-        className: "bg-indigo-700 text-white"
-      });
-    } else {
-      console.log('Date unchanged, no action needed');
     }
-
+    
     setDraggedAppointment(null);
   };
 
-  // Fonction pour annuler le déplacement
-  const handleCancelDrop = () => {
-    if (originalAppointment) {
-      // Restaurer le rendez-vous original dans l'état
-      setAppointments(prev => 
-        prev.map(apt => 
-          apt.id === originalAppointment.id ? originalAppointment : apt
-        )
-      );
+  const handleDragOver = (e: React.DragEvent) => {
+    if (!enableDragAndDrop) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDeleteClick = (appointment: Appointment) => {
+    setAppointmentToDelete(appointment);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!appointmentToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      const success = await AppointmentService.delete(appointmentToDelete.id);
+      if (success) {
+        await fetchAppointments();
+        setShowDeleteModal(false);
+        setAppointmentToDelete(null);
+        // Appeler la callback parent si elle existe
+        if (onDeleteAppointment) {
+          onDeleteAppointment(appointmentToDelete);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+    } finally {
+      setIsDeleting(false);
     }
-    setOriginalAppointment(null);
-    setDraggedAppointment(null);
   };
 
-  // Fonction pour confirmer le déplacement
-  const handleConfirmDrop = (updatedAppointment: Appointment) => {
-    // Mettre à jour l'état local avec le rendez-vous modifié
-    setAppointments(prev => 
-      prev.map(apt => 
-        apt.id === updatedAppointment.id ? updatedAppointment : apt
-      )
-    );
-    setOriginalAppointment(null);
-    setDraggedAppointment(null);
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setAppointmentToDelete(null);
   };
 
-  // Affichage d'un indicateur de chargement pendant la récupération des données
   if (loading) {
     return (
-      <div className="calendar-luxury rounded-3xl premium-shadow-xl overflow-hidden border-0">
-        <div className="p-16 text-center">
-          <RizikyLoadingSpinner 
-            size="lg"
-            text="Préparation de votre calendrier premium"
-          />
-        </div>
-      </div>
+      <Card className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
+        <CardContent className="p-8 lg:p-16 text-center">
+          <div className="relative mb-6 lg:mb-8 floating-animation">
+            <div className="w-16 lg:w-20 h-16 lg:h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 lg:w-20 h-16 lg:h-20 border-4 border-transparent border-r-purple-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+            <div className="absolute inset-3 lg:inset-4 w-10 lg:w-12 h-10 lg:h-12 bg-primary/10 rounded-full blur-sm"></div>
+          </div>
+          <div className="flex items-center justify-center gap-2 lg:gap-3 text-lg lg:text-xl font-bold luxury-text-gradient mb-2 lg:mb-3">
+            <Crown className="w-5 lg:w-6 h-5 lg:h-6 text-primary" />
+            <span>Chargement du calendrier premium...</span>
+            <Sparkles className="w-4 lg:w-5 h-4 lg:h-5 text-primary animate-pulse" />
+          </div>
+          <p className="text-sm lg:text-base text-muted-foreground font-medium">Synchronisation des données de luxe</p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="calendar-luxury rounded-3xl premium-shadow-xl overflow-hidden border-0 premium-hover glow-effect">
-      {/* En-tête du calendrier premium avec affichage du mois */}
-      <CalendarHeader 
-        title="Calendrier Hebdomadaire Premium"
-        currentDate={currentDate}
-        onPrevious={previousWeek}
-        onNext={nextWeek}
-      />
+    <>
+      <Card className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
+        {/* En-tête du calendrier avec navigation */}
+        <CardHeader className="premium-gradient text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+          
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-bold text-white mb-1">
+                  {isMobile ? 'Calendrier' : 'Calendrier Premium'}
+                </CardTitle>
+                <p className="text-white/90 text-lg font-medium">
+                  {format(startOfCurrentWeek, 'MMMM yyyy', { locale: fr })}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-white font-medium">Live</span>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handlePreviousWeek}
+                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleNextWeek}
+                  className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+              <Star className="w-5 h-5 text-yellow-300 animate-pulse" />
+            </div>
+          </div>
+        </CardHeader>
 
-      {/* En-têtes des jours de la semaine premium - masqué sur mobile */}
-      {!isMobile && (
-        <div className="grid grid-cols-7 bg-gradient-to-r from-primary/5 to-purple-500/5 border-b border-primary/20">
-          {days.map((day, index) => (
-            <CalendarDayHeader key={index} day={day} />
-          ))}
-        </div>
+        <CardContent className="p-0">
+          {/* Navigation de semaine sur mobile */}
+          {isMobile && (
+            <CalendarHeader 
+              title="Semaine"
+              currentDate={currentDate}
+              onPrevious={handlePreviousWeek}
+              onNext={handleNextWeek}
+            />
+          )}
+
+          {/* Contenu du calendrier avec les rendez-vous pour chaque jour */}
+          <div className={`${
+            isMobile 
+              ? 'space-y-4 p-4' 
+              : 'grid grid-cols-7 min-h-[600px] bg-gradient-to-br from-gray-50/50 to-blue-50/30'
+          }`}>
+            {days.map((day, index) => (
+              <CalendarDay
+                key={day.dateStr}
+                day={day}
+                appointments={day.appointments}
+                onAppointmentClick={onAppointmentClick}
+                onDragStart={handleDragStart}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                enableDragAndDrop={enableDragAndDrop}
+                showActionButtons={showActionButtons}
+                onAddAppointment={onAddAppointment}
+                onEditAppointment={onEditAppointment}
+                onDeleteAppointment={handleDeleteClick}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Modal de confirmation de suppression */}
+      {appointmentToDelete && (
+        <ConfirmDeleteModal
+          isOpen={showDeleteModal}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          appointment={appointmentToDelete}
+          isDeleting={isDeleting}
+        />
       )}
-
-      {/* Contenu du calendrier avec les rendez-vous pour chaque jour */}
-      <div className={`${
-        isMobile 
-          ? 'flex flex-col bg-gradient-to-b from-white via-primary/2 to-purple-500/5 max-h-[70vh] overflow-y-auto premium-scroll'
-          : 'grid grid-cols-7 min-h-[400px] bg-gradient-to-br from-white via-primary/2 to-purple-500/5'
-      }`}>
-        {days.map((day, dayIndex) => (
-          <CalendarDay 
-            key={dayIndex} 
-            day={day}
-            appointments={getAppointmentsForDate(day)}
-            onAppointmentClick={onAppointmentClick}
-            onDrop={enableDragAndDrop ? handleDrop : undefined}
-            onDragStart={enableDragAndDrop ? handleDragStart : undefined}
-            onCancelDrop={enableDragAndDrop ? handleCancelDrop : undefined}
-            onConfirmDrop={enableDragAndDrop ? handleConfirmDrop : undefined}
-            enableDragAndDrop={enableDragAndDrop}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 
