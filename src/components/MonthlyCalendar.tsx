@@ -274,22 +274,32 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({
                     onDrop={(e) => handleDrop(day, e)}
                     onDragOver={handleDragOver}
                   >
-                    <div className={`flex items-center justify-between mb-1 lg:mb-2 ${isTodayDate ? 'text-white' : ''}`}>
-                      <span className={`text-xs lg:text-sm font-bold ${isTodayDate ? 'text-white' : isCurrentMonth ? 'text-blue-700' : 'text-muted-foreground'}`}>
+                   <div className={`group flex items-center justify-between mb-1 lg:mb-2 ${isTodayDate ? 'text-white' : ''}`}
+                    >
+                      <span
+                        className={`text-xs lg:text-sm font-bold ${
+                          isTodayDate ? 'text-white' : isCurrentMonth ? 'text-blue-700' : 'text-muted-foreground'
+                        }`}
+                      >
                         {format(day, 'd')}
                       </span>
+
                       <div className="flex items-center gap-1">
-                        {isTodayDate && <Crown className="w-2 lg:w-3 h-2 lg:h-3 text-yellow-300" />}
-                        {/* Bouton d'ajout + rouge */}
+                        {isTodayDate && (
+                          <Crown className="w-2 lg:w-3 h-2 lg:h-3 text-yellow-300" />
+                        )}
+
+                        {/* Bouton visible uniquement au hover du parent */}
                         <button
                           onClick={(e) => handleAddClick(day, e)}
-                          className="w-5 h-5 lg:w-6 lg:h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                          className="w-5 h-5 lg:w-6 lg:h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 opacity-0 group-hover:opacity-100"
                           title="Ajouter un rendez-vous"
                         >
                           <Plus className="w-2 lg:w-3 h-2 lg:h-3" />
                         </button>
                       </div>
                     </div>
+
 
                     <div className={`space-y-0.5 lg:space-y-1 ${dayAppointments.length > 3 ? 'appointment-stack' : ''}`}>
                       {dayAppointments.slice(0, window.innerWidth < 768 ? 2 : 3).map((appointment, appointmentIndex) => (
