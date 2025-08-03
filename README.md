@@ -422,7 +422,7 @@ wscat -c ws://localhost:3001                  # WebSocket test
 **📅 Dernière mise à jour** : 10 décembre 2024  
 **🚀 Version actuelle** : 2.7.0  
 **👨‍💻 Équipe** : Riziky-Agendas Development Team  
-**📧 Contact** : [support@riziky-agendas.com](mailto:support@riziky-agendas.com)
+**📧 Contact** : [vianey1.jean@gmail.com](mailto:support@riziky-agendas.com)
 
 ---
 
