@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Phone, MapPin, Send, MessageCircle, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle, Clock, AlertCircle } from 'lucide-react';
 import { ContactService } from '@/services/ContactService';
-import { toast } from 'sonner';
+import { ModernToast } from '@/components/ui/modern-toast';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -16,31 +16,91 @@ const ContactPage = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({
+    nom: '',
+    email: '',
+    sujet: '',
+    message: ''
+  });
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors = {
+      nom: '',
+      email: '',
+      sujet: '',
+      message: ''
+    };
+
+    // Validation du nom
+    if (!formData.nom.trim()) {
+      newErrors.nom = 'Le nom est obligatoire';
+    }
+
+    // Validation de l'email
+    if (!formData.email.trim()) {
+      newErrors.email = 'L\'email est obligatoire';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Format d\'email invalide (ex: test@test.com)';
+    }
+
+    // Validation du sujet
+    if (!formData.sujet.trim()) {
+      newErrors.sujet = 'Le sujet est obligatoire';
+    }
+
+    // Validation du message
+    if (!formData.message.trim()) {
+      newErrors.message = 'Le message est obligatoire';
+    } else if (formData.message.length < 8) {
+      newErrors.message = 'Le message doit contenir au moins 8 caractères';
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === '');
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Effacer l'erreur quand l'utilisateur commence à taper
+    if (errors[name as keyof typeof errors]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      await ContactService.send(formData);
-      toast.success('Message envoyé avec succès!', {
-        style: {
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-          color: 'white',
-          border: 'none',
-          borderRadius: '12px',
-        }
-      });
-      setFormData({ nom: '', email: '', sujet: '', message: '' });
+      const result = await ContactService.send(formData);
+      
+      if (result.success) {
+        ModernToast.success("✅ Message envoyé avec succès !");
+        setFormData({ nom: '', email: '', sujet: '', message: '' });
+        setErrors({ nom: '', email: '', sujet: '', message: '' });
+      } else {
+        ModernToast.error("❌ Erreur lors de l'envoi du message");
+      }
     } catch (error) {
-      toast.error('Erreur lors de l\'envoi du message');
+      ModernToast.error("❌ Erreur de connexion au serveur");
     } finally {
       setIsSubmitting(false);
     }
@@ -90,10 +150,17 @@ const ContactPage = () => {
                         name="nom"
                         value={formData.nom}
                         onChange={handleInputChange}
-                        required
-                        className="bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg"
+                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                          errors.nom ? 'border-red-500 focus:border-red-500' : ''
+                        }`}
                         placeholder="Votre nom"
                       />
+                      {errors.nom && (
+                        <div className="flex items-center gap-2 text-red-500 text-sm">
+                          <AlertCircle className="w-4 h-4" />
+                          {errors.nom}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">Email *</label>
@@ -102,10 +169,17 @@ const ContactPage = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required
-                        className="bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg"
+                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                          errors.email ? 'border-red-500 focus:border-red-500' : ''
+                        }`}
                         placeholder="votre@email.com"
                       />
+                      {errors.email && (
+                        <div className="flex items-center gap-2 text-red-500 text-sm">
+                          <AlertCircle className="w-4 h-4" />
+                          {errors.email}
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -115,23 +189,45 @@ const ContactPage = () => {
                       name="sujet"
                       value={formData.sujet}
                       onChange={handleInputChange}
-                      required
-                      className="bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg"
+                      className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                        errors.sujet ? 'border-red-500 focus:border-red-500' : ''
+                      }`}
                       placeholder="Objet de votre message"
                     />
+                    {errors.sujet && (
+                      <div className="flex items-center gap-2 text-red-500 text-sm">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.sujet}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Message *</label>
+                    <label className="text-sm font-medium text-gray-700">
+                      Message * 
+                      <span className="text-blue-600 font-bold ml-2">
+                        (minimum 8 caractères)
+                      </span>
+                    </label>
                     <Textarea
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
-                      required
                       rows={6}
-                      className="bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg resize-none"
+                      className={`text-blue-600 font-bold  bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg resize-none ${
+                        errors.message ? 'border-red-500 focus:border-red-500' : ''
+                      }`}
                       placeholder="Décrivez votre demande en détail..."
                     />
+                    {errors.message && (
+                      <div className="flex items-center gap-2 text-red-500 text-sm">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.message}
+                      </div>
+                    )}
+                    <div className="text-sm text-gray-500">
+                      {formData.message.length}/8 caractères minimum
+                    </div>
                   </div>
                   
                   <Button 
