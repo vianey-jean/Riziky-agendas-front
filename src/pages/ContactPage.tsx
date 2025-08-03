@@ -1,4 +1,49 @@
 
+/**
+ * ============================================================================
+ * PAGE DE CONTACT - FORMULAIRE DE CONTACT ET INFORMATIONS
+ * ============================================================================
+ * 
+ * Cette page permet aux utilisateurs de contacter l'équipe Riziky Agendas
+ * via un formulaire sécurisé avec validation en temps réel.
+ * 
+ * FONCTIONNALITÉS PRINCIPALES :
+ * - Formulaire de contact avec validation complète
+ * - Informations de contact de l'entreprise
+ * - Envoi d'emails automatique via le service backend
+ * - Notifications de succès/erreur avec ModernToast
+ * - Design responsive et accessible
+ * 
+ * CHAMPS DU FORMULAIRE :
+ * - Nom complet (obligatoire)
+ * - Adresse email (obligatoire, validation format)
+ * - Sujet du message (obligatoire)
+ * - Message détaillé (obligatoire, 500 caractères max)
+ * 
+ * VALIDATION :
+ * - Validation côté client avec regex pour email
+ * - Limitation de caractères pour éviter le spam
+ * - Vérification de tous les champs obligatoires
+ * - Messages d'erreur contextuels et utiles
+ * 
+ * INTÉGRATION BACKEND :
+ * - Utilise ContactService pour l'envoi
+ * - Sauvegarde en base de données (messages.json)
+ * - Envoi d'email via nodemailer (si configuré)
+ * - Notification en temps réel via WebSocket
+ * 
+ * DESIGN PREMIUM :
+ * - Cards avec glass-morphism effect
+ * - Animations CSS fluides
+ * - Icônes contextuelles (Mail, Phone, MapPin)
+ * - États de chargement avec spinners
+ * - Layout responsive avec grid system
+ * 
+ * @author Riziky Agendas Team
+ * @version 1.0.0
+ * @lastModified 2024
+ */
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

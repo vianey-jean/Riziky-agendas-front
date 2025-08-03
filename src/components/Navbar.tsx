@@ -1,4 +1,43 @@
 
+/**
+ * ============================================================================
+ * BARRE DE NAVIGATION PRINCIPALE - COMPOSANT HEADER
+ * ============================================================================
+ * 
+ * Ce composant gère la navigation principale de l'application Riziky Agendas.
+ * Il s'adapte automatiquement selon l'état d'authentification de l'utilisateur.
+ * 
+ * FONCTIONNALITÉS PRINCIPALES :
+ * - Navigation responsive avec menu mobile hamburger
+ * - Logo animé avec effets premium (couronne, étoiles, diamants)
+ * - Affichage conditionnel des menus selon l'authentification
+ * - Badge de notification pour les messages non lus
+ * - Menu déroulant utilisateur avec accès aux messages
+ * - Effets de scroll avec backdrop blur et transparence
+ * - Déconnexion avec confirmation
+ * 
+ * ÉTATS DE NAVIGATION :
+ * - Navigation publique : Accueil, Contact
+ * - Navigation privée : Dashboard, Calendrier, Clients
+ * - Accès direct aux messages avec compteur de non-lus
+ * 
+ * DESIGN PREMIUM :
+ * - Gradient background avec transparence
+ * - Logo animé avec rotation et effets de scale
+ * - Icônes Lucide pour la cohérence visuelle
+ * - Animations smooth et transitions CSS
+ * - Responsive design avec breakpoints
+ * 
+ * SÉCURITÉ :
+ * - Gestion d'état authentification via Context
+ * - Protection des routes privées
+ * - Déconnexion sécurisée avec nettoyage d'état
+ * 
+ * @author Riziky Agendas Team
+ * @version 1.0.0
+ * @lastModified 2024
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';

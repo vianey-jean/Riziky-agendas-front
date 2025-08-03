@@ -1,4 +1,50 @@
 
+/**
+ * ============================================================================
+ * PAGE DE GESTION DES MESSAGES - ADMINISTRATION DES CONTACTS
+ * ============================================================================
+ * 
+ * Cette page permet aux administrateurs de consulter, gérer et répondre
+ * aux messages reçus via le formulaire de contact.
+ * 
+ * FONCTIONNALITÉS PRINCIPALES :
+ * - Affichage de tous les messages reçus
+ * - Marquage des messages comme lu/non lu
+ * - Suppression de messages avec confirmation
+ * - Détail complet des messages dans une modale
+ * - Notifications en temps réel via WebSocket
+ * - Interface responsive et moderne
+ * 
+ * GESTION DES MESSAGES :
+ * - Liste paginée avec état lu/non lu
+ * - Badge de compteur pour messages non lus
+ * - Détails complets : nom, email, sujet, message, date
+ * - Actions : Marquer lu/non lu, Supprimer
+ * - Synchronisation temps réel avec WebSocket
+ * 
+ * FONCTIONNALITÉS AVANCÉES :
+ * - Filtrage par statut (lu/non lu)
+ * - Recherche dans les messages
+ * - Export des données (futur)
+ * - Statistiques des contacts
+ * 
+ * SÉCURITÉ :
+ * - Accès réservé aux administrateurs
+ * - Confirmation avant suppression
+ * - Validation des actions côté serveur
+ * - Protection contre les actions non autorisées
+ * 
+ * TEMPS RÉEL :
+ * - Mise à jour automatique via WebSocket
+ * - Notifications instantanées de nouveaux messages
+ * - Synchronisation entre plusieurs sessions admin
+ * - Compteur de non lus en temps réel
+ * 
+ * @author Riziky Agendas Team
+ * @version 1.0.0
+ * @lastModified 2024
+ */
+
 import React, { useState, useEffect } from 'react';
 import { MessageService, ContactMessage } from '@/services/MessageService';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
