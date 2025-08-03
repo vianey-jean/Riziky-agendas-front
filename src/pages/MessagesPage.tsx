@@ -11,16 +11,27 @@ import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import ConfirmDeleteMessageModal from '@/components/ConfirmDeleteMessageModal';
 
 const MessagesPage = () => {
+  const { messages: messagesFromWebSocket, refreshUnreadCount } = useUnreadMessages();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { refreshUnreadCount } = useUnreadMessages();
+
+  // Synchroniser avec les données WebSocket
+  useEffect(() => {
+    if (messagesFromWebSocket.length > 0 || messagesFromWebSocket.length === 0) {
+      setMessages(messagesFromWebSocket);
+      setLoading(false);
+    }
+  }, [messagesFromWebSocket]);
 
   useEffect(() => {
-    loadMessages();
+    // Chargement initial si WebSocket n'a pas encore de données
+    if (messages.length === 0) {
+      loadMessages();
+    }
   }, []);
 
   const loadMessages = async () => {
@@ -42,13 +53,14 @@ const MessagesPage = () => {
     if (!message.lu) {
       const success = await MessageService.markAsRead(message.id);
       if (success) {
+        // Les données seront mises à jour automatiquement via WebSocket
+        // Mais on peut aussi mettre à jour localement pour une réponse immédiate
         setMessages(prev => 
           prev.map(msg => 
             msg.id === message.id ? { ...msg, lu: true } : msg
           )
         );
         setSelectedMessage(prev => prev ? { ...prev, lu: true } : null);
-        refreshUnreadCount();
       }
     }
   };
@@ -58,13 +70,13 @@ const MessagesPage = () => {
     
     const success = await MessageService.markAsUnread(selectedMessage.id);
     if (success) {
+      // Les données seront mises à jour automatiquement via WebSocket
       setMessages(prev => 
         prev.map(msg => 
           msg.id === selectedMessage.id ? { ...msg, lu: false } : msg
         )
       );
       setSelectedMessage(prev => prev ? { ...prev, lu: false } : null);
-      refreshUnreadCount();
       toast.success('Message marqué comme non lu');
     } else {
       toast.error('Erreur lors de la mise à jour du message');
@@ -78,8 +90,8 @@ const MessagesPage = () => {
     const success = await MessageService.deleteMessage(selectedMessage.id);
     
     if (success) {
+      // Les données seront mises à jour automatiquement via WebSocket
       setMessages(prev => prev.filter(msg => msg.id !== selectedMessage.id));
-      refreshUnreadCount();
       setIsDeleteModalOpen(false);
       setIsDialogOpen(false);
       setSelectedMessage(null);
