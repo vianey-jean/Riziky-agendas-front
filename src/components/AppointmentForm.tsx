@@ -42,9 +42,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import DateOfBirthInput from './DateOfBirthInput';
+import ClientAutocomplete from './ClientAutocomplete';
 
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
-import { ClientService } from '@/services/ClientService';
+import { ClientService, Client } from '@/services/ClientService';
 import { AuthService } from '@/services/AuthService';
 import { toast } from 'sonner';
 
@@ -128,6 +129,15 @@ const AppointmentForm = ({
   const [isAvailable, setIsAvailable] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availableHours, setAvailableHours] = useState<string[]>([]);
+
+  // Fonction pour remplir automatiquement les champs quand un client est sélectionné
+  const handleClientSelect = (client: Client) => {
+    form.setValue('nom', client.nom || '');
+    form.setValue('prenom', client.prenom || '');
+    form.setValue('telephone', client.telephone || '');
+    form.setValue('dateNaissance', client.dateNaissance || '');
+    form.setValue('location', client.adresse || '');
+  };
 
   const checkAvailability = async (dateStr: string, currentHeure?: string) => {
     try {
@@ -226,9 +236,6 @@ const AppointmentForm = ({
 
     setIsSubmitting(true);
     try {
-      // debug utile si besoin:
-      // console.log('Données envoyées:', values);
-
       await checkAndAddClient(values);
 
       if (isEditing && appointment) {
@@ -315,7 +322,6 @@ const AppointmentForm = ({
                   Action
                 </FormLabel>
 
-                {/* === Correction importante: use value (contrôlé) au lieu de defaultValue === */}
                 <Select onValueChange={(v) => field.onChange(v)} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50">
@@ -355,50 +361,54 @@ const AppointmentForm = ({
             )}
           />
 
-          {/* Nom / Prénom */}
+          {/* Nom avec autocomplétion / Prénom */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="nom"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    Nom (facultatif)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nom de famille"
-                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+  <FormField
+    control={form.control}
+    name="nom"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+          <User className="w-4 h-4" />
+          Nom (facultatif)
+        </FormLabel>
+        <FormControl>
+          <ClientAutocomplete
+            value={field.value || ""}
+            onChange={field.onChange}
+            onClientSelect={handleClientSelect}
+            placeholder="Nom de famille" // <- espace initial supprimé
+            className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50 pl-3"
+            //inputClassName="pl-3" // utile si le composant forwarde une classe à l'input interne
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
 
-            <FormField
-              control={form.control}
-              name="prenom"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    Prénom (facultatif)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Prénom"
-                      className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+  <FormField
+    control={form.control}
+    name="prenom"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel className="text-base font-bold text-primary flex items-center gap-2">
+          <User className="w-4 h-4" />
+          Prénom (facultatif)
+        </FormLabel>
+        <FormControl>
+          <Input
+            placeholder="Prénom"
+            className="bg-gray-50/50 rounded-xl border-2 border-gray-200 focus:border-primary/60 h-12 text-base font-medium hover:bg-gray-50 pl-3"
+            {...field}
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+</div>
+
 
           {/* DateNaissance / Telephone */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
