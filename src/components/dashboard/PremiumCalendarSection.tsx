@@ -18,7 +18,7 @@ const PremiumCalendarSection: React.FC<PremiumCalendarSectionProps> = ({
   onEditAppointment
 }) => {
   return (
-    <div className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden relative glow-effect">
+    <div className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden relative ">
       <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-primary/5 to-purple-500/10"></div>
       <div className="absolute top-4 lg:top-6 right-4 lg:right-6 flex items-center gap-2 lg:gap-3 z-10">
         <div className="flex items-center gap-1 lg:gap-2 bg-white/20 backdrop-blur-sm rounded-full px-2 sm:px-3 lg:px-4 py-1 lg:py-2 border border-white/30">
