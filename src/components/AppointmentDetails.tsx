@@ -70,13 +70,9 @@ const AppointmentDetails = ({
       if (!open) setConfirmDelete(false);
       onOpenChange(open);
     }}>
-      <DialogContent className="max-w-md backdrop-blur-xl bg-white/95 border-0 shadow-2xl overflow-hidden ">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-transparent"></div>
-        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-violet-400/20 to-purple-400/20 rounded-full blur-2xl"></div>
-        
-        <div className="relative z-10 overflow-y-auto max-h-[90vh] pr-1">
-          <DialogHeader className="pb-6 border-b border-gray-200/50">
+      <DialogContent className="max-w-[95vw] sm:max-w-md backdrop-blur-xl bg-white/95 border-0 shadow-2xl overflow-hidden">
+        <div className="max-h-[85vh] sm:max-h-[80vh] overflow-y-auto">
+          <DialogHeader className="pb-4 sm:pb-6 border-b border-gray-200/50">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
                 <CalendarIcon className="w-5 h-5 text-white" />
@@ -190,39 +186,39 @@ const AppointmentDetails = ({
             </div>
           </div>
           
-          <DialogFooter className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200/50">
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-gray-200/50">
             {confirmDelete ? (
-              <div className="w-full space-y-4">
-                <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-red-700 font-medium text-center">
-                    <Trash2 className="w-4 h-4" />
+              <div className="w-full space-y-3 sm:space-y-4">
+                <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-lg sm:rounded-xl p-3 sm:p-4">
+                  <div className="flex items-center justify-center gap-2 text-red-700 font-medium text-sm sm:text-base">
+                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Confirmer la suppression définitive ?</span>
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <Button 
                     variant="outline" 
-                    className="flex-1 border-2 border-gray-200 hover:border-gray-300 bg-white/50 backdrop-blur-sm"
+                    className="w-full sm:flex-1 h-10 sm:h-auto border-2 border-gray-200 hover:border-gray-300 bg-white/50 backdrop-blur-sm text-sm sm:text-base"
                     onClick={() => setConfirmDelete(false)}
                     disabled={isDeleting}
                   >
-                    <Reply className="mr-2 h-4 w-4" />
+                    <Reply className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                     Annuler
                   </Button>
                   <Button 
                     variant="destructive" 
-                    className="flex-1 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full sm:flex-1 h-10 sm:h-auto bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
                     onClick={handleDelete}
                     disabled={isDeleting}
                   >
                     {isDeleting ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                         Suppression...
                       </div>
                     ) : (
                       <>
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                         Confirmer
                       </>
                     )}
@@ -230,21 +226,21 @@ const AppointmentDetails = ({
                 </div>
               </div>
             ) : (
-              <div className="flex gap-3 w-full">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
                 <Button 
                   variant="outline" 
-                  className="flex-1 border-2 border-violet-200 hover:border-violet-300 bg-violet-50/50 hover:bg-violet-100/50 text-violet-700 backdrop-blur-sm transition-all duration-300"
+                  className="w-full sm:flex-1 h-10 sm:h-auto border-2 border-violet-200 hover:border-violet-300 bg-violet-50/50 hover:bg-violet-100/50 text-violet-700 backdrop-blur-sm transition-all duration-300 text-sm sm:text-base"
                   onClick={onEdit}
                 >
-                  <Edit className="h-4 w-4 mr-2" />
+                  <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Modifier
                 </Button>
                 <Button 
                   variant="destructive" 
-                  className="flex-1 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="w-full sm:flex-1 h-10 sm:h-auto bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
                   onClick={() => setConfirmDelete(true)}
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
+                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Supprimer
                 </Button>
               </div>

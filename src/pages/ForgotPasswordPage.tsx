@@ -197,7 +197,7 @@ const ForgotPasswordPage = () => {
   };
   
   return (
-    <div className="mt-[80px] min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="mt-[60px] sm:mt-[70px] lg:mt-[80px] min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center p-2 sm:p-4 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -205,16 +205,16 @@ const ForgotPasswordPage = () => {
         <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-gradient-to-br from-yellow-400/10 to-orange-400/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '8s' }}></div>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl shadow-2xl mb-4 relative">
-            <KeyRound className="w-8 h-8 text-white" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+      <div className="w-full max-w-[95vw] sm:max-w-md relative z-10">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl sm:rounded-2xl shadow-2xl mb-3 sm:mb-4 relative">
+            <KeyRound className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl sm:rounded-2xl"></div>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-1 sm:mb-2 px-2">
             Mot de passe oublié
           </h1>
-          <p className="text-gray-600">Réinitialisez votre mot de passe</p>
+          <p className="text-gray-600 text-sm sm:text-base px-2">Réinitialisez votre mot de passe</p>
         </div>
 
         <Card className="backdrop-blur-xl bg-white/80 shadow-2xl border-0 relative overflow-hidden">

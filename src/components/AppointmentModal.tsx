@@ -72,13 +72,13 @@ const AppointmentModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleCloseModal}>
-      <DialogContent className="text-black sm:max-w-[700px] bg-white border-0 shadow-lg overflow-hidden rounded-3xl">
+      <DialogContent className="text-black max-w-[95vw] sm:max-w-[700px] bg-white border-0 shadow-lg overflow-hidden rounded-2xl sm:rounded-3xl">
         {/* Background light decoration */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20"></div>
-        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-100/30 to-purple-100/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-pink-100/20 to-blue-100/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-0 right-0 w-32 sm:w-40 h-32 sm:h-40 bg-gradient-to-br from-blue-100/30 to-purple-100/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-24 sm:w-32 h-24 sm:h-32 bg-gradient-to-br from-pink-100/20 to-blue-100/10 rounded-full blur-2xl"></div>
         
-        <div className="relative z-10">
+        <div className="relative z-10 max-h-[85vh] overflow-y-auto">
           {/* Close button */}
           {/* <button
             onClick={handleCloseModal}
@@ -88,8 +88,8 @@ const AppointmentModal = ({
           </button> */}
 
           {/* Header premium */}
-          <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200">
-            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden ${
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-gray-200">
+            <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center relative overflow-hidden ${
               mode === 'delete' 
                 ? 'bg-gradient-to-br from-red-500 to-pink-600' 
                 : 'premium-gradient'
@@ -97,32 +97,36 @@ const AppointmentModal = ({
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
               <div className="relative z-10">
                 {mode === 'delete' ? (
-                  <Trash2 className="w-7 h-7 text-white" />
+                  <Trash2 className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                 ) : (
-                  <Crown className="w-7 h-7 text-white" />
+                  <Crown className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                 )}
               </div>
             </div>
-            <div className="flex-1">
-              <DialogTitle className={`text-2xl font-bold mb-2 ${
+            <div className="flex-1 text-center sm:text-left">
+              <DialogTitle className={`text-xl sm:text-2xl font-bold mb-1 sm:mb-2 ${
                 mode === 'delete' 
                   ? 'bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent' 
                   : 'luxury-text-gradient'
               }`}>
                 {title}
               </DialogTitle>
-              <div className="flex items-center gap-2 text-gray-600">
-                <p className="text-base">
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-2 text-gray-600">
+                <p className="text-xs sm:text-sm lg:text-base">
                   {mode === 'add' && 'Créez un nouveau rendez-vous premium'}
                   {mode === 'edit' && 'Modifiez les détails avec élégance'}
                   {mode === 'delete' && 'Action irréversible - Attention requise'}
                   {mode === 'search' && 'Trouvez vos rendez-vous rapidement'}
                   {mode === 'select' && 'Sélectionnez avec style'}
                 </p>
-                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-primary animate-pulse" />
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 sm:hidden">
+              <Star className="w-4 h-4 text-yellow-400" />
+              <Diamond className="w-3 h-3 text-primary" />
+            </div>
+            <div className="hidden sm:flex items-center gap-1">
               <Star className="w-5 h-5 text-yellow-400" />
               <Diamond className="w-4 h-4 text-primary" />
             </div>
@@ -130,30 +134,30 @@ const AppointmentModal = ({
 
           {/* Content */}
           {mode === 'delete' && confirmDelete ? (
-            <div className="space-y-8">
-              <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200/50 rounded-2xl p-6 premium-shadow">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                    <AlertTriangle className="w-6 h-6 text-red-500 flex-shrink-0" />
+            <div className="space-y-6 sm:space-y-8">
+              <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 premium-shadow">
+                <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-bold text-red-800 mb-2 text-lg">
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="font-bold text-red-800 mb-1 sm:mb-2 text-base sm:text-lg">
                       Confirmer la suppression
                     </p>
-                    <p className="text-red-600 font-medium">
+                    <p className="text-red-600 font-medium text-sm sm:text-base">
                       Cette action est définitive et ne peut pas être annulée.
                     </p>
                   </div>
-                  <Sparkles className="w-5 h-5 text-red-400" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 hidden sm:block" />
                 </div>
               </div>
               
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
                 <Button 
                   variant="outline" 
                   onClick={() => setConfirmDelete(false)}
                   disabled={isProcessing}
-                  className="text-black px-8 py-3 border-2 border-gray-300 bg-white text-black hover:bg-gray-50 hover:border-gray-400 font-semibold rounded-2xl premium-hover"
+                  className="w-full sm:w-auto text-black px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-black hover:bg-gray-50 hover:border-gray-400 font-semibold rounded-xl sm:rounded-2xl premium-hover text-sm sm:text-base"
                 >
                   Annuler
                 </Button>
@@ -161,16 +165,16 @@ const AppointmentModal = ({
                   variant="destructive" 
                   onClick={handleDelete}
                   disabled={isProcessing}
-                  className="px-8 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 premium-shadow-lg font-semibold rounded-2xl premium-hover"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 premium-shadow-lg font-semibold rounded-xl sm:rounded-2xl premium-hover text-sm sm:text-base"
                 >
                   {isProcessing ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Suppression...
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       Confirmer la suppression
                     </div>
                   )}

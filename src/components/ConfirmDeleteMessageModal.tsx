@@ -21,10 +21,10 @@ const ConfirmDeleteMessageModal = ({
 }: ConfirmDeleteMessageModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-white border-0 shadow-2xl overflow-hidden rounded-3xl">
+      <DialogContent className="max-w-[95vw] sm:max-w-[500px] bg-white border-0 shadow-2xl overflow-hidden rounded-2xl sm:rounded-3xl">
         <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-pink-50"></div>
         
-        <div className="relative z-10 p-6">
+        <div className="relative z-10 p-4 sm:p-6 max-h-[85vh] overflow-y-auto">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"

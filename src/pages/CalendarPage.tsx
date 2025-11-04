@@ -93,7 +93,7 @@ const CalendarPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden mt-[80px]">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden mt-[60px] sm:mt-[70px] lg:mt-[80px]">
       {/* Background premium - plus clair */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -101,28 +101,28 @@ const CalendarPage: React.FC = () => {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
       </div>
 
-      <div className="container mx-auto px-6 py-12 relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-12 relative z-10">
         {/* En-tête premium */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center w-28 h-28 premium-gradient rounded-3xl premium-shadow-xl mb-8 relative overflow-hidden floating-animation">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-3xl"></div>
-            <Calendar className="w-14 h-14 text-white relative z-10" />
-            <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center premium-shadow">
-              <Crown className="w-5 h-5 text-white" />
+        <div className="mb-6 sm:mb-8 lg:mb-12 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-28 lg:h-28 premium-gradient rounded-2xl sm:rounded-3xl premium-shadow-xl mb-4 sm:mb-6 lg:mb-8 relative overflow-hidden floating-animation">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-2xl sm:rounded-3xl"></div>
+            <Calendar className="w-8 h-8 sm:w-10 sm:h-10 lg:w-14 lg:h-14 text-white relative z-10" />
+            <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 lg:-top-3 lg:-right-3 w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center premium-shadow">
+              <Crown className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
             </div>
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-              <Star className="w-4 h-4 text-white" />
+            <div className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2 w-5 h-5 sm:w-6 sm:w-6 lg:w-8 lg:h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
+              <Star className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold luxury-text-gradient mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold luxury-text-gradient mb-2 sm:mb-3 lg:mb-4 px-2">
             Calendrier Complet Premium
           </h1>
-          <div className="flex items-center justify-center gap-3 max-w-2xl mx-auto">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <p className="text-xl text-muted-foreground font-medium">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 max-w-2xl mx-auto px-2">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-muted-foreground font-medium">
               Visualisez vos rendez-vous sous tous les angles
             </p>
-            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
           </div>
         </div>
 
@@ -130,36 +130,36 @@ const CalendarPage: React.FC = () => {
         <AppointmentStatsDisplay refreshTrigger={refreshKey} />
 
         {/* Onglets de calendrier */}
-        <Tabs defaultValue="week" className="space-y-8" key={refreshKey}>
-         <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 gap-2 h-auto p-1 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-xl">
+        <Tabs defaultValue="week" className="space-y-4 sm:space-y-6 lg:space-y-8" key={refreshKey}>
+         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 h-auto p-1 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-lg sm:rounded-xl">
   
   <TabsTrigger
     value="week"
-    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+    className="flex items-center justify-center gap-1 sm:gap-2 h-10 sm:h-11 lg:h-12 font-medium w-full text-xs sm:text-sm lg:text-base"
   >
-    <Calendar className="w-4 h-4" />
-    Vue Semaine
+    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+    <span className="hidden sm:inline">Vue</span> Semaine
   </TabsTrigger>
 
   <TabsTrigger
     value="month"
-    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+    className="flex items-center justify-center gap-1 sm:gap-2 h-10 sm:h-11 lg:h-12 font-medium w-full text-xs sm:text-sm lg:text-base"
   >
-    <CalendarDays className="w-4 h-4" />
-    Vue Mensuelle
+    <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4" />
+    <span className="hidden sm:inline">Vue</span> Mensuelle
   </TabsTrigger>
 
   <TabsTrigger
     value="dashboard"
-    className="flex items-center justify-center gap-2 h-12 font-medium w-full"
+    className="flex items-center justify-center gap-1 sm:gap-2 h-10 sm:h-11 lg:h-12 font-medium w-full text-xs sm:text-sm lg:text-base"
   >
-    <BarChart3 className="w-4 h-4" />
-    Vue Dashboard
+    <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+    <span className="hidden sm:inline">Vue</span> Dashboard
   </TabsTrigger>
 
 </TabsList>
 
-          <TabsContent value="week" className="space-y-6">
+          <TabsContent value="week" className="space-y-3 sm:space-y-4 lg:space-y-6">
             <WeekCalendar 
               onAppointmentClick={handleAppointmentClick}
               enableDragAndDrop={true}
@@ -168,7 +168,7 @@ const CalendarPage: React.FC = () => {
             />
           </TabsContent>
 
-          <TabsContent value="month" className="space-y-6">
+          <TabsContent value="month" className="space-y-3 sm:space-y-4 lg:space-y-6">
             <MonthlyCalendar 
               onDateClick={handleDateClick}
               onAppointmentClick={handleAppointmentClick}
@@ -177,7 +177,7 @@ const CalendarPage: React.FC = () => {
             />
           </TabsContent>
 
-          <TabsContent value="dashboard" className="space-y-6">
+          <TabsContent value="dashboard" className="space-y-3 sm:space-y-4 lg:space-y-6">
             <DashboardCalendar 
               onAddAppointment={handleAddAppointment}
               onEditAppointment={handleEdit}

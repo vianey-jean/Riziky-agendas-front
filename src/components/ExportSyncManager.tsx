@@ -173,70 +173,72 @@ const ExportSyncManager: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-primary">Export & Synchronisation</h2>
-        <p className="text-muted-foreground">Exportez vos données et synchronisez avec d'autres calendriers</p>
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-primary">Export & Synchronisation</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">Exportez vos données et synchronisez avec d'autres calendriers</p>
+        </div>
       </div>
 
       {/* Export */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Download className="w-5 h-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
             Exporter les rendez-vous
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Téléchargez vos rendez-vous dans différents formats
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Format d'export</Label>
+        <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Format d'export</Label>
               <Select value={exportFormat} onValueChange={(value: any) => setExportFormat(value)}>
-                <SelectTrigger>
+                <SelectTrigger className="h-9 sm:h-10 text-sm sm:text-base">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="csv">
+                  <SelectItem value="csv" className="text-sm sm:text-base">
                     <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
+                      <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
                       CSV (Excel)
                     </div>
                   </SelectItem>
-                  <SelectItem value="json">
+                  <SelectItem value="json" className="text-sm sm:text-base">
                     <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
+                      <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
                       JSON (Données)
                     </div>
                   </SelectItem>
-                  <SelectItem value="ical">
+                  <SelectItem value="ical" className="text-sm sm:text-base">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
+                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                       iCalendar (.ics)
                     </div>
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Période</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Période</Label>
               <Select value={dateRange} onValueChange={(value: any) => setDateRange(value)}>
-                <SelectTrigger>
+                <SelectTrigger className="h-9 sm:h-10 text-sm sm:text-base">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="week">7 derniers jours</SelectItem>
-                  <SelectItem value="month">30 derniers jours</SelectItem>
-                  <SelectItem value="year">12 derniers mois</SelectItem>
-                  <SelectItem value="all">Tous les rendez-vous</SelectItem>
+                  <SelectItem value="week" className="text-sm sm:text-base">7 derniers jours</SelectItem>
+                  <SelectItem value="month" className="text-sm sm:text-base">30 derniers jours</SelectItem>
+                  <SelectItem value="year" className="text-sm sm:text-base">12 derniers mois</SelectItem>
+                  <SelectItem value="all" className="text-sm sm:text-base">Tous les rendez-vous</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <Button onClick={exportAppointments} disabled={isExporting} className="gap-2">
-            <Download className="w-4 h-4" />
+          <Button onClick={exportAppointments} disabled={isExporting} className="gap-2 w-full sm:w-auto h-9 sm:h-10 text-sm sm:text-base">
+            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
             {isExporting ? 'Export en cours...' : 'Exporter'}
           </Button>
         </CardContent>
@@ -244,45 +246,45 @@ const ExportSyncManager: React.FC = () => {
 
       {/* Synchronisation */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <RefreshCw className="w-5 h-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
             Synchronisation calendriers
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Synchronisez avec vos calendriers externes
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="p-4">
-              <div className="flex items-center justify-between mb-3">
+        <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            <Card className="p-3 sm:p-4">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium">Google Calendar</span>
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                  <span className="font-medium text-sm sm:text-base">Google Calendar</span>
                 </div>
-                <Badge variant="outline">Beta</Badge>
+                <Badge variant="outline" className="text-xs">Beta</Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
                 Synchronisez automatiquement avec votre agenda Google
               </p>
-              <Button onClick={syncWithGoogleCalendar} variant="outline" size="sm" className="w-full">
+              <Button onClick={syncWithGoogleCalendar} variant="outline" size="sm" className="w-full text-xs sm:text-sm h-8 sm:h-9">
                 Configurer
               </Button>
             </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between mb-3">
+            <Card className="p-3 sm:p-4">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-800" />
-                  <span className="font-medium">Outlook Calendar</span>
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-800" />
+                  <span className="font-medium text-sm sm:text-base">Outlook Calendar</span>
                 </div>
-                <Badge variant="outline">Beta</Badge>
+                <Badge variant="outline" className="text-xs">Beta</Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
                 Synchronisez avec Microsoft Outlook
               </p>
-              <Button onClick={syncWithOutlook} variant="outline" size="sm" className="w-full">
+              <Button onClick={syncWithOutlook} variant="outline" size="sm" className="w-full text-xs sm:text-sm h-8 sm:h-9">
                 Configurer
               </Button>
             </Card>
@@ -292,39 +294,39 @@ const ExportSyncManager: React.FC = () => {
 
       {/* Notifications */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Mail className="w-5 h-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
             Notifications automatiques
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Configurez les rappels et confirmations
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-blue-600" />
-                <div>
-                  <p className="font-medium">Rappels par email</p>
-                  <p className="text-sm text-muted-foreground">Envoyer des rappels 24h avant</p>
+        <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="flex items-center justify-between p-3 sm:p-4 border rounded-lg">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-medium text-sm sm:text-base">Rappels par email</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Envoyer des rappels 24h avant</p>
                 </div>
               </div>
-              <Badge variant={syncSettings.emailReminders ? "default" : "secondary"}>
+              <Badge variant={syncSettings.emailReminders ? "default" : "secondary"} className="text-xs flex-shrink-0">
                 {syncSettings.emailReminders ? "Activé" : "Désactivé"}
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Smartphone className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="font-medium">Rappels par SMS</p>
-                  <p className="text-sm text-muted-foreground">SMS 2h avant le rendez-vous</p>
+            <div className="flex items-center justify-between p-3 sm:p-4 border rounded-lg">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <Smartphone className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-medium text-sm sm:text-base">Rappels par SMS</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">SMS 2h avant le rendez-vous</p>
                 </div>
               </div>
-              <Badge variant="outline">Bientôt</Badge>
+              <Badge variant="outline" className="text-xs flex-shrink-0">Bientôt</Badge>
             </div>
           </div>
         </CardContent>

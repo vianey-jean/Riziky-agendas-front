@@ -152,7 +152,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-100 mt-[80px]">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-100 mt-[60px] sm:mt-[70px] lg:mt-[80px]">
       {/* Éléments décoratifs */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-teal-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
@@ -160,95 +160,95 @@ const ContactPage = () => {
         <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-cyan-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-2000"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 relative">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-8 lg:py-12 relative">
         <div className="max-w-6xl mx-auto">
           {/* En-tête */}
-          <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-full text-sm font-medium text-teal-800 mb-6 shadow-lg">
-              <MessageCircle className="w-4 h-4 mr-2" />
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in">
+            <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-full text-xs sm:text-sm font-medium text-teal-800 mb-4 sm:mb-6 shadow-lg">
+              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               Nous sommes là pour vous
             </div>
             
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent px-2">
               Contactez-nous
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-2">
               Une question, une suggestion ou besoin d'aide ? Notre équipe est à votre écoute
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             {/* Formulaire de contact */}
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-2xl hover:shadow-3xl transition-all duration-300">
-              <CardHeader className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-t-lg">
-                <CardTitle className="text-2xl flex items-center gap-3">
-                  <Send className="w-6 h-6" />
+              <CardHeader className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-t-lg p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl flex items-center gap-2 sm:gap-3">
+                  <Send className="w-5 h-5 sm:w-6 sm:h-6" />
                   Envoyez-nous un message
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Nom complet *</label>
+              <CardContent className="p-4 sm:p-6 lg:p-8">
+                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 lg:space-y-6">
+                  <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="space-y-1 sm:space-y-2">
+                      <label className="text-xs sm:text-sm font-medium text-gray-700">Nom complet *</label>
                       <Input
                         name="nom"
                         value={formData.nom}
                         onChange={handleInputChange}
-                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg h-9 sm:h-10 lg:h-11 text-sm sm:text-base ${
                           errors.nom ? 'border-red-500 focus:border-red-500' : ''
                         }`}
                         placeholder="Votre nom"
                       />
                       {errors.nom && (
-                        <div className="flex items-center gap-2 text-red-500 text-sm">
-                          <AlertCircle className="w-4 h-4" />
+                        <div className="flex items-center gap-1 sm:gap-2 text-red-500 text-xs sm:text-sm">
+                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {errors.nom}
                         </div>
                       )}
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Email *</label>
+                    <div className="space-y-1 sm:space-y-2">
+                      <label className="text-xs sm:text-sm font-medium text-gray-700">Email *</label>
                       <Input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                        className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg h-9 sm:h-10 lg:h-11 text-sm sm:text-base ${
                           errors.email ? 'border-red-500 focus:border-red-500' : ''
                         }`}
                         placeholder="votre@email.com"
                       />
                       {errors.email && (
-                        <div className="flex items-center gap-2 text-red-500 text-sm">
-                          <AlertCircle className="w-4 h-4" />
+                        <div className="flex items-center gap-1 sm:gap-2 text-red-500 text-xs sm:text-sm">
+                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {errors.email}
                         </div>
                       )}
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Sujet *</label>
+                  <div className="space-y-1 sm:space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Sujet *</label>
                     <Input
                       name="sujet"
                       value={formData.sujet}
                       onChange={handleInputChange}
-                      className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg ${
+                      className={`bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg h-9 sm:h-10 lg:h-11 text-sm sm:text-base ${
                         errors.sujet ? 'border-red-500 focus:border-red-500' : ''
                       }`}
                       placeholder="Objet de votre message"
                     />
                     {errors.sujet && (
-                      <div className="flex items-center gap-2 text-red-500 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 sm:gap-2 text-red-500 text-xs sm:text-sm">
+                        <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                         {errors.sujet}
                       </div>
                     )}
                   </div>
                   
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">
+                  <div className="space-y-1 sm:space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">
                       Message * 
                       <span className="text-blue-600 font-bold ml-2">
                         (minimum 8 caractères)
@@ -259,18 +259,18 @@ const ContactPage = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={6}
-                      className={`text-blue-600 font-bold  bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg resize-none ${
+                      className={`text-blue-600 font-bold bg-gray-50 border-gray-200 focus:border-teal-500 focus:ring-teal-500 rounded-lg resize-none text-sm sm:text-base ${
                         errors.message ? 'border-red-500 focus:border-red-500' : ''
                       }`}
                       placeholder="Décrivez votre demande en détail..."
                     />
                     {errors.message && (
-                      <div className="flex items-center gap-2 text-red-500 text-sm">
-                        <AlertCircle className="w-4 h-4" />
+                      <div className="flex items-center gap-1 sm:gap-2 text-red-500 text-xs sm:text-sm">
+                        <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                         {errors.message}
                       </div>
                     )}
-                    <div className="text-sm text-gray-500">
+                    <div className="text-xs sm:text-sm text-gray-500">
                       {formData.message.length}/8 caractères minimum
                     </div>
                   </div>
@@ -278,7 +278,7 @@ const ContactPage = () => {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-2.5 sm:py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base h-10 sm:h-11"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
@@ -297,16 +297,16 @@ const ContactPage = () => {
             </Card>
 
             {/* Informations de contact */}
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8">
               {/* Coordonnées */}
               <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-xl text-blue-800 flex items-center gap-3">
-                    <Phone className="w-5 h-5" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl text-blue-800 flex items-center gap-2 sm:gap-3">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                     Nos coordonnées
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-gradient-to-r from-red-400 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Mail className="w-5 h-5 text-white" />
@@ -345,25 +345,25 @@ const ContactPage = () => {
 
               {/* Horaires */}
               <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="text-xl text-green-800 flex items-center gap-3">
-                    <Clock className="w-5 h-5" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl text-green-800 flex items-center gap-2 sm:gap-3">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                     Horaires de support
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-2 sm:space-y-3">
                     <div className="flex justify-between items-center py-2 border-b border-green-100">
-                      <span className="font-medium text-gray-700">Lundi - Vendredi</span>
-                      <span className="text-green-600 font-semibold">8h00 - 18h00</span>
+                      <span className="font-medium text-gray-700 text-xs sm:text-sm">Lundi - Vendredi</span>
+                      <span className="text-green-600 font-semibold text-xs sm:text-sm">8h00 - 18h00</span>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-green-100">
-                      <span className="font-medium text-gray-700">Samedi</span>
-                      <span className="text-green-600 font-semibold">9h00 - 12h00</span>
+                      <span className="font-medium text-gray-700 text-xs sm:text-sm">Samedi</span>
+                      <span className="text-green-600 font-semibold text-xs sm:text-sm">9h00 - 12h00</span>
                     </div>
                     <div className="flex justify-between items-center py-2">
-                      <span className="font-medium text-gray-700">Dimanche</span>
-                      <span className="text-gray-400">Fermé</span>
+                      <span className="font-medium text-gray-700 text-xs sm:text-sm">Dimanche</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">Fermé</span>
                     </div>
                   </div>
                 </CardContent>

@@ -146,20 +146,20 @@ const ConflictManager: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div>
-          <h2 className="text-2xl font-bold text-primary">Gestion des conflits</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-xl sm:text-2xl font-bold text-primary">Gestion des conflits</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Détection et résolution des conflits de rendez-vous
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={loadAppointments}>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" onClick={loadAppointments} className="flex-1 sm:flex-initial h-9 sm:h-10 text-sm sm:text-base">
             Actualiser
           </Button>
           {conflicts.length > 0 && (
-            <Badge variant="destructive" className="gap-1">
+            <Badge variant="destructive" className="gap-1 text-xs sm:text-sm">
               <AlertTriangle className="w-3 h-3" />
               {conflicts.length} conflit{conflicts.length > 1 ? 's' : ''}
             </Badge>
@@ -169,65 +169,65 @@ const ConflictManager: React.FC = () => {
 
       {conflicts.length === 0 ? (
         <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+          <CardContent className="pt-4 sm:pt-6">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <Calendar className="w-5 h-5 text-green-600" />
               </div>
-              <div>
-                <p className="font-semibold text-green-800">Aucun conflit détecté</p>
-                <p className="text-green-600">Tous vos rendez-vous sont bien organisés !</p>
+              <div className="text-center sm:text-left">
+                <p className="font-semibold text-green-800 text-sm sm:text-base">Aucun conflit détecté</p>
+                <p className="text-green-600 text-xs sm:text-sm">Tous vos rendez-vous sont bien organisés !</p>
               </div>
             </div>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {conflicts.map(conflict => (
             <Card key={conflict.id} className={`border-l-4 ${getSeverityColor(conflict.severity)}`}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <AlertTriangle className="w-5 h-5" />
+              <CardHeader className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
                     {conflict.message}
                   </CardTitle>
                   {getSeverityBadge(conflict.severity)}
                 </div>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm">
                   {conflict.suggestion}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                     {conflict.appointments.map((appointment, index) => (
-                      <div key={appointment.id} className="p-4 border rounded-lg bg-background">
+                      <div key={appointment.id} className="p-3 sm:p-4 border rounded-lg bg-background">
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-primary">{appointment.titre}</h4>
-                          <Badge variant="outline">RDV {index + 1}</Badge>
+                          <h4 className="font-semibold text-primary text-sm sm:text-base">{appointment.titre}</h4>
+                          <Badge variant="outline" className="text-xs">RDV {index + 1}</Badge>
                         </div>
-                        <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
                           <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            {format(parseISO(appointment.date), 'EEEE dd MMMM yyyy', { locale: fr })}
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{format(parseISO(appointment.date), 'EEEE dd MMMM yyyy', { locale: fr })}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                             {appointment.heure} ({appointment.duree} min)
                           </div>
                           <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            {appointment.location}
+                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{appointment.location}</span>
                           </div>
                           {(appointment.nom || appointment.prenom) && (
                             <div className="flex items-center gap-2">
-                              <User className="w-4 h-4" />
+                              <User className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                               {appointment.prenom} {appointment.nom}
                             </div>
                           )}
                           {appointment.telephone && (
                             <div className="flex items-center gap-2">
-                              <Phone className="w-4 h-4" />
+                              <Phone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                               {appointment.telephone}
                             </div>
                           )}
@@ -240,6 +240,7 @@ const ConflictManager: React.FC = () => {
                       onClick={() => resolveConflict(conflict.id)}
                       variant="outline"
                       size="sm"
+                      className="text-xs sm:text-sm"
                     >
                       Résoudre automatiquement
                     </Button>

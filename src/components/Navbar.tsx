@@ -89,14 +89,14 @@ const Navbar = () => {
       "fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-600 to-violet-600 backdrop-blur-md transition-all duration-300 border-b border-white/20",
       isScrolled ? "shadow-xl" : "shadow-none"
     )}>
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-2 sm:px-4 md:px-6 py-2 sm:py-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo */}
        <Link
               to="/"
               className={cn(
                 "group flex items-center transition-all duration-700 ease-out transform hover:scale-105",
-                "relative overflow-hidden rounded-xl px-2 py-1 shrink-0"
+                "relative overflow-hidden rounded-lg sm:rounded-xl px-1 sm:px-2 py-1 shrink-0"
               )}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -137,14 +137,14 @@ const Navbar = () => {
             </Link>
           
           {/* Navigation Desktop */}
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
             {navItems.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.path}
                 className={({ isActive }) =>
                   cn(
-                    "py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/20 hover:backdrop-blur-sm flex items-center space-x-2 text-white/90 hover:text-white premium-hover",
+                    "py-2 px-2 lg:px-3 xl:px-4 rounded-lg transition-all duration-200 hover:bg-white/20 hover:backdrop-blur-sm flex items-center space-x-1 lg:space-x-2 text-white/90 hover:text-white premium-hover text-sm lg:text-base",
                     isActive ? "bg-white/20 text-white font-semibold" : ""
                   )
                 }
@@ -158,7 +158,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMobileMenu}
-            className="lg:hidden w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            className="lg:hidden w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors flex-shrink-0"
           >
             {isMobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -168,13 +168,13 @@ const Navbar = () => {
           </button>
 
           {/* Auth Section Desktop */}
-<div className="hidden lg:flex items-center space-x-4">
+<div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
   {user ? (
     <>
       <div className="relative group">
-        <div className="flex items-center gap-2 py-2 px-4 rounded-lg text-white/90 font-medium cursor-pointer hover:bg-white/10 transition-all">
-          <User className="w-5 h-5" />
-          <span className="text-green-300 font-bold">{user.prenom} {user.nom}</span>
+        <div className="flex items-center gap-1 lg:gap-2 py-2 px-2 lg:px-3 xl:px-4 rounded-lg text-white/90 font-medium cursor-pointer hover:bg-white/10 transition-all">
+          <User className="w-4 h-4 lg:w-5 lg:h-5" />
+          <span className="text-green-300 font-bold text-xs lg:text-sm xl:text-base truncate max-w-[100px] lg:max-w-[150px]">{user.prenom} {user.nom}</span>
         </div>
         
         {/* Menu déroulant Messages */}
@@ -196,7 +196,7 @@ const Navbar = () => {
       
       <button 
         onClick={logout} 
-        className="py-2 px-4 rounded-lg bg-red-500/80 text-white border border-red-400/30 hover:bg-red-500/60 transition-all duration-200 font-medium"
+        className="py-2 px-2 lg:px-3 xl:px-4 rounded-lg bg-red-500/80 text-white border border-red-400/30 hover:bg-red-500/60 transition-all duration-200 font-medium text-xs lg:text-sm xl:text-base"
       >
         Déconnexion
       </button>

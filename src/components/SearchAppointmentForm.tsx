@@ -38,43 +38,44 @@ const SearchAppointmentForm = ({ onSelect }: SearchAppointmentFormProps) => {
   };
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 px-2 sm:px-0">
       <div className="flex items-center space-x-2">
         <Input 
           placeholder="Entrez au moins 3 caractères..." 
           value={searchQuery} 
           onChange={(e) => handleSearch(e.target.value)} 
+          className="h-10 sm:h-11 text-sm sm:text-base"
         />
       </div>
 
       {searchResults.length > 0 ? (
-        <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+        <div className="mt-3 sm:mt-4 space-y-2 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
           {searchResults.map(appointment => (
             <div 
               key={appointment.id}
-              className="p-3 border rounded-md hover:bg-gray-50 cursor-pointer"
+              className="p-3 sm:p-4 border rounded-lg sm:rounded-xl hover:bg-gray-50 cursor-pointer transition-colors"
               onClick={() => onSelect(appointment)}
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-bold">{appointment.titre}</div>
-                <Badge variant={appointment.statut === 'validé' ? 'default' : 'destructive'}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2">
+                <div className="font-bold text-sm sm:text-base">{appointment.titre}</div>
+                <Badge variant={appointment.statut === 'validé' ? 'default' : 'destructive'} className="text-xs">
                   {appointment.statut || 'validé'}
                 </Badge>
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-xs sm:text-sm text-gray-500">
                 {appointment.date} à {appointment.heure}
               </div>
               {(appointment.nom || appointment.prenom) && (
-                <div className="text-sm text-gray-600">
+                <div className="text-xs sm:text-sm text-gray-600">
                   {appointment.prenom} {appointment.nom}
                 </div>
               )}
-              <div className="text-sm text-gray-600 truncate">{appointment.description}</div>
+              <div className="text-xs sm:text-sm text-gray-600 truncate">{appointment.description}</div>
             </div>
           ))}
         </div>
       ) : searchQuery.length >= 3 ? (
-        <p className="text-gray-500">Aucun résultat trouvé</p>
+        <p className="text-gray-500 text-sm sm:text-base text-center py-4">Aucun résultat trouvé</p>
       ) : null}
     </div>
   );

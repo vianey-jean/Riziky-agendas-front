@@ -180,7 +180,7 @@ const RegisterPage = () => {
   const isFormDisabled = !isEmailAvailable || isEmailChecking || isSubmitting || !isPasswordValid;
   
   return (
-    <div className="mt-[80px] min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="mt-[60px] sm:mt-[70px] lg:mt-[80px] min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 flex items-center justify-center p-2 sm:p-4 md:p-6 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -188,29 +188,29 @@ const RegisterPage = () => {
         <div className="absolute top-1/4 right-1/4 w-60 h-60 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '6s' }}></div>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-2xl mb-4 relative">
-            <UserPlus className="w-8 h-8 text-white" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+      <div className="w-full max-w-[95vw] sm:max-w-md relative z-10">
+        <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl shadow-2xl mb-3 sm:mb-4 relative">
+            <UserPlus className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl sm:rounded-2xl"></div>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-1 sm:mb-2">
             Inscription
           </h1>
-          <p className="text-gray-600">Créez votre compte en quelques étapes</p>
+          <p className="text-sm sm:text-base text-gray-600 px-2">Créez votre compte en quelques étapes</p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/80 shadow-2xl border-0 relative overflow-hidden rounded-2xl">
+        <div className="backdrop-blur-xl bg-white/80 shadow-2xl border-0 relative overflow-hidden rounded-xl sm:rounded-2xl">
           <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent"></div>
           
-          <div className="relative z-10 p-6">
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5 text-emerald-500" />
-                <h2 className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          <div className="relative z-10 p-3 sm:p-4 lg:p-6">
+            <div className="text-center mb-3 sm:mb-4 lg:mb-6">
+              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
+                <h2 className="text-base sm:text-lg lg:text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                   Vos informations
                 </h2>
-                <Sparkles className="w-5 h-5 text-teal-500" />
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
               </div>
             </div>
             

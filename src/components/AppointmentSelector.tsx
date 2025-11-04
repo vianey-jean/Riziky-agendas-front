@@ -80,21 +80,21 @@ const AppointmentSelector = ({
   }, [searchQuery, appointments]);
   
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-3">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <div className="flex-1">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
-                className="w-full justify-start text-left font-normal"
+                className="w-full justify-start text-left font-normal h-10 sm:h-11 text-sm sm:text-base"
               >
                 {selectedDate ? (
                   format(selectedDate, "EEEE d MMMM yyyy", { locale: fr })
                 ) : (
                   <span>Sélectionner une date</span>
                 )}
-                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                <CalendarIcon className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -109,21 +109,21 @@ const AppointmentSelector = ({
         </div>
         
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
           <Input 
             placeholder="Rechercher..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-8 sm:pl-9 h-10 sm:h-11 text-sm sm:text-base"
           />
         </div>
       </div>
       
-      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+      <div className="space-y-2 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
         {loading ? (
-          <p className="text-center py-4 text-gray-500">Chargement...</p>
+          <p className="text-center py-4 text-gray-500 text-sm sm:text-base">Chargement...</p>
         ) : filteredAppointments.length === 0 ? (
-          <p className="text-center py-4 text-gray-500">
+          <p className="text-center py-4 text-gray-500 text-sm sm:text-base">
             Aucun rendez-vous trouvé pour cette date
           </p>
         ) : (
@@ -133,20 +133,20 @@ const AppointmentSelector = ({
               className={`cursor-pointer border-l-4 ${mode === 'edit' ? 'border-l-primary' : 'border-l-destructive'} hover:bg-accent transition-colors duration-200`}
               onClick={() => onSelect(appointment)}
             >
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">{appointment.titre}</h4>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{appointment.description}</p>
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                  <div className="flex-1">
+                    <h4 className="font-medium text-sm sm:text-base">{appointment.titre}</h4>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">{appointment.description}</p>
                   </div>
-                  <div className="text-right">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="h-3.5 w-3.5 mr-1" />
+                  <div className="text-left sm:text-right">
+                    <div className="flex items-center text-xs sm:text-sm text-gray-500">
+                      <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                       {appointment.heure}
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 text-sm text-gray-500">{appointment.location}</div>
+                <div className="mt-2 text-xs sm:text-sm text-gray-500">{appointment.location}</div>
               </CardContent>
             </Card>
           ))
@@ -154,8 +154,8 @@ const AppointmentSelector = ({
       </div>
       
       <div className="flex justify-end pt-2">
-        <Button variant="outline" onClick={onCancel}>
-        <Reply className="mr-1 h-4 w-4" />
+        <Button variant="outline" onClick={onCancel} className="h-9 sm:h-10 text-sm sm:text-base">
+        <Reply className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           Annuler
         </Button>
       </div>

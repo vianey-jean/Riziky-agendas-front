@@ -305,11 +305,11 @@ const AppointmentForm = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 max-h-[80vh] overflow-y-auto border border-gray-100">
+    <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 max-h-[85vh] sm:max-h-[80vh] overflow-y-auto border border-gray-100">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
+          className="space-y-3 sm:space-y-4 lg:space-y-6"
         >
           {/* Statut */}
           <FormField

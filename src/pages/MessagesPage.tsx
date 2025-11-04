@@ -172,13 +172,13 @@ const MessagesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 pt-20 px-4">
-      <div className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 pt-16 sm:pt-18 lg:pt-20 px-2 sm:px-4 lg:px-6">
+      <div className="container mx-auto py-4 sm:py-6 lg:py-8">
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2 px-2">
             Messages de Contact
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap px-2">
             <Badge variant="outline" className="text-sm">
               {messages.length} message(s) total
             </Badge>
@@ -192,16 +192,16 @@ const MessagesPage = () => {
 
         {messages.length === 0 ? (
           <Card>
-            <CardContent className="text-center py-12">
-              <Mail className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Aucun message</h3>
-              <p className="text-muted-foreground">
+            <CardContent className="text-center py-8 sm:py-10 lg:py-12 px-4">
+              <Mail className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mb-3 sm:mb-4" />
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Aucun message</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Vous n'avez reçu aucun message de contact pour le moment.
               </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {messages.map((message) => (
               <Card 
                 key={message.id} 
@@ -210,39 +210,39 @@ const MessagesPage = () => {
                 }`}
                 onClick={() => handleMessageClick(message)}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-4 lg:p-6">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                       {message.lu ? (
-                        <MailOpen className="w-5 h-5 text-muted-foreground" />
+                        <MailOpen className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0" />
                       ) : (
-                        <Mail className="w-5 h-5 text-green-600" />
+                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
                       )}
-                      <div>
-                        <CardTitle className="text-lg">{message.sujet}</CardTitle>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                      <div className="min-w-0 flex-1">
+                        <CardTitle className="text-sm sm:text-base lg:text-lg truncate">{message.sujet}</CardTitle>
+                        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-muted-foreground mt-1 flex-wrap">
                           <div className="flex items-center gap-1">
-                            <User className="w-4 h-4" />
-                            {message.nom}
+                            <User className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{message.nom}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Mail className="w-4 h-4" />
-                            {message.email}
+                            <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{message.email}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {formatDate(message.dateEnvoi)}
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="truncate">{formatDate(message.dateEnvoi)}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     {!message.lu && (
-                      <Badge className="bg-green-500 text-white">Nouveau</Badge>
+                      <Badge className="bg-green-500 text-white text-xs flex-shrink-0">Nouveau</Badge>
                     )}
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground line-clamp-2">
+                <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+                  <p className="text-sm sm:text-base text-muted-foreground line-clamp-2">
                     {message.message}
                   </p>
                 </CardContent>
@@ -252,43 +252,43 @@ const MessagesPage = () => {
         )}
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-2xl" aria-describedby="message-dialog-description">
+          <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto" aria-describedby="message-dialog-description">
             {selectedMessage && (
               <>
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                    <Mail className="w-5 h-5" />
-                    {selectedMessage.sujet}
+                <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
+                  <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="truncate">{selectedMessage.sujet}</span>
                   </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4" id="message-dialog-description">
-                  <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
+                <div className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0" id="message-dialog-description">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">De:</label>
-                      <p className="font-medium">{selectedMessage.nom}</p>
+                      <label className="text-xs sm:text-sm font-medium text-muted-foreground">De:</label>
+                      <p className="font-medium text-sm sm:text-base truncate">{selectedMessage.nom}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Email:</label>
-                      <p className="font-medium">{selectedMessage.email}</p>
+                      <label className="text-xs sm:text-sm font-medium text-muted-foreground">Email:</label>
+                      <p className="font-medium text-sm sm:text-base truncate">{selectedMessage.email}</p>
                     </div>
-                    <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Date:</label>
-                      <p className="font-medium">{formatDate(selectedMessage.dateEnvoi)}</p>
+                    <div className="col-span-1 sm:col-span-2">
+                      <label className="text-xs sm:text-sm font-medium text-muted-foreground">Date:</label>
+                      <p className="font-medium text-sm sm:text-base">{formatDate(selectedMessage.dateEnvoi)}</p>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Message:</label>
-                    <div className="p-4 bg-background border rounded-lg">
-                      <p className="whitespace-pre-wrap">{selectedMessage.message}</p>
+                    <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-2 block">Message:</label>
+                    <div className="p-3 sm:p-4 bg-background border rounded-lg">
+                      <p className="whitespace-pre-wrap text-sm sm:text-base">{selectedMessage.message}</p>
                     </div>
                   </div>
-                  <div className="flex justify-between">
-                    <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       {selectedMessage.lu && (
                         <Button 
                           variant="outline" 
                           onClick={handleMarkAsUnread}
-                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200 h-9 sm:h-10 text-xs sm:text-sm"
                         >
                           Marquer comme non lu
                         </Button>
@@ -296,13 +296,13 @@ const MessagesPage = () => {
                       <Button
                         variant="outline"
                         onClick={() => setIsDeleteModalOpen(true)}
-                        className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200 flex items-center gap-2"
+                        className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200 flex items-center gap-2 h-9 sm:h-10 text-xs sm:text-sm"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         Supprimer
                       </Button>
                     </div>
-                    <Button onClick={() => setIsDialogOpen(false)}>
+                    <Button onClick={() => setIsDialogOpen(false)} className="h-9 sm:h-10 text-xs sm:text-sm">
                       Fermer
                     </Button>
                   </div>

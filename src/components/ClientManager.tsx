@@ -156,40 +156,40 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUp
         <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-gradient-to-br from-pink-400/10 to-rose-400/10 rounded-full blur-3xl animate-spin" style={{ animationDuration: '25s' }}></div>
       </div>
 
-      <div className="container mx-auto px-6 py-12 relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-8 lg:py-12 relative z-10">
         {/* Header premium */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center w-28 h-28 premium-gradient rounded-3xl premium-shadow-xl mb-8 relative overflow-hidden floating-animation">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-3xl"></div>
-            <User className="w-14 h-14 text-white relative z-10" />
-            <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center premium-shadow">
-              <Crown className="w-5 h-5 text-white" />
+        <div className="mb-6 sm:mb-8 lg:mb-12 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 premium-gradient rounded-2xl sm:rounded-3xl premium-shadow-xl mb-4 sm:mb-6 lg:mb-8 relative overflow-hidden floating-animation">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-2xl sm:rounded-3xl"></div>
+            <User className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 text-white relative z-10" />
+            <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center premium-shadow">
+              <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-              <Star className="w-4 h-4 text-white" />
+            <div className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
+              <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold luxury-text-gradient mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold luxury-text-gradient mb-2 sm:mb-3 lg:mb-4 px-2">
             Gestion des Clients Premium
           </h1>
-          <div className="flex items-center justify-center gap-3 max-w-2xl mx-auto">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <p className="text-xl text-muted-foreground font-medium">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 max-w-2xl mx-auto px-2">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-muted-foreground font-medium">
               Gérez vos clients avec élégance et efficacité
             </p>
-            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
           </div>
         </div>
           <ClientStatsDisplay refreshTrigger={refreshTrigger} />
         {/* Actions et recherche */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6 lg:mb-8 px-2 sm:px-0">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             <Input
               placeholder="Rechercher un client..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/80 backdrop-blur-sm border-2 border-primary/20 focus:border-primary/40 rounded-xl h-12"
+              className="pl-8 sm:pl-10 bg-white/80 backdrop-blur-sm border-2 border-primary/20 focus:border-primary/40 rounded-lg sm:rounded-xl h-10 sm:h-11 lg:h-12 text-sm sm:text-base"
             />
           </div>
           
@@ -197,23 +197,24 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUp
             <DialogTrigger asChild>
               <Button 
                 onClick={resetForm}
-                className="premium-gradient text-white rounded-xl h-12 px-8 premium-shadow-lg hover:scale-105 transition-all duration-200"
+                className="w-full sm:w-auto premium-gradient text-white rounded-lg sm:rounded-xl h-10 sm:h-11 lg:h-12 px-4 sm:px-6 lg:px-8 premium-shadow-lg hover:scale-105 transition-all duration-200 text-sm sm:text-base"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                Nouveau Client
-                <Diamond className="h-4 w-4 ml-2" />
+                <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                <span className="hidden sm:inline">Nouveau Client</span>
+                <span className="sm:hidden">Nouveau</span>
+                <Diamond className="h-3 w-3 sm:h-4 sm:w-4 ml-2" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] bg-white rounded-3xl border-0 premium-shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20 rounded-3xl"></div>
+            <DialogContent className="max-w-[95vw] sm:max-w-[600px] bg-white rounded-2xl sm:rounded-3xl border-0 premium-shadow-xl max-h-[90vh] overflow-y-auto">
+              <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20 rounded-2xl sm:rounded-3xl"></div>
               <div className="relative z-10">
-                <DialogHeader className="mb-6">
-                  <DialogTitle className="text-2xl font-bold luxury-text-gradient flex items-center gap-3">
-                    <div className="w-12 h-12 premium-gradient rounded-2xl flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
+                <DialogHeader className="mb-4 sm:mb-6">
+                  <DialogTitle className="text-xl sm:text-2xl font-bold luxury-text-gradient flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 premium-gradient rounded-xl sm:rounded-2xl flex items-center justify-center">
+                      <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                     {isEditing ? 'Modifier le client' : 'Nouveau client'}
-                    <Sparkles className="w-5 h-5 text-primary" />
+                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   </DialogTitle>
                 </DialogHeader>
 
@@ -344,11 +345,11 @@ const ClientManager: React.FC<ClientManagerProps> = ({ onClientAdded, onClientUp
 
         {/* Liste des clients */}
         {isLoading ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+          <div className="flex justify-center items-center py-8 sm:py-10 lg:py-12">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 px-2 sm:px-0">
             {filteredClients.map((client) => (
               <Card key={client.id} className="bg-white/80 backdrop-blur-sm border-2 border-white/50 premium-shadow hover:premium-shadow-lg transition-all duration-300 hover:scale-105 rounded-2xl overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-primary/10 to-purple-500/10 pb-4">

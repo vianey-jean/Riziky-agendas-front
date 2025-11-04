@@ -127,65 +127,69 @@ const AvailabilityManager: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div>
-          <h2 className="text-2xl font-bold text-primary">Gestion des disponibilités</h2>
-          <p className="text-muted-foreground">Configurez vos horaires de travail et créneaux disponibles</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-primary">Gestion des disponibilités</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">Configurez vos horaires de travail et créneaux disponibles</p>
         </div>
-        <Button onClick={saveSettings} className="gap-2">
-          <Save className="w-4 h-4" />
+        <Button onClick={saveSettings} className="w-full sm:w-auto gap-2 h-9 sm:h-10 text-sm sm:text-base">
+          <Save className="w-3 h-3 sm:w-4 sm:h-4" />
           Sauvegarder
         </Button>
       </div>
 
       {/* Paramètres généraux */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             Paramètres généraux
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Configurez les règles de base pour vos rendez-vous
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="defaultDuration">Durée par défaut (min)</Label>
+        <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="space-y-1 sm:space-y-2">
+              <Label htmlFor="defaultDuration" className="text-xs sm:text-sm">Durée par défaut (min)</Label>
               <Input
                 id="defaultDuration"
                 type="number"
                 value={settings.defaultDuration}
                 onChange={(e) => setSettings(prev => ({ ...prev, defaultDuration: parseInt(e.target.value) || 60 }))}
+                className="h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="bufferTime">Temps de pause (min)</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label htmlFor="bufferTime" className="text-xs sm:text-sm">Temps de pause (min)</Label>
               <Input
                 id="bufferTime"
                 type="number"
                 value={settings.bufferTime}
                 onChange={(e) => setSettings(prev => ({ ...prev, bufferTime: parseInt(e.target.value) || 0 }))}
+                className="h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="maxAdvance">Réservation max (jours)</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label htmlFor="maxAdvance" className="text-xs sm:text-sm">Réservation max (jours)</Label>
               <Input
                 id="maxAdvance"
                 type="number"
                 value={settings.maxAdvanceBooking}
                 onChange={(e) => setSettings(prev => ({ ...prev, maxAdvanceBooking: parseInt(e.target.value) || 30 }))}
+                className="h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="minAdvance">Réservation min (heures)</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label htmlFor="minAdvance" className="text-xs sm:text-sm">Réservation min (heures)</Label>
               <Input
                 id="minAdvance"
                 type="number"
                 value={settings.minAdvanceBooking}
                 onChange={(e) => setSettings(prev => ({ ...prev, minAdvanceBooking: parseInt(e.target.value) || 24 }))}
+                className="h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
           </div>
@@ -194,49 +198,49 @@ const AvailabilityManager: React.FC = () => {
 
       {/* Ajouter un nouveau créneau */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="w-5 h-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Ajouter un créneau
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-4 items-end">
-            <div className="space-y-2">
-              <Label>Jour</Label>
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-end">
+            <div className="space-y-1 sm:space-y-2 w-full sm:w-auto">
+              <Label className="text-xs sm:text-sm">Jour</Label>
               <Select value={newSlot.day.toString()} onValueChange={(value) => setNewSlot(prev => ({ ...prev, day: parseInt(value) }))}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-full sm:w-40 h-9 sm:h-10 text-sm sm:text-base">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {DAYS_OF_WEEK.map((day, index) => (
-                    <SelectItem key={index} value={index.toString()}>
+                    <SelectItem key={index} value={index.toString()} className="text-sm sm:text-base">
                       {day}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Heure de début</Label>
+            <div className="space-y-1 sm:space-y-2 w-full sm:w-auto">
+              <Label className="text-xs sm:text-sm">Heure de début</Label>
               <Input
                 type="time"
                 value={newSlot.startTime}
                 onChange={(e) => setNewSlot(prev => ({ ...prev, startTime: e.target.value }))}
-                className="w-32"
+                className="w-full sm:w-32 h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Heure de fin</Label>
+            <div className="space-y-1 sm:space-y-2 w-full sm:w-auto">
+              <Label className="text-xs sm:text-sm">Heure de fin</Label>
               <Input
                 type="time"
                 value={newSlot.endTime}
                 onChange={(e) => setNewSlot(prev => ({ ...prev, endTime: e.target.value }))}
-                className="w-32"
+                className="w-full sm:w-32 h-9 sm:h-10 text-sm sm:text-base"
               />
             </div>
-            <Button onClick={addTimeSlot} className="gap-2">
-              <Plus className="w-4 h-4" />
+            <Button onClick={addTimeSlot} className="gap-2 w-full sm:w-auto h-9 sm:h-10 text-sm sm:text-base">
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
               Ajouter
             </Button>
           </div>

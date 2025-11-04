@@ -244,61 +244,61 @@ const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
   
   return (
     <>
-      <div className="calendar-luxury rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
+      <div className="calendar-luxury rounded-xl sm:rounded-2xl lg:rounded-3xl premium-shadow-xl border-0 overflow-hidden">
         {/* En-tête premium */}
-        <CardHeader className="premium-gradient text-white relative overflow-hidden">
+        <CardHeader className="premium-gradient text-white relative overflow-hidden p-3 sm:p-4 lg:p-6">
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
             
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-white" />
+            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white/30 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-bold text-white mb-1">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-0.5 sm:mb-1">
                     Calendrier Dashboard Premium
                   </CardTitle>
-                  <p className="text-white/90 text-lg font-medium">
+                  <p className="text-white/90 text-xs sm:text-sm lg:text-base xl:text-lg font-medium">
                     {format(currentDate, 'MMMM yyyy', { locale: fr })}
                   </p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-white font-medium">Live</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3">
+                <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 bg-white/20 rounded-full px-2 sm:px-3 py-0.5 sm:py-1">
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-[10px] sm:text-xs text-white font-medium">Live</span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={previousWeek}
-                    className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                    className="text-white hover:bg-white/20 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 p-0"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                   </Button>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={nextWeek}
-                    className="text-white hover:bg-white/20 w-10 h-10 p-0"
+                    className="text-white hover:bg-white/20 w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 p-0"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                   </Button>
                 </div>
-                <Star className="w-5 h-5 text-yellow-300 animate-pulse" />
+                <Star className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-yellow-300 animate-pulse" />
               </div>
             </div>
           </CardHeader>
 
-        <div className="overflow-x-auto premium-scroll">
-          <div className="min-w-[900px] relative">
-            <div className="grid grid-cols-8 bg-gradient-to-r from-primary/5 to-purple-500/5 border-2 border-primary/30 rounded-lg overflow-hidden">
+        <div className="overflow-x-auto premium-scroll -mx-2 sm:mx-0">
+          <div className="min-w-[600px] sm:min-w-[800px] lg:min-w-[900px] relative">
+            <div className="grid grid-cols-8 bg-gradient-to-r from-primary/5 to-purple-500/5 border border-primary/30 rounded-lg overflow-hidden">
               {/* Header - Empty cell for hours column */}
-              <div className="luxury-card p-3 lg:p-4 flex items-center justify-center border-b-2 border-r-2 border-primary/40">
-                <Clock className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
+              <div className="luxury-card p-1.5 sm:p-2 lg:p-3 xl:p-4 flex items-center justify-center border-b border-r border-primary/40">
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-primary" />
               </div>
               
               {/* Header - Days of the week */}

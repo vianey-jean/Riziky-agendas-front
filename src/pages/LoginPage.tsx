@@ -152,7 +152,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="mt-[80px] min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="mt-[60px] sm:mt-[70px] lg:mt-[80px] min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-2 sm:p-4 md:p-6 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -160,40 +160,40 @@ const LoginPage = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-cyan-400/10 to-blue-400/10 rounded-full blur-3xl animate-spin" style={{ animationDuration: '20s' }}></div>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-2xl mb-4 relative">
-            <Shield className="w-8 h-8 text-white" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+      <div className="w-full max-w-[95vw] sm:max-w-md relative z-10">
+        <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl shadow-2xl mb-3 sm:mb-4 relative">
+            <Shield className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl sm:rounded-2xl"></div>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-1 sm:mb-2">
             Connexion
           </h1>
-          <p className="text-gray-600">Accédez à votre espace personnel</p>
+          <p className="text-sm sm:text-base text-gray-600 px-2">Accédez à votre espace personnel</p>
         </div>
 
         <Card className="backdrop-blur-xl bg-white/80 shadow-2xl border-0 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent"></div>
-          <CardHeader className="text-center relative z-10 pb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="w-5 h-5 text-indigo-500" />
-              <CardTitle className="text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <CardHeader className="text-center relative z-10 pb-3 sm:pb-4 lg:pb-6 px-3 sm:px-4 lg:px-6">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
+              <CardTitle className="text-lg sm:text-xl lg:text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 {step === 'email' ? 'Votre email' : 'Votre mot de passe'}
               </CardTitle>
-              <Sparkles className="w-5 h-5 text-purple-500" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
             </div>
           </CardHeader>
-          <CardContent className="relative z-10">
+          <CardContent className="relative z-10 px-3 sm:px-4 lg:px-6 pb-4 sm:pb-6">
             {step === 'email' ? (
               <Form {...emailForm}>
-                <form onSubmit={emailForm.handleSubmit(onSubmitEmail)} className="space-y-6">
+                <form onSubmit={emailForm.handleSubmit(onSubmitEmail)} className="space-y-3 sm:space-y-4 lg:space-y-6">
                   <FormField
                     control={emailForm.control}
                     name="email"
                     render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-indigo-500" />
+                      <FormItem className="space-y-2 sm:space-y-3">
+                        <FormLabel className="text-xs sm:text-sm font-medium text-gray-700 flex items-center gap-1 sm:gap-2">
+                          <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-500" />
                           Adresse email
                         </FormLabel>
                         <FormControl>
@@ -201,10 +201,10 @@ const LoginPage = () => {
                             <Input 
                               placeholder="votre@email.com" 
                               autoComplete="email"
-                              className="premium-input pl-12 h-12 border-2 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200/50 transition-all duration-300 rounded-xl"
+                              className="premium-input pl-8 sm:pl-10 lg:pl-12 h-10 sm:h-11 lg:h-12 border-2 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200/50 transition-all duration-300 rounded-lg sm:rounded-xl text-sm sm:text-base"
                               {...field}
                             />
-                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <Mail className="absolute left-2 sm:left-3 lg:left-4 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -222,7 +222,7 @@ const LoginPage = () => {
                   />
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]" 
+                    className="w-full h-10 sm:h-11 lg:h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] text-sm sm:text-base" 
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
@@ -301,19 +301,19 @@ const LoginPage = () => {
                       </FormItem>
                     )}
                   />
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 sm:gap-3">
                     <Button 
                       type="button" 
                       variant="outline" 
                       onClick={() => setStep('email')} 
-                      className="text-black flex-1 h-12 border-2 border-gray-200/50 hover:border-gray-300 bg-white/50 backdrop-blur-sm rounded-xl transition-all duration-300 hover:shadow-md"
+                      className="text-black flex-1 h-10 sm:h-11 lg:h-12 border-2 border-gray-200/50 hover:border-gray-300 bg-white/50 backdrop-blur-sm rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md text-sm sm:text-base"
                     >
-                      <Reply className="mr-2 h-4 w-4 text-black" />
+                      <Reply className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 text-black" />
                       Retour
                     </Button>
                     <Button 
                       type="submit" 
-                      className="flex-1 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]" 
+                      className="flex-1 h-10 sm:h-11 lg:h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] text-sm sm:text-base" 
                       disabled={isSubmitting || !isPasswordValid}
                     >
                       {isSubmitting ? (
@@ -335,8 +335,8 @@ const LoginPage = () => {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
+        <div className="text-center mt-4 sm:mt-6 px-2">
+          <p className="text-xs sm:text-sm text-gray-600">
             Pas encore de compte ?{' '}
             <Link to="/inscription" className="font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
               S'inscrire gratuitement
