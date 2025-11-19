@@ -49,10 +49,13 @@ import ActionButtons from '@/components/ActionButtons';
 import AppointmentModal from '@/components/AppointmentModal';
 import SearchAppointmentForm from '@/components/SearchAppointmentForm';
 import AppointmentStatsDisplay from '@/components/AppointmentStatsDisplay';
+import ExportAppointmentsModal from '@/components/ExportAppointmentsModal';
 import { AppointmentService, Appointment } from '@/services/AppointmentService';
 import { useDashboardState } from '@/hooks/useDashboardState';
 
 const DashboardPage = () => {
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  
   const {
     activeAppointment,
     setActiveAppointment,
@@ -134,6 +137,11 @@ const DashboardPage = () => {
     setIsSearchModalOpen(true);
   };
 
+  const handleOpenExport = () => {
+    console.log('Opening export modal');
+    setIsExportModalOpen(true);
+  };
+
   const handleViewAppointment = (appointment: Appointment) => {
     console.log('Viewing appointment', appointment);
     setActiveAppointment(appointment);
@@ -184,6 +192,7 @@ const DashboardPage = () => {
             onEdit={() => handleOpenEdit()}
             onDelete={handleOpenDelete}
             onSearch={handleOpenSearch}
+            onExport={handleOpenExport}
           />
         </div>
 
@@ -224,6 +233,11 @@ const DashboardPage = () => {
             <SearchAppointmentForm onSelect={handleViewAppointment} />
           </AppointmentModal>
         )}
+
+        <ExportAppointmentsModal
+          isOpen={isExportModalOpen}
+          onClose={() => setIsExportModalOpen(false)}
+        />
       </div>
     </div>
   );

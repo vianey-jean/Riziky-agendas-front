@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Edit, Trash2, Search, Sparkles, Crown } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Search, Sparkles, Crown, FileDown } from 'lucide-react';
 
 /**
  * Props pour les boutons d'action
@@ -10,13 +10,14 @@ type ActionButtonsProps = {
   onEdit: () => void;
   onDelete: () => void;
   onSearch: () => void;
+  onExport?: () => void;
 };
 
 /**
  * Composant pour afficher les boutons d'action du tableau de bord
  * Permet d'ajouter, modifier, supprimer et rechercher des rendez-vous
  */
-const ActionButtons = ({ onAdd, onEdit, onDelete, onSearch }: ActionButtonsProps) => {
+const ActionButtons = ({ onAdd, onEdit, onDelete, onSearch, onExport }: ActionButtonsProps) => {
   return (
     <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center px-2 sm:px-0">
       <Button 
@@ -69,6 +70,21 @@ const ActionButtons = ({ onAdd, onEdit, onDelete, onSearch }: ActionButtonsProps
         <span className="sm:hidden">Rechercher</span>
         <Crown className="w-3 h-3 sm:w-4 sm:h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Button>
+
+      {onExport && (
+        <Button 
+          variant="outline"
+          className="group flex items-center justify-center gap-2 sm:gap-3 luxury-card premium-shadow rounded-xl sm:rounded-2xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold tracking-wide border-2 border-green-300 hover:border-green-400 text-green-600 hover:text-green-700 premium-hover glow-effect w-full sm:w-auto" 
+          onClick={onExport}
+        >
+          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center">
+            <FileDown className="h-3 w-3 sm:h-4 sm:w-4" />
+          </div>
+          <span className="hidden sm:inline">Exporter rendez-vous</span>
+          <span className="sm:hidden">Exporter</span>
+          <Crown className="w-3 h-3 sm:w-4 sm:h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </Button>
+      )}
     </div>
   );
 };
